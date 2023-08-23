@@ -31,22 +31,23 @@ const AuthProvider = ({ children }) => {
   useEffect(() => {
     const initAuth = async () => {
       const storedToken = window.localStorage.getItem(authConfig.storageTokenKeyName)
+      console.log(`${authConfig.storageTokenKeyName} ${storedToken}`)
       if (storedToken) {
         setLoading(true)
         await axios
-          .get(authConfig.meEndpoint, {
+          .get(authConfig.baseUrl + authConfig.meEndpoint, {
             headers: {
               Authorization: storedToken
             }
           })
           .then(async response => {
             setLoading(false)
-            setUser({ ...response.data.userData })
+            setUser({ ...response.data.resource_owner })
           })
           .catch(() => {
             localStorage.removeItem('userData')
-            localStorage.removeItem('refreshToken')
-            localStorage.removeItem('accessToken')
+            localStorage.removeItem(authConfig.refreshTokenKeyName)
+            localStorage.removeItem(authConfig.storageTokenKeyName)
             setUser(null)
             setLoading(false)
             if (authConfig.onTokenExpiration === 'logout' && !router.pathname.includes('login')) {
@@ -63,19 +64,22 @@ const AuthProvider = ({ children }) => {
 
   const handleLogin = (params, errorCallback) => {
     axios
-      .post(authConfig.loginEndpoint, params)
+      .post(authConfig.baseUrl + authConfig.loginEndpoint, params)
       .then(async response => {
+        window.localStorage.setItem(authConfig.storageTokenKeyName, response.data.token)
         params.rememberMe
-          ? window.localStorage.setItem(authConfig.storageTokenKeyName, response.data.accessToken)
+          ? window.localStorage.setItem(authConfig.refreshTokenKeyName, response.data.refresh_token)
           : null
         const returnUrl = router.query.returnUrl
-        setUser({ ...response.data.userData })
-        params.rememberMe ? window.localStorage.setItem('userData', JSON.stringify(response.data.userData)) : null
+        setUser({ ...response.data.resource_owner })
+        params.rememberMe ? window.localStorage.setItem('userData', JSON.stringify(response.data.resource_owner)) : null
+        console.log('Signed in Successfully :)')
         const redirectURL = returnUrl && returnUrl !== '/' ? returnUrl : '/'
         router.replace(redirectURL)
       })
       .catch(err => {
         if (errorCallback) errorCallback(err)
+        console.log('Cannot Sign in :(')
       })
   }
 
@@ -83,6 +87,7 @@ const AuthProvider = ({ children }) => {
     setUser(null)
     window.localStorage.removeItem('userData')
     window.localStorage.removeItem(authConfig.storageTokenKeyName)
+    window.localStorage.removeItem(authConfig.refreshTokenKeyName)
     router.push('/login')
   }
 
