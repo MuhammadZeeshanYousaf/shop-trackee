@@ -85,11 +85,28 @@ const AuthProvider = ({ children }) => {
   }
 
   const handleLogout = () => {
-    setUser(null)
-    window.localStorage.removeItem('userData')
-    window.localStorage.removeItem(authConfig.storageTokenKeyName)
-    window.localStorage.removeItem(authConfig.refreshTokenKeyName)
-    router.push('/login')
+    const storedToken = window.localStorage.getItem(authConfig.storageTokenKeyName)
+
+    if (storedToken) {
+      axios
+        .post(authConfig.baseUrl + authConfig.logoutEndpoint, null, {
+          headers: {
+            Authorization: `Bearer ${storedToken}`
+          }
+        })
+        .then(async response => {
+          setUser(null)
+          window.localStorage.removeItem('userData')
+          window.localStorage.removeItem(authConfig.storageTokenKeyName)
+          window.localStorage.removeItem(authConfig.refreshTokenKeyName)
+          router.push('/login')
+        })
+        .catch(() => {
+          // handle logout error
+        })
+    } else {
+      // session already expired
+    }
   }
 
   const handleSignup = (params, errorCallback) => {

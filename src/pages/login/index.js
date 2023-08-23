@@ -185,15 +185,14 @@ const LoginPage = () => {
               <Typography variant='h3' sx={{ mb: 1.5 }}>
                 {`Welcome to ${appConfig.appName}! 👋🏻`}
               </Typography>
-              <Typography sx={{ color: 'text.secondary' }}>
-                Please sign-in to your account
-              </Typography>
+              <Typography sx={{ color: 'text.secondary' }}>Please sign-in to your account</Typography>
             </Box>
             <form noValidate autoComplete='off' onSubmit={handleSubmit(onSubmit)}>
               <Box sx={{ mb: 4 }}>
                 <Controller
                   name='email'
                   control={control}
+                  defaultValue=''
                   rules={{ required: true }}
                   render={({ field: { value, onChange, onBlur } }) => (
                     <CustomTextField
@@ -214,6 +213,7 @@ const LoginPage = () => {
                 <Controller
                   name='password'
                   control={control}
+                  defaultValue=''
                   rules={{ required: true }}
                   render={({ field: { value, onChange, onBlur } }) => (
                     <CustomTextField
