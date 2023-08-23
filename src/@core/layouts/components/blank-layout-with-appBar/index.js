@@ -12,6 +12,7 @@ import themeConfig from 'src/configs/themeConfig'
 
 // ** Hook
 import { useSettings } from 'src/@core/hooks/useSettings'
+import appConfig from 'src/configs/appConfig'
 
 const LinkStyled = styled(Link)(({ theme }) => ({
   display: 'flex',
@@ -73,7 +74,7 @@ const BlankLayoutAppBar = () => {
             />
           </svg>
           <Typography variant='h4' sx={{ ml: 2.5, fontWeight: 700, lineHeight: '24px' }}>
-            {themeConfig.templateName}
+            {appConfig.appName}
           </Typography>
         </LinkStyled>
       </Toolbar>

@@ -12,6 +12,7 @@ import Icon from 'src/@core/components/icon'
 
 // ** Configs
 import themeConfig from 'src/configs/themeConfig'
+import appConfig from 'src/configs/appConfig'
 
 // ** Styled Components
 const MenuHeaderWrapper = styled(Box)(({ theme }) => ({
@@ -104,7 +105,7 @@ const VerticalNavHeader = props => {
             />
           </svg>
           <HeaderTitle variant='h4' sx={{ ...menuCollapsedStyles, ...(navCollapsed && !navHover ? {} : { ml: 2.5 }) }}>
-            {themeConfig.templateName}
+            {appConfig.appName}
           </HeaderTitle>
         </LinkStyled>
       )}
