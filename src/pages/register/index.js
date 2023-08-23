@@ -78,6 +78,7 @@ const FormControlLabel = styled(MuiFormControlLabel)(({ theme }) => ({
 }))
 
 const schema = yup.object().shape({
+  name: yup.string().min(3).required(),
   email: yup.string().email().required(),
   password: yup.string().min(5).required()
 })
@@ -107,8 +108,8 @@ const Register = () => {
   })
 
   const onSubmit = data => {
-    const { email, password } = data
-    auth.signup({ email, password }, error => {
+    const { name, email, password } = data
+    auth.signup({ name, email, password }, error => {
       setError('email', {
         type: 'manual',
         message: error
@@ -186,11 +187,32 @@ const Register = () => {
               <Typography sx={{ color: 'text.secondary' }}>Make your app management easy and fun!</Typography>
             </Box>
             <form noValidate autoComplete='off' onSubmit={handleSubmit(onSubmit)}>
-              <CustomTextField autoFocus fullWidth sx={{ mb: 4 }} label='Name' placeholder='Enter name' />
+              <Box sx={{ mb: 4 }}>
+                <Controller
+                  name='name'
+                  control={control}
+                  defaultValue=''
+                  rules={{ required: true }}
+                  render={({ field: { value, onChange, onBlur } }) => (
+                    <CustomTextField
+                      fullWidth
+                      autoFocus
+                      label='Name'
+                      value={value}
+                      onBlur={onBlur}
+                      onChange={onChange}
+                      placeholder='Enter name'
+                      error={Boolean(errors.name)}
+                      {...(errors.name && { helperText: errors.name.message })}
+                    />
+                  )}
+                />
+              </Box>
               <Box sx={{ mb: 4 }}>
                 <Controller
                   name='email'
                   control={control}
+                  defaultValue=''
                   rules={{ required: true }}
                   render={({ field: { value, onChange, onBlur } }) => (
                     <CustomTextField
@@ -211,6 +233,7 @@ const Register = () => {
                 <Controller
                   name='password'
                   control={control}
+                  defaultValue=''
                   rules={{ required: true }}
                   render={({ field: { value, onChange, onBlur } }) => (
                     <CustomTextField
