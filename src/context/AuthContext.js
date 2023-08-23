@@ -17,7 +17,8 @@ const defaultProvider = {
   setUser: () => null,
   setLoading: () => Boolean,
   login: () => Promise.resolve(),
-  logout: () => Promise.resolve()
+  logout: () => Promise.resolve(),
+  signup: () => Promise.resolve()
 }
 const AuthContext = createContext(defaultProvider)
 
@@ -91,13 +92,33 @@ const AuthProvider = ({ children }) => {
     router.push('/login')
   }
 
+  const handleSignup = (params, errorCallback) => {
+    axios
+      .post(authConfig.baseUrl + authConfig.signupEndpoint, params)
+      .then(async response => {
+        window.localStorage.setItem(authConfig.storageTokenKeyName, response.data.token)
+        window.localStorage.setItem(authConfig.refreshTokenKeyName, response.data.refresh_token)
+        const returnUrl = router.query.returnUrl
+        setUser({ ...response.data.resource_owner })
+        window.localStorage.setItem('userData', JSON.stringify(response.data.resource_owner))
+        console.log('Signed UP Successfully :)')
+        const redirectURL = returnUrl && returnUrl !== '/' ? returnUrl : '/'
+        router.replace(redirectURL)
+      })
+      .catch(err => {
+        if (errorCallback) errorCallback(err)
+        console.log('Cannot Sign UP:(')
+      })
+  }
+
   const values = {
     user,
     loading,
     setUser,
     setLoading,
     login: handleLogin,
-    logout: handleLogout
+    logout: handleLogout,
+    signup: handleSignup
   }
 
   return <AuthContext.Provider value={values}>{children}</AuthContext.Provider>
