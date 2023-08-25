@@ -15,6 +15,7 @@ import useMediaQuery from '@mui/material/useMediaQuery'
 import { styled, useTheme } from '@mui/material/styles'
 import InputAdornment from '@mui/material/InputAdornment'
 import MuiFormControlLabel from '@mui/material/FormControlLabel'
+import { MenuItem, Select, FormHelperText, InputLabel } from '@mui/material'
 
 // ** Custom Component Import
 import CustomTextField from 'src/@core/components/mui/text-field'
@@ -108,8 +109,8 @@ const Register = () => {
   })
 
   const onSubmit = data => {
-    const { name, email, password } = data
-    auth.signup({ name, email, password }, error => {
+    const { name, email, password, role } = data
+    auth.signup({ name, email, password, role }, error => {
       setError('email', {
         type: 'manual',
         message: error
@@ -263,13 +264,43 @@ const Register = () => {
                   )}
                 />
               </Box>
+
+              <Box sx={{ mt: 3 }}>
+                <Controller
+                  name='role'
+                  control={control}
+                  defaultValue='customer'
+                  rules={{ required: true }}
+                  render={({ field: { value, onChange, onBlur } }) => (
+                    <>
+                      <InputLabel id='role-label'>Role</InputLabel>
+                      <Select
+                        fullWidth
+                        labelId='role-label' // Use the labelId to associate the label with the select
+                        label='Role'
+                        value={value}
+                        onBlur={onBlur}
+                        onChange={onChange}
+                        error={Boolean(errors.role)}
+                        variant='outlined'
+                        size='small'
+                      >
+                        <MenuItem value='customer'>Customer</MenuItem>
+                        <MenuItem value='seller'>Seller</MenuItem>
+                      </Select>
+                      {errors.role && <FormHelperText error>{errors.role.message}</FormHelperText>}
+                    </>
+                  )}
+                />
+              </Box>
+
               <FormControlLabel
                 control={<Checkbox />}
                 sx={{ mb: 4, mt: 1.5, '& .MuiFormControlLabel-label': { fontSize: theme.typography.body2.fontSize } }}
                 label={
                   <Box sx={{ display: 'flex', alignItems: 'center', flexWrap: 'wrap', justifyContent: 'center' }}>
                     <Typography sx={{ color: 'text.secondary' }}>I agree to</Typography>
-                    <Typography component={LinkStyled} href='/' onClick={e => e.preventDefault()} sx={{ ml: 1 }}>
+                    <Typography component={LinkStyled} href='#' onClick={e => e.preventDefault()} sx={{ ml: 1 }}>
                       privacy policy & terms
                     </Typography>
                   </Box>
