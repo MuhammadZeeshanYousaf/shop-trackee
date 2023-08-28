@@ -1,5 +1,5 @@
 // ** React Imports
-import { useState, useEffect } from 'react'
+import { useRouter } from 'next/router'
 
 // ** MUI Components
 import Box from '@mui/material/Box'
@@ -27,14 +27,9 @@ const ProfilePicture = styled('img')(({ theme }) => ({
 }))
 
 const UserProfileHeader = () => {
-  // ** State
-//   const [data, setData] = useState(null)
-//   useEffect(() => {
-//     axios.get('/pages/profile-header').then(response => {
-//       setData(response.data)
-//     })
-//   }, [])
-//   const designationIcon = data?.designationIcon || 'tabler:briefcase'
+
+  const router=useRouter()
+
 
   return  <Card>
       <CardMedia
@@ -78,7 +73,6 @@ const UserProfileHeader = () => {
               }}
             >
               <Box sx={{ mr: 4, display: 'flex', alignItems: 'center', '& svg': { mr: 1.5, color: 'text.secondary' } }}>
-                {/* <Icon fontSize='1.25rem' icon={designationIcon} /> */}
                 <Typography sx={{ color: 'text.secondary' }}>Software Engineer</Typography>
               </Box>
               <Box sx={{ mr: 4, display: 'flex', alignItems: 'center', '& svg': { mr: 1.5, color: 'text.secondary' } }}>
@@ -91,9 +85,9 @@ const UserProfileHeader = () => {
               </Box>
             </Box>
           </Box>
-          <Button variant='contained' sx={{ '& svg': { mr: 2 } }}>
-            <Icon icon='tabler:check' fontSize='1.125rem' />
-            Connected
+          <Button variant='contained' sx={{ '& svg': { mr: 2 } }} onClick={()=>router.push('/edit-profile')}>
+           
+            Edit Profile
           </Button>
         </Box>
       </CardContent>
