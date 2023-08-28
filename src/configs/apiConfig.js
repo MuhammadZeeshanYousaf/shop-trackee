@@ -1,5 +1,5 @@
 import { create } from 'apisauce'
-import authConfig from './auth'
+import auth from './auth'
 
 const baseURL = process.env.NEXT_PUBLIC_API_V1_BASE_URL
 
@@ -8,7 +8,7 @@ const client = create({
 })
 
 client.addAsyncRequestTransform(async request => {
-  const token = localStorage.getItem(authConfig.storageTokenKeyName)
+  const token = localStorage.getItem(auth.storageTokenKeyName)
 
   if (!token) {
     return
@@ -18,7 +18,7 @@ client.addAsyncRequestTransform(async request => {
 })
 
 export const config = async () => {
-  const token = localStorage.getItem(authConfig.storageTokenKeyName)
+  const token = localStorage.getItem(auth.storageTokenKeyName)
   return {
     headers: {
       Authorization: `Bearer ${token}`,
@@ -37,7 +37,7 @@ export const authConfig = async token => {
 }
 
 export const multipartConfig = async () => {
-  const token = localStorage.getItem(authConfig.storageTokenKeyName)
+  const token = localStorage.getItem(auth.storageTokenKeyName)
   return {
     headers: {
       Authorization: `Bearer ${token}`,
@@ -46,7 +46,7 @@ export const multipartConfig = async () => {
   }
 }
 export const blobConfig = async () => {
-  const token = localStorage.getItem(authConfig.storageTokenKeyName)
+  const token = localStorage.getItem(auth.storageTokenKeyName)
   return {
     headers: {
       Authorization: `Bearer ${token}`,
