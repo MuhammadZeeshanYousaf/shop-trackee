@@ -1,41 +1,21 @@
 import Grid from '@mui/material/Grid'
 import AboutOverivew from './AboutOverview'
 
-const UserProfile = () => {
+const UserProfile = ({ user }) => {
   const data = {
     contacts: [
       {
         icon: 'tabler:phone-call',
         property: 'Contact',
-        value: '(123) 456-7890'
+        value: user?.phone
       },
-      {
-        icon: 'tabler:brand-skype',
-        property: 'Skype',
-        value: 'john.doe'
-      },
-      {
-        icon: 'tabler:mail',
-        property: 'Email',
-        value: 'john.doe@example.com'
-      }
     ],
     about: [
-      { property: 'Full Name', value: 'John Doe', icon: 'tabler:user' },
+      { property: 'Full Name', value: user?.name, icon: 'tabler:user' },
 
-      { property: 'Status', value: 'active', icon: 'tabler:check' },
+      { property: 'Role', value: user?.role, icon: 'tabler:crown' },
 
-      { property: 'Role', value: 'Developer', icon: 'tabler:crown' },
-
-      { property: 'Country', value: 'USA', icon: 'tabler:flag' }
-    ],
-    teams: [
-      {
-        color: 'primary',
-        icon: 'tabler:brand-github',
-        property: 'Backend Developer',
-        value: '(126 Members)'
-      }
+      { property: 'Country', value: user?.country, icon: 'tabler:flag' }
     ],
     overview: [
       {
@@ -59,7 +39,7 @@ const UserProfile = () => {
   return (
     <Grid container spacing={6}>
       <Grid item lg={4} md={5} xs={12}>
-        <AboutOverivew about={data.about} contacts={data.contacts} teams={data.teams} overview={data.overview} />
+        <AboutOverivew about={data.about} contacts={data.contacts}  overview={data.overview} />
       </Grid>
     </Grid>
   )

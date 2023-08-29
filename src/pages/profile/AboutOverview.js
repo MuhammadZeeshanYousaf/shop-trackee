@@ -29,7 +29,7 @@ const renderList = arr => {
               {`${item.property.charAt(0).toUpperCase() + item.property.slice(1)}:`}
             </Typography>
             <Typography sx={{ color: 'text.secondary' }}>
-              {item.value.charAt(0).toUpperCase() + item.value.slice(1)}
+              {item.value?.charAt(0).toUpperCase() + item.value?.slice(1)}
             </Typography>
           </Box>
         </Box>
@@ -70,7 +70,7 @@ const renderTeams = arr => {
 }
 
 const AboutOverivew = props => {
-  const { teams, about, contacts, overview } = props
+  const {  about, contacts, overview } = props
 
   return (
     <Grid container spacing={6}>
@@ -89,12 +89,6 @@ const AboutOverivew = props => {
               </Typography>
               {renderList(contacts)}
             </Box>
-            <div>
-              <Typography variant='body2' sx={{ mb: 4, color: 'text.disabled', textTransform: 'uppercase' }}>
-                Teams
-              </Typography>
-              {renderTeams(teams)}
-            </div>
           </CardContent>
         </Card>
       </Grid>

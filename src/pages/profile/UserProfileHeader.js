@@ -26,12 +26,11 @@ const ProfilePicture = styled('img')(({ theme }) => ({
   }
 }))
 
-const UserProfileHeader = () => {
+const UserProfileHeader = ({ user }) => {
+  const router = useRouter()
 
-  const router=useRouter()
-
-
-  return  <Card>
+  return (
+    <Card>
       <CardMedia
         component='img'
         alt='profile-header'
@@ -50,7 +49,7 @@ const UserProfileHeader = () => {
           justifyContent: { xs: 'center', md: 'flex-start' }
         }}
       >
-         <ProfilePicture src={'/images/avatars/1.png'} alt='profile-picture' /> 
+        <ProfilePicture src={'/images/avatars/1.png'} alt='profile-picture' />
         <Box
           sx={{
             width: '100%',
@@ -63,7 +62,7 @@ const UserProfileHeader = () => {
         >
           <Box sx={{ mb: [6, 0], display: 'flex', flexDirection: 'column', alignItems: ['center', 'flex-start'] }}>
             <Typography variant='h5' sx={{ mb: 2.5 }}>
-                          John Doe
+              {user?.name}
             </Typography>
             <Box
               sx={{
@@ -73,26 +72,18 @@ const UserProfileHeader = () => {
               }}
             >
               <Box sx={{ mr: 4, display: 'flex', alignItems: 'center', '& svg': { mr: 1.5, color: 'text.secondary' } }}>
-                <Typography sx={{ color: 'text.secondary' }}>Software Engineer</Typography>
-              </Box>
-              <Box sx={{ mr: 4, display: 'flex', alignItems: 'center', '& svg': { mr: 1.5, color: 'text.secondary' } }}>
                 <Icon fontSize='1.25rem' icon='tabler:map-pin' />
-                <Typography sx={{ color: 'text.secondary' }}>Lahore</Typography>
-              </Box>
-              <Box sx={{ display: 'flex', alignItems: 'center', '& svg': { mr: 1.5, color: 'text.secondary' } }}>
-                <Icon fontSize='1.25rem' icon='tabler:calendar' />
-                <Typography sx={{ color: 'text.secondary' }}>Joined 25-August</Typography>
+                <Typography sx={{ color: 'text.secondary' }}>{user?.country}</Typography>
               </Box>
             </Box>
           </Box>
-          <Button variant='contained' sx={{ '& svg': { mr: 2 } }} onClick={()=>router.push('/edit-profile')}>
-           
+          <Button variant='contained' sx={{ '& svg': { mr: 2 } }} onClick={() => router.push('/edit-profile')}>
             Edit Profile
           </Button>
         </Box>
       </CardContent>
     </Card>
-  
+  )
 }
 
 export default UserProfileHeader
