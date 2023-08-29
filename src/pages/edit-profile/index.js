@@ -13,6 +13,8 @@ import Box from '@mui/material/Box'
 import { useState } from 'react'
 import { styled } from '@mui/material/styles'
 import Typography from '@mui/material/Typography'
+import { Network, Url, multipartConfig } from '../../configs'
+import { useRouter } from 'next/router'
 
 const ImgStyled = styled('img')(({ theme }) => ({
   width: 100,
@@ -41,6 +43,8 @@ const ResetButtonStyled = styled(Button)(({ theme }) => ({
 const EditProfile = () => {
   const [inputValue, setInputValue] = useState('')
   const [imgSrc, setImgSrc] = useState('/images/avatars/1.png')
+  const [base64,setbase64]=useState(null)
+  const router=useRouter()
 
   const schema = yup.object().shape({
     name: yup.string().required(),
@@ -60,31 +64,49 @@ const EditProfile = () => {
     resolver: yupResolver(schema)
   })
 
-  const onSubmit = data => {
-    console.log({ data })
+  const onSubmit = async data => {
+    // const formData = new FormData()
+    // formData.set('name', data.name)
+    // formData.set('phone', data.phone)
+    // formData.set('country', data.country)
+    // formData.set('address', data.address)
+    // formData.set('gender', data.gender)
+    // formData.set('avatar', inputValue)
+    console.log({ base64 })
+    
+    const payload={...data,avatar:base64}
+
+    // for (const entry of formData) {
+    //   console.log(entry[0], entry[1])
+    // }
+
+    // console.log({ formData })
+
+    const response = await Network.put(Url.updateUser, payload)
+    console.log({ response })
   }
 
-  const handleInputImageChange = file => {
+  const handleInputImageChange = e => {
+    console.log(e.target.files[0])
     const reader = new FileReader()
-    const { files } = file.target
-    if (files && files.length !== 0) {
-      reader.onload = () => setImgSrc(reader.result)
-      reader.readAsDataURL(files[0])
-      if (reader.result !== null) {
-        setInputValue(reader.result)
-      }
+    setInputValue(e.target.files[0])
+    reader.onloadend = () => {
+      const base64 = reader.result.split(',')[1]
+      setbase64(base64)
+      setImgSrc(reader.result)
     }
+    const result = reader.readAsDataURL(e.target.files[0])
+    setImgSrc(result)
   }
 
   const handleInputImageReset = () => {
     setInputValue('')
-    setImgSrc('/images/avatars/15.png')
+    setImgSrc('/images/avatars/1.png')
   }
 
   return (
     <Card>
       <CardHeader title='Profile Details' />
-
       <CardContent sx={{ pt: 0 }}>
         <Box sx={{ display: 'flex', alignItems: 'center' }}>
           <ImgStyled src={imgSrc} alt='Profile Pic' />
@@ -94,9 +116,8 @@ const EditProfile = () => {
               <input
                 hidden
                 type='file'
-                value={inputValue}
                 accept='image/png, image/jpeg'
-                onChange={handleInputImageChange}
+                onChange={e => handleInputImageChange(e)}
                 id='account-settings-upload-image'
               />
             </ButtonStyled>
@@ -224,7 +245,7 @@ const EditProfile = () => {
             <Button type='submit' variant='contained'>
               Submit
             </Button>
-            <Button type='reset' color='secondary' variant='tonal'>
+            <Button type='reset' color='secondary' variant='tonal' onClick={()=>router.push('/profile')}>
               Back
             </Button>
           </CardActions>
