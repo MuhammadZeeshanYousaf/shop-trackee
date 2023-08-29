@@ -15,6 +15,7 @@ import { styled } from '@mui/material/styles'
 import Typography from '@mui/material/Typography'
 import { Network, Url, multipartConfig } from '../../configs'
 import { useRouter } from 'next/router'
+import { showErrorMessage, showSuccessMessage } from 'src/components'
 
 const ImgStyled = styled('img')(({ theme }) => ({
   width: 100,
@@ -41,10 +42,9 @@ const ResetButtonStyled = styled(Button)(({ theme }) => ({
 }))
 
 const EditProfile = () => {
-  const [inputValue, setInputValue] = useState('')
+  const [inputValue, setInputValue] = useState(null)
   const [imgSrc, setImgSrc] = useState('/images/avatars/1.png')
-  const [base64,setbase64]=useState(null)
-  const router=useRouter()
+  const router = useRouter()
 
   const schema = yup.object().shape({
     name: yup.string().required(),
@@ -65,34 +65,22 @@ const EditProfile = () => {
   })
 
   const onSubmit = async data => {
-    // const formData = new FormData()
-    // formData.set('name', data.name)
-    // formData.set('phone', data.phone)
-    // formData.set('country', data.country)
-    // formData.set('address', data.address)
-    // formData.set('gender', data.gender)
-    // formData.set('avatar', inputValue)
-    console.log({ base64 })
-    
-    const payload={...data,avatar:base64}
-
-    // for (const entry of formData) {
-    //   console.log(entry[0], entry[1])
-    // }
-
-    // console.log({ formData })
-
-    const response = await Network.put(Url.updateUser, payload)
-    console.log({ response })
+    const formData = new FormData()
+    formData.append('name', data.name)
+    formData.append('phone', data.phone)
+    formData.append('country', data.country)
+    formData.append('address', data.address)
+    formData.append('gender', data.gender)
+    if (inputValue) formData.append('avatar', inputValue)
+    const response = await Network.put(Url.updateUser, formData, (await multipartConfig()).headers)
+    if (!response.ok) return showErrorMessage(response.data.message)
+    showSuccessMessage(response.data.message)
   }
 
   const handleInputImageChange = e => {
-    console.log(e.target.files[0])
     const reader = new FileReader()
     setInputValue(e.target.files[0])
     reader.onloadend = () => {
-      const base64 = reader.result.split(',')[1]
-      setbase64(base64)
       setImgSrc(reader.result)
     }
     const result = reader.readAsDataURL(e.target.files[0])
@@ -245,7 +233,7 @@ const EditProfile = () => {
             <Button type='submit' variant='contained'>
               Submit
             </Button>
-            <Button type='reset' color='secondary' variant='tonal' onClick={()=>router.push('/profile')}>
+            <Button type='reset' color='secondary' variant='tonal' onClick={() => router.push('/profile')}>
               Back
             </Button>
           </CardActions>

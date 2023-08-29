@@ -41,7 +41,7 @@ export const multipartConfig = async () => {
   return {
     headers: {
       Authorization: `Bearer ${token}`,
-      Accept: 'multipart/form-data'
+      'Content-Type': 'multipart/form-data'
     }
   }
 }
