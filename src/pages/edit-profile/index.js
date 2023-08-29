@@ -10,7 +10,7 @@ import { Controller, useForm } from 'react-hook-form'
 import * as yup from 'yup'
 import { yupResolver } from '@hookform/resolvers/yup'
 import Box from '@mui/material/Box'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { styled } from '@mui/material/styles'
 import Typography from '@mui/material/Typography'
 import { Network, Url, multipartConfig } from '../../configs'
@@ -54,10 +54,15 @@ const EditProfile = () => {
     gender: yup.string().required()
   })
 
+  useEffect(() => {
+    getUser()
+  }, [])
+
   const {
     control,
     setError,
     handleSubmit,
+    setValue,
     formState: { errors }
   } = useForm({
     mode: 'onBlur',
@@ -75,6 +80,15 @@ const EditProfile = () => {
     const response = await Network.put(Url.updateUser, formData, (await multipartConfig()).headers)
     if (!response.ok) return showErrorMessage(response.data.message)
     showSuccessMessage(response.data.message)
+  }
+
+  const getUser = async () => {
+    const response = await Network.get(Url.getUser)
+    setValue('name', response.data.resource_owner.name)
+    setValue('phone', response.data.resource_owner.phone)
+    setValue('country', response.data.resource_owner.country)
+    setValue('address', response.data.resource_owner.address)
+    setValue('gender', response.data.resource_owner.gender)
   }
 
   const handleInputImageChange = e => {
