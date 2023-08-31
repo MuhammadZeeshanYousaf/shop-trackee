@@ -16,6 +16,7 @@ import Typography from '@mui/material/Typography'
 import { Network, Url, multipartConfig } from '../../configs'
 import { useRouter } from 'next/router'
 import { showErrorMessage, showSuccessMessage } from 'src/components'
+import { useLoader } from 'src/hooks'
 
 const ImgStyled = styled('img')(({ theme }) => ({
   width: 100,
@@ -45,6 +46,7 @@ const EditProfile = () => {
   const [inputValue, setInputValue] = useState(null)
   const [imgSrc, setImgSrc] = useState('/images/avatars/1.png')
   const router = useRouter()
+  const { setLoader } = useLoader()
 
   const schema = yup.object().shape({
     name: yup.string().required(),
@@ -77,13 +79,19 @@ const EditProfile = () => {
     formData.append('address', data.address)
     formData.append('gender', data.gender)
     if (inputValue) formData.append('avatar', inputValue)
+    setLoader(true)
     const response = await Network.put(Url.updateUser, formData, (await multipartConfig()).headers)
+    setLoader(false)
     if (!response.ok) return showErrorMessage(response.data.message)
     showSuccessMessage(response.data.message)
+    router.push('/profile')
   }
 
   const getUser = async () => {
+    setLoader(true)
     const response = await Network.get(Url.getUser)
+    setLoader(false)
+    if (!response.ok) return showErrorMessage(response.data.message)
     setValue('name', response.data.resource_owner.name)
     setValue('phone', response.data.resource_owner.phone)
     setValue('country', response.data.resource_owner.country)

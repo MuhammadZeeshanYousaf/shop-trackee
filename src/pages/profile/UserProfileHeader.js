@@ -9,9 +9,10 @@ import { styled } from '@mui/material/styles'
 import CardMedia from '@mui/material/CardMedia'
 import Typography from '@mui/material/Typography'
 import CardContent from '@mui/material/CardContent'
+import MuiAvatar from '@mui/material/Avatar'
+import { useTheme } from '@mui/material/styles'
 
 // ** Third Party Imports
-import axios from 'axios'
 
 // ** Icon Imports
 import Icon from 'src/@core/components/icon'
@@ -28,6 +29,9 @@ const ProfilePicture = styled('img')(({ theme }) => ({
 
 const UserProfileHeader = ({ user }) => {
   const router = useRouter()
+  const theme = useTheme()
+
+  console.log({ user })
 
   return (
     <Card>
@@ -49,7 +53,13 @@ const UserProfileHeader = ({ user }) => {
           justifyContent: { xs: 'center', md: 'flex-start' }
         }}
       >
-        <ProfilePicture src={'/images/avatars/1.png'} alt='profile-picture' />
+        {user?.avatar ? (
+          <ProfilePicture src={`${process.env.NEXT_PUBLIC_IMAGE_URL}${user?.avatar}`} alt='profile-picture' />
+        ) : (
+          <MuiAvatar variant='rounded' sx={{ width: 108, height: 108, bgcolor: theme.palette.secondary }}>
+            {user?.name[0]?.toUpperCase()}
+          </MuiAvatar>
+        )}
         <Box
           sx={{
             width: '100%',
