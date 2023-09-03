@@ -47,6 +47,7 @@
     "clipboard-copy": "4.0.1",
     "clsx": "1.2.1",
     "date-fns": "2.30.0",
+    "dayjs": "^1.11.9",
     "draft-js": "0.11.7",
     "i18next": "22.4.15",
     "i18next-browser-languagedetector": "7.0.1",
@@ -74,6 +75,7 @@
     "recharts": "2.5.0",
     "stylis": "4.1.4",
     "stylis-plugin-rtl": "2.1.1",
+    "uuid": "^9.0.0",
     "yup": "1.1.1"
   },
   "devDependencies": {

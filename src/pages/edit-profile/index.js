@@ -1,10 +1,5 @@
-import { CardHeader, Divider } from '@mui/material'
-import Card from '@mui/material/Card'
-import CardContent from '@mui/material/CardContent'
-import Grid from '@mui/material/Grid'
+import { CardHeader, Divider,Card,CardContent,Grid,Button,CardActions } from '@mui/material'
 import CustomTextField from 'src/@core/components/mui/text-field'
-import Button from '@mui/material/Button'
-import CardActions from '@mui/material/CardActions'
 import MenuItem from '@mui/material/MenuItem'
 import { Controller, useForm } from 'react-hook-form'
 import * as yup from 'yup'
@@ -101,8 +96,6 @@ const EditProfile = () => {
     if (response.data.resource_owner?.avatar) {
       setImgSrc(`${process.env.NEXT_PUBLIC_IMAGE_URL}/${response.data.resource_owner?.avatar}`)
     }
-
-    console.log({ response })
   }
 
   const handleInputImageChange = e => {
@@ -256,6 +249,11 @@ const EditProfile = () => {
               />
               {/* <CustomTextField fullWidth label='Address' placeholder='Address' /> */}
             </Grid>
+
+            
+
+
+
           </Grid>
           <CardActions sx={{ justifyContent: 'end' }}>
             <Button type='submit' variant='contained'>

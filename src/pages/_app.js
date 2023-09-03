@@ -52,6 +52,9 @@ import 'prismjs/components/prism-tsx'
 import 'react-perfect-scrollbar/dist/css/styles.css'
 import 'src/iconify-bundle/icons-bundle-react'
 
+// ** React Date Picker Style
+import 'react-datepicker/dist/react-datepicker.css'
+
 // ** Global css styles
 import '../../styles/globals.css'
 import appConfig from 'src/configs/appConfig'
@@ -107,7 +110,7 @@ const App = props => {
       </Head>
 
       <AuthProvider>
-        <LoaderContext.Provider value={{loading,setLoading}}>
+        <LoaderContext.Provider value={{ loading, setLoading }}>
           <Loader visible={loading} />
           <SettingsProvider {...(setConfig ? { pageSettings: setConfig() } : {})}>
             <SettingsConsumer>
