@@ -73,7 +73,11 @@ const Shop = () => {
                         <TableCell>{shop?.contact}</TableCell>
                         <TableCell>
                           <Icon icon='tabler:trash' fontSize={20} onClick={() => deleteShop(shop.id)} />
-                          <Icon icon='tabler:pencil' fontSize={20} />
+                          <Icon
+                            icon='tabler:pencil'
+                            fontSize={20}
+                            onClick={() => router.push(`/shop/form?mode=Edit&id=${shop.id}`)}
+                          />
                         </TableCell>
                       </TableRow>
                     )

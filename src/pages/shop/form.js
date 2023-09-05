@@ -3,20 +3,25 @@ import { useRouter } from 'next/router'
 import * as yup from 'yup'
 import { yupResolver } from '@hookform/resolvers/yup'
 import CustomTextField from 'src/@core/components/mui/text-field'
+import CustomChip from 'src/@core/components/mui/chip'
 import { useForm, Controller } from 'react-hook-form'
 import DatePicker from 'react-datepicker'
-import { CustomInput, DatePickerWrapper } from 'src/components'
 import { useTheme } from '@mui/material/styles'
-import CustomChip from 'src/@core/components/mui/chip'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { v4 as uuid } from 'uuid'
 import Icon from 'src/@core/components/icon'
+import GooglePlacesAutocomplete from 'react-google-places-autocomplete'
+import { Network, Url } from '../../configs'
+import { showErrorMessage, showSuccessMessage, CustomInput, DatePickerWrapper } from '../../components'
+import { useLoader } from '../../hooks'
+import moment from 'moment-timezone'
 
 const Form = () => {
   const router = useRouter()
-  const { mode } = router.query
+  const { mode, id } = router.query
   const theme = useTheme()
   const { direction } = theme
+  const { setLoader } = useLoader()
 
   const [socialLinks, setSocialLinks] = useState([
     {
@@ -89,9 +94,93 @@ const Form = () => {
     setSocialLinks(updatedData)
   }
 
-  const onSubmit = data => {
-    console.log({ data })
+  const simplifyTime = inputDateTime => {
+    const inputDate = new Date(inputDateTime)
+
+    const hours = inputDate.getHours()
+    const minutes = inputDate.getMinutes()
+    const ampm = hours >= 12 ? 'pm' : 'am'
+
+    // Convert hours from 24-hour format to 12-hour format
+    const hours12 = hours % 12 || 12
+
+    // Pad the minutes with a leading zero if necessary
+    const paddedMinutes = minutes < 10 ? `0${minutes}` : minutes
+
+    const formattedTime = `${hours12}:${paddedMinutes} ${ampm}`
+    return formattedTime
   }
+
+  const convertintoTimeZone = inputTime => {
+    const [time, ampm] = inputTime.split(/[APM:]+/).filter(Boolean)
+    const [hours, minutes] = time.split(':').map(Number)
+
+    // Create a Date object with the input time in the current timezone
+    const currentTime = new Date()
+    currentTime.setHours(hours)
+    currentTime.setMinutes(minutes)
+
+    // Convert the time to the target timezone
+    const options = {
+      timeZone: 'Asia/Karachi',
+      hour12: true,
+      hour: 'numeric',
+      minute: 'numeric'
+    }
+
+    return currentTime.toLocaleString('en-US', options)
+  }
+
+  const onSubmit = async data => {
+    const social_links = []
+
+    socialLinks.forEach(item => {
+      social_links.push(item.link)
+    })
+
+    const payload = {
+      ...data,
+      social_links
+    }
+
+    const request = mode == 'Add' ? 'post' : 'put'
+    const route = mode == 'Add' ? Url.getShops : `${Url.getShops}/${id}`
+
+    setLoader(true)
+    const response = await Network[request](route, payload)
+    setLoader(false)
+    if (!response.ok) return showErrorMessage(response.data.message)
+    showSuccessMessage('Shop Created Successfully')
+    router.push('/shop')
+  }
+
+  const getShop = async () => {
+    setLoader(true)
+    const response = await Network.get(`${Url.getShops}/${id}`)
+    setLoader(false)
+    if (!response.ok) return showErrorMessage(response.data.message)
+    setValue('name', response.data.name)
+    setValue('description', response.data.description)
+    setValue('address', response.data.address)
+    setValue('contact', response.data.contact)
+    setValue('opening_time', response.data.opening_time ? new Date(response.data.opening_time) : '')
+    setValue('closing_time', response.data.closing_time ? new Date(response.data.closing_time) : '')
+    setValue('closing_days', response.data.closing_days)
+
+    const social_links = response.data.social_links.map(link => {
+      return {
+        id: uuid(),
+        link
+      }
+    })
+    setSocialLinks(social_links)
+  }
+
+  useEffect(() => {
+    if (mode == 'Edit') {
+      getShop()
+    }
+  }, [])
 
   return (
     <Card>
@@ -157,12 +246,13 @@ const Form = () => {
                         showTimeSelect
                         showTimeSelectOnly
                         selected={value}
-                        timeIntervals={15}
+                        timeIntervals={30}
                         dateFormat='h:mm aa'
                         id='time-only-picker'
                         popperPlacement={popperPlacement}
                         onChange={onChange}
                         customInput={<CustomInput label='Opening Time' />}
+                        autocomplete='off'
                       />
                     </Box>
                   </DatePickerWrapper>
@@ -181,7 +271,7 @@ const Form = () => {
                         showTimeSelect
                         showTimeSelectOnly
                         selected={value}
-                        timeIntervals={15}
+                        timeIntervals={30}
                         dateFormat='h:mm aa'
                         id='time-only-picker'
                         popperPlacement={popperPlacement}
@@ -314,6 +404,10 @@ const Form = () => {
               />
             </Grid>
           </Grid>
+
+          {/* <Grid container spacing={5} sx={{ marginTop: '5px' }}>
+            <GooglePlacesAutocomplete apiKey='AIzaSyDoN2CpVkzIUTZfg46lJljBmEbaJqWxYg8' />
+          </Grid> */}
 
           <CardActions sx={{ justifyContent: 'end' }}>
             <Button type='submit' variant='contained'>
