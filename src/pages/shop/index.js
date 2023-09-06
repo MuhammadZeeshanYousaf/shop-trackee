@@ -1,11 +1,10 @@
-import { Box, Button, TableBody } from '@mui/material'
 import { useRouter } from 'next/router'
 import { Network, Url } from '../../configs'
 import { showErrorMessage, showSuccessMessage } from '../../components'
 import { useLoader } from '../../hooks'
 import { useEffect, useState } from 'react'
-import { Grid, Card, CardHeader, TableContainer, Paper, Table, TableHead, TableRow, TableCell } from '@mui/material'
-import Icon from 'src/@core/components/icon'
+import { Grid, Box, Button } from '@mui/material'
+import ShopCard from './ShopCard'
 
 const Shop = () => {
   const router = useRouter()
@@ -51,7 +50,7 @@ const Shop = () => {
         </Button>
       </Box>
       <Grid container spacing={6} sx={{ marginTop: '5px' }}>
-        <Grid item xs={12}>
+        {/* <Grid item xs={12}>
           <Card>
             <CardHeader title='Shops' />
             <TableContainer component={Paper} sx={{ maxHeight: 440 }}>
@@ -86,7 +85,11 @@ const Shop = () => {
               </Table>
             </TableContainer>
           </Card>
-        </Grid>
+</Grid> */}
+
+        {shops?.map((shop) => {
+          return <ShopCard shop={shop} />
+        })}
       </Grid>
     </div>
   )
