@@ -1,4 +1,4 @@
-import { CardHeader, Divider,Card,CardContent,Grid,Button,CardActions } from '@mui/material'
+import { CardHeader, Divider, Card, CardContent, Grid, Button, CardActions } from '@mui/material'
 import CustomTextField from 'src/@core/components/mui/text-field'
 import MenuItem from '@mui/material/MenuItem'
 import { Controller, useForm } from 'react-hook-form'
@@ -78,6 +78,8 @@ const EditProfile = () => {
     const response = await Network.put(Url.updateUser, formData, (await multipartConfig()).headers)
     setLoader(false)
     if (!response.ok) return showErrorMessage(response.data.message)
+
+    localStorage.setItem('userData', JSON.stringify(response.data.user))
     showSuccessMessage(response.data.message)
     router.push('/profile')
   }
@@ -249,11 +251,6 @@ const EditProfile = () => {
               />
               {/* <CustomTextField fullWidth label='Address' placeholder='Address' /> */}
             </Grid>
-
-            
-
-
-
           </Grid>
           <CardActions sx={{ justifyContent: 'end' }}>
             <Button type='submit' variant='contained'>

@@ -85,6 +85,10 @@ const UserProfileHeader = ({ user }) => {
                 <Icon fontSize='1.25rem' icon='tabler:map-pin' />
                 <Typography sx={{ color: 'text.secondary' }}>{user?.country}</Typography>
               </Box>
+              <Box sx={{ mr: 4, display: 'flex', alignItems: 'center', '& svg': { mr: 1.5, color: 'text.secondary' } }}>
+                <Icon fontSize='1.25rem' icon='tabler:crown' />
+                <Typography sx={{ color: 'text.secondary' }}>{user?.role}</Typography>
+              </Box>
             </Box>
           </Box>
           <Button variant='contained' sx={{ '& svg': { mr: 2 } }} onClick={() => router.push('/edit-profile')}>

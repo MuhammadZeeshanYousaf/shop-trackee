@@ -103,10 +103,10 @@ const UserDropdown = props => {
           horizontal: 'right'
         }}
       >
-        {user?.image ? (
+        {user?.avatar ? (
           <Avatar
             alt={user?.name}
-            src='/images/avatars/1.png'
+            src={`${process.env.NEXT_PUBLIC_IMAGE_URL}${user?.avatar}`}
             onClick={handleDropdownOpen}
             sx={{ width: 38, height: 38 }}
           />
@@ -134,8 +134,12 @@ const UserDropdown = props => {
                 horizontal: 'right'
               }}
             >
-              {user?.image ? (
-                <Avatar alt={user?.name} src='/images/avatars/1.png' sx={{ width: '2.5rem', height: '2.5rem' }} />
+              {user?.avatar ? (
+                <Avatar
+                  alt={user?.name}
+                  src={`${process.env.NEXT_PUBLIC_IMAGE_URL}${user?.avatar}`}
+                  sx={{ width: '2.5rem', height: '2.5rem' }}
+                />
               ) : (
                 <Avatar sx={{ width: '2.5rem', height: '2.5rem' }}>{user?.name[0]?.toUpperCase()}</Avatar>
               )}
