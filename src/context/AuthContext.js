@@ -73,7 +73,9 @@ const AuthProvider = ({ children }) => {
           : null
         const returnUrl = router.query.returnUrl
         setUser({ ...response.data.resource_owner })
-        params.rememberMe ? window.localStorage.setItem('userData', JSON.stringify(response.data.resource_owner)) : null
+
+        window.localStorage.setItem('userData', JSON.stringify(response.data.resource_owner))
+        // params.rememberMe ? window.localStorage.setItem('userData', JSON.stringify(response.data.resource_owner)) : null
         console.log('Signed in Successfully :)')
         const redirectURL = returnUrl && returnUrl !== '/' ? returnUrl : '/'
         router.replace(redirectURL)

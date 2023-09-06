@@ -19,6 +19,7 @@ import Icon from 'src/@core/components/icon'
 
 // ** Context
 import { useAuth } from 'src/hooks/useAuth'
+import { Grid } from '@mui/material'
 
 // ** Styled Components
 const BadgeContentSpan = styled('span')(({ theme }) => ({
@@ -38,6 +39,10 @@ const MenuItemStyled = styled(MenuItem)(({ theme }) => ({
 const UserDropdown = props => {
   // ** Props
   const { settings } = props
+
+  const user = JSON.parse(localStorage.getItem('userData'))
+
+  console.log({ user })
 
   // ** States
   const [anchorEl, setAnchorEl] = useState(null)
@@ -82,6 +87,12 @@ const UserDropdown = props => {
 
   return (
     <Fragment>
+      <Box sx={{ display: 'flex', ml: 2.5, flexDirection: 'column' }}>
+        <Typography sx={{ fontWeight: 500 }}>{user?.name}</Typography>
+        <Typography sx={{ textAlign: 'right' }} variant='body2'>
+          {user?.role}
+        </Typography>
+      </Box>
       <Badge
         overlap='circular'
         onClick={handleDropdownOpen}
@@ -127,7 +138,7 @@ const UserDropdown = props => {
         </Box>
         <Divider sx={{ my: theme => `${theme.spacing(2)} !important` }} />
         <MenuItemStyled sx={{ p: 0 }} onClick={() => handleDropdownClose()}>
-          <Box sx={styles} onClick={()=>router.push('/profile')}>
+          <Box sx={styles} onClick={() => router.push('/profile')}>
             <Icon icon='tabler:user-check' />
             My Profile
           </Box>

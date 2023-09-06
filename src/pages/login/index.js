@@ -113,7 +113,7 @@ const LoginPage = () => {
   const onSubmit = data => {
     const { email, password } = data
     auth.login({ email, password, rememberMe }, error => {
-      console.log({ error })
+    
 
       setError('email', {
         type: 'manual',
