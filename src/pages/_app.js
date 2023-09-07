@@ -76,11 +76,11 @@ if (themeConfig.routingLoader) {
 
 const Guard = ({ children, authGuard, guestGuard }) => {
   if (guestGuard) {
-    return <GuestGuard fallback={<Spinner />}>{children}</GuestGuard>
+    return <GuestGuard fallback={<Loader visible={true} />}>{children}</GuestGuard>
   } else if (!guestGuard && !authGuard) {
     return <>{children}</>
   } else {
-    return <AuthGuard fallback={<Spinner />}>{children}</AuthGuard>
+    return <AuthGuard fallback={<Loader visible={true} />}>{children}</AuthGuard>
   }
 }
 
