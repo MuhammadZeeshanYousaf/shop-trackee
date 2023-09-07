@@ -51,7 +51,7 @@ const Shop = () => {
       </Box>
       <Grid container spacing={6} sx={{ marginTop: '5px' }}>
         {shops?.map(shop => {
-          return <ShopCard shop={shop} deleteShop={deleteShop} />
+          return <ShopCard key={shop.id} shop={shop} deleteShop={deleteShop} />
         })}
       </Grid>
     </div>
