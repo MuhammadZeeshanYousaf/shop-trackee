@@ -6,8 +6,6 @@ import moment from 'moment'
 import { useRouter } from 'next/router'
 
 const ShopCard = ({ shop, deleteShop }) => {
-  console.log({ shop })
-
   const router = useRouter()
 
   return (

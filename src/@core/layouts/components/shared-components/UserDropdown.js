@@ -42,7 +42,6 @@ const UserDropdown = props => {
 
   const user = JSON.parse(localStorage.getItem('userData'))
 
-  console.log({ user })
 
   // ** States
   const [anchorEl, setAnchorEl] = useState(null)

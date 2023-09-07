@@ -31,7 +31,6 @@ const UserProfileHeader = ({ user }) => {
   const router = useRouter()
   const theme = useTheme()
 
-  console.log({ user })
 
   return (
     <Card>
