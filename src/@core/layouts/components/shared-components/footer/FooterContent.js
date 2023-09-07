@@ -35,12 +35,12 @@ const FooterContent = () => {
       </Typography>
       {hidden ? null : (
         <Box sx={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', '& :not(:last-child)': { mr: 4 } }}>
-          <Typography target='_blank' component={LinkStyled} href='https://themeforest.net/licenses/standard'>
+          {/* <Typography target='_blank' component={LinkStyled} href='https://themeforest.net/licenses/standard'>
             License
           </Typography>
           <Typography target='_blank' component={LinkStyled} href='https://1.envato.market/pixinvent_portfolio'>
             More Themes
-          </Typography>
+          </Typography> */}
           <Typography
             target='_blank'
             component={LinkStyled}
