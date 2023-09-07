@@ -87,8 +87,8 @@ const Shop = () => {
           </Card>
 </Grid> */}
 
-        {shops?.map((shop) => {
-          return <ShopCard shop={shop} />
+        {shops?.map(shop => {
+          return <ShopCard shop={shop} deleteShop={deleteShop} />
         })}
       </Grid>
     </div>
