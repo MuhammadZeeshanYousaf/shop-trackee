@@ -4,6 +4,7 @@ import CustomChip from 'src/@core/components/mui/chip'
 import Icon from 'src/@core/components/icon'
 import moment from 'moment'
 import { useRouter } from 'next/router'
+import ShopIcon from '../../assets/images/shop-icon.svg'
 
 const ShopCard = ({ shop, deleteShop }) => {
   const router = useRouter()
@@ -24,7 +25,7 @@ const ShopCard = ({ shop, deleteShop }) => {
         />
         <CardContent>
           <Box sx={{ display: 'flex', alignItems: 'center', flexDirection: 'column' }}>
-            <Avatar src={'./images/avatars/1.png'} sx={{ mb: 5, width: 100, height: 100 }} />
+            <Avatar src={'/images/shop-icon.svg'} sx={{ mb: 5, width: 100, height: 100 }} />
             <Typography variant='h4'>{shop?.name}</Typography>
             <Typography sx={{ mb: 5, color: 'text.secondary', fontWeight: 500 }}>{shop?.contact}</Typography>
             <Box sx={{ mb: 5 }}>
@@ -47,7 +48,7 @@ const ShopCard = ({ shop, deleteShop }) => {
                   rounded
                   size='small'
                   skin='light'
-                  color='info'
+                  color='warning'
                   label={moment(shop?.closing_time).format('h:mm A')}
                 />
               ) : null}
