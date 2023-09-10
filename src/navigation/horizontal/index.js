@@ -10,6 +10,11 @@ const navigation = () => [
     icon: 'tabler:building-warehouse'
   },
   {
+    title: 'Products & Services',
+    path: '/products-and-services',
+    icon: 'tabler:building-warehouse'
+  },
+  {
     path: '/acl',
     action: 'read',
     subject: 'acl-page',

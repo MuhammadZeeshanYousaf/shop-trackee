@@ -84,7 +84,11 @@ const ShopCard = ({ shop, deleteShop }) => {
             </Box>
 
             <Box sx={{ display: 'flex', alignItems: 'center' }}>
-              <Button sx={{ mr: 4, '& svg': { mr: 2 } }} variant={true ? 'contained' : 'tonal'}>
+              <Button
+                sx={{ mr: 4, '& svg': { mr: 2 } }}
+                variant={true ? 'contained' : 'tonal'}
+                onClick={() => router.push(`/products-and-services?shopId=${shop?.id}`)}
+              >
                 Show
               </Button>
               <Button variant='tonal' color='secondary' sx={{ p: 2, minWidth: 38 }}>
