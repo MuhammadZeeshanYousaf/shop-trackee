@@ -94,43 +94,6 @@ const Form = () => {
     setSocialLinks(updatedData)
   }
 
-  const simplifyTime = inputDateTime => {
-    const inputDate = new Date(inputDateTime)
-
-    const hours = inputDate.getHours()
-    const minutes = inputDate.getMinutes()
-    const ampm = hours >= 12 ? 'pm' : 'am'
-
-    // Convert hours from 24-hour format to 12-hour format
-    const hours12 = hours % 12 || 12
-
-    // Pad the minutes with a leading zero if necessary
-    const paddedMinutes = minutes < 10 ? `0${minutes}` : minutes
-
-    const formattedTime = `${hours12}:${paddedMinutes} ${ampm}`
-    return formattedTime
-  }
-
-  const convertintoTimeZone = inputTime => {
-    const [time, ampm] = inputTime.split(/[APM:]+/).filter(Boolean)
-    const [hours, minutes] = time.split(':').map(Number)
-
-    // Create a Date object with the input time in the current timezone
-    const currentTime = new Date()
-    currentTime.setHours(hours)
-    currentTime.setMinutes(minutes)
-
-    // Convert the time to the target timezone
-    const options = {
-      timeZone: 'Asia/Karachi',
-      hour12: true,
-      hour: 'numeric',
-      minute: 'numeric'
-    }
-
-    return currentTime.toLocaleString('en-US', options)
-  }
-
   const onSubmit = async data => {
     const social_links = []
 
