@@ -6,21 +6,31 @@ import { Url, Network } from '../../configs'
 import { showErrorMessage, showSuccessMessage } from 'src/components'
 import { useEffect, useState } from 'react'
 import ProductCard from './ProductCard'
+import ServiceCard from './ServiceCard'
 
 const ProductandServices = () => {
   const { query } = useRouter()
   const { setLoader } = useLoader()
   const [product, setProducts] = useState([])
   const [anchorEl, setAnchorEl] = useState(null)
+  const [services, setServices] = useState([])
 
   const getProducts = async () => {
     setLoader(true)
     const response = await Network.get(Url.getProducts(query.shopId))
     setLoader(false)
     if (!response.ok) return showErrorMessage(response.data.message)
-    console.log({ response })
 
     setProducts(response.data)
+  }
+
+  const getServices = async () => {
+    setLoader(true)
+    const response = await Network.get(Url.getServices(query.shopId))
+    setLoader(false)
+    if (!response.ok) return showErrorMessage(response.data.message)
+    setServices(response.data)
+    console.log({ response })
   }
 
   const deleteProduct = async id => {
@@ -35,6 +45,7 @@ const ProductandServices = () => {
 
   useEffect(() => {
     getProducts()
+    getServices()
   }, [])
 
   return (
@@ -43,7 +54,7 @@ const ProductandServices = () => {
         <SplitButton shopId={query.shopId} />
       </Box>
 
-      <Grid container>
+      <Grid container spacing={5}>
         {/* Products */}
         <Grid item md={6}>
           {product?.map((product, i) => (
@@ -57,7 +68,11 @@ const ProductandServices = () => {
           ))}
         </Grid>
         {/* Services */}
-        <Grid item md={6}></Grid>
+        <Grid item md={6}>
+          {services?.map((service, i) => (
+            <ServiceCard service={service} key={i} />
+          ))}
+        </Grid>
       </Grid>
     </>
   )

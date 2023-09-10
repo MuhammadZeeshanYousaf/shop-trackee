@@ -21,7 +21,9 @@ const ProductCard = ({ product, deleteProduct, anchorEl, setAnchorEl }) => {
     setAnchorEl(event.currentTarget)
   }
 
-  const handleClose = () => {}
+  const handleClose = () => {
+    setAnchorEl(false)
+  }
 
   const StyledGrid = styled(Grid)(({ theme }) => ({
     display: 'flex',
@@ -34,8 +36,6 @@ const ProductCard = ({ product, deleteProduct, anchorEl, setAnchorEl }) => {
       borderRight: `1px solid ${theme.palette.divider}`
     }
   }))
-
-  console.log('images', product?.images)
 
   return (
     <Card sx={{ mt: 5 }}>
