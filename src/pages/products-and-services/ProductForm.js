@@ -126,7 +126,7 @@ const ProductForm = () => {
     if (!response) return showErrorMessage(response.data.message)
     showSuccessMessage(response.data.message)
 
-    console.log({ response })
+    router.push(`/products-and-services?shopId=${query.shopId}`)
 
     // if (images.length == 0) return showErrorMessage('Please Select Images')
     // const formData = new FormData()

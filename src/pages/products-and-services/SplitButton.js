@@ -20,20 +20,17 @@ const options = ['Product', 'Service']
 const ButtonGroupSplit = ({ shopId }) => {
   // ** States
   const [open, setOpen] = useState(false)
-  const [selectedIndex, setSelectedIndex] = useState(1)
+
   const router = useRouter()
 
   // ** Ref
   const anchorRef = useRef(null)
 
-  const handleClick = () => {
-    console.info(`You clicked '${options[selectedIndex]}'`)
-  }
-
   const handleMenuItemClick = option => {
     if (option == 'Product') {
       return router.push(`/products-and-services/ProductForm?shopId=${shopId}`)
     }
+    router.push(`/products-and-services/ServiceForm?shopId=${shopId}`)
     setOpen(false)
   }
 
@@ -48,7 +45,7 @@ const ButtonGroupSplit = ({ shopId }) => {
   return (
     <Fragment>
       <ButtonGroup variant='contained' ref={anchorRef} aria-label='split button'>
-        <Button onClick={handleClick}>Add</Button>
+        <Button>Add</Button>
         <Button
           sx={{ px: '0' }}
           aria-haspopup='menu'
@@ -70,12 +67,7 @@ const ButtonGroupSplit = ({ shopId }) => {
               <ClickAwayListener onClickAway={handleClose}>
                 <MenuList id='split-button-menu'>
                   {options.map((option, index) => (
-                    <MenuItem
-                      key={option}
-                      disabled={index === 2}
-                      selected={index === selectedIndex}
-                      onClick={event => handleMenuItemClick(option)}
-                    >
+                    <MenuItem key={option} disabled={index === 2} onClick={event => handleMenuItemClick(option)}>
                       {option}
                     </MenuItem>
                   ))}
