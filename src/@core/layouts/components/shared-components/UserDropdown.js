@@ -19,6 +19,7 @@ import Icon from 'src/@core/components/icon'
 
 // ** Context
 import { useAuth } from 'src/hooks/useAuth'
+import { Grid } from '@mui/material'
 
 // ** Styled Components
 const BadgeContentSpan = styled('span')(({ theme }) => ({
@@ -38,6 +39,8 @@ const MenuItemStyled = styled(MenuItem)(({ theme }) => ({
 const UserDropdown = props => {
   // ** Props
   const { settings } = props
+
+  const user = JSON.parse(localStorage.getItem('userData'))
 
   // ** States
   const [anchorEl, setAnchorEl] = useState(null)
@@ -82,6 +85,12 @@ const UserDropdown = props => {
 
   return (
     <Fragment>
+      <Box sx={{ display: 'flex', ml: 2.5, flexDirection: 'column' }}>
+        <Typography sx={{ fontWeight: 500 }}>{user?.name}</Typography>
+        <Typography sx={{ textAlign: 'right' }} variant='body2'>
+          {user?.role}
+        </Typography>
+      </Box>
       <Badge
         overlap='circular'
         onClick={handleDropdownOpen}
@@ -92,12 +101,18 @@ const UserDropdown = props => {
           horizontal: 'right'
         }}
       >
-        <Avatar
-          alt='John Doe'
-          src='/images/avatars/1.png'
-          onClick={handleDropdownOpen}
-          sx={{ width: 38, height: 38 }}
-        />
+        {user?.avatar ? (
+          <Avatar
+            alt={user?.name}
+            src={`${process.env.NEXT_PUBLIC_API_HOST_URL}${user?.avatar}`}
+            onClick={handleDropdownOpen}
+            sx={{ width: 38, height: 38 }}
+          />
+        ) : (
+          <Avatar onClick={handleDropdownOpen} sx={{ width: 38, height: 38 }}>
+            {user?.name[0]?.toUpperCase()}
+          </Avatar>
+        )}
       </Badge>
       <Menu
         anchorEl={anchorEl}
@@ -117,17 +132,25 @@ const UserDropdown = props => {
                 horizontal: 'right'
               }}
             >
-              <Avatar alt='John Doe' src='/images/avatars/1.png' sx={{ width: '2.5rem', height: '2.5rem' }} />
+              {user?.avatar ? (
+                <Avatar
+                  alt={user?.name}
+                  src={`${process.env.NEXT_PUBLIC_API_HOST_URL}${user?.avatar}`}
+                  sx={{ width: '2.5rem', height: '2.5rem' }}
+                />
+              ) : (
+                <Avatar sx={{ width: '2.5rem', height: '2.5rem' }}>{user?.name[0]?.toUpperCase()}</Avatar>
+              )}
             </Badge>
             <Box sx={{ display: 'flex', ml: 2.5, alignItems: 'flex-start', flexDirection: 'column' }}>
-              <Typography sx={{ fontWeight: 500 }}>John Doe</Typography>
-              <Typography variant='body2'>Admin</Typography>
+              <Typography sx={{ fontWeight: 500 }}>{user?.name}</Typography>
+              <Typography variant='body2'>{user?.role}</Typography>
             </Box>
           </Box>
         </Box>
         <Divider sx={{ my: theme => `${theme.spacing(2)} !important` }} />
         <MenuItemStyled sx={{ p: 0 }} onClick={() => handleDropdownClose()}>
-          <Box sx={styles} onClick={()=>router.push('/profile')}>
+          <Box sx={styles} onClick={() => router.push('/profile')}>
             <Icon icon='tabler:user-check' />
             My Profile
           </Box>

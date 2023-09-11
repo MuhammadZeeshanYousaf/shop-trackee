@@ -1,4 +1,5 @@
 export default {
   getUser: '/users/tokens/info',
-  updateUser:'/user'
+  updateUser: '/user',
+  getShops:'/shops'
 }

@@ -14,6 +14,7 @@ import { buildAbilityFor } from 'src/configs/acl'
 import NotAuthorized from 'src/pages/401'
 import Spinner from 'src/@core/components/spinner'
 import BlankLayout from 'src/@core/layouts/BlankLayout'
+import { Loader } from 'src/components'
 
 // ** Hooks
 import { useAuth } from 'src/hooks/useAuth'
@@ -42,7 +43,7 @@ const AclGuard = props => {
   if (auth.user && !ability) {
     ability = buildAbilityFor(auth.user.role, aclAbilities.subject)
     if (router.route === '/') {
-      return <Spinner />
+      return <Loader visible={true} />
     }
   }
 

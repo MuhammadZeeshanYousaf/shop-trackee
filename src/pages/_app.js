@@ -52,6 +52,9 @@ import 'prismjs/components/prism-tsx'
 import 'react-perfect-scrollbar/dist/css/styles.css'
 import 'src/iconify-bundle/icons-bundle-react'
 
+// ** React Date Picker Style
+import 'react-datepicker/dist/react-datepicker.css'
+
 // ** Global css styles
 import '../../styles/globals.css'
 import appConfig from 'src/configs/appConfig'
@@ -73,11 +76,11 @@ if (themeConfig.routingLoader) {
 
 const Guard = ({ children, authGuard, guestGuard }) => {
   if (guestGuard) {
-    return <GuestGuard fallback={<Spinner />}>{children}</GuestGuard>
+    return <GuestGuard fallback={<Loader visible={true} />}>{children}</GuestGuard>
   } else if (!guestGuard && !authGuard) {
     return <>{children}</>
   } else {
-    return <AuthGuard fallback={<Spinner />}>{children}</AuthGuard>
+    return <AuthGuard fallback={<Loader visible={true} />}>{children}</AuthGuard>
   }
 }
 
@@ -107,7 +110,7 @@ const App = props => {
       </Head>
 
       <AuthProvider>
-        <LoaderContext.Provider value={{loading,setLoading}}>
+        <LoaderContext.Provider value={{ loading, setLoading }}>
           <Loader visible={loading} />
           <SettingsProvider {...(setConfig ? { pageSettings: setConfig() } : {})}>
             <SettingsConsumer>

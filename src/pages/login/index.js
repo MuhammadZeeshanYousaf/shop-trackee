@@ -113,9 +113,11 @@ const LoginPage = () => {
   const onSubmit = data => {
     const { email, password } = data
     auth.login({ email, password, rememberMe }, error => {
+    
+
       setError('email', {
         type: 'manual',
-        message: error
+        message: error.message
 
         // message: 'Email or Password is invalid'
       })

@@ -5,9 +5,9 @@ const navigation = () => [
     icon: 'tabler:smart-home'
   },
   {
-    title: 'Second Page',
-    path: '/second-page',
-    icon: 'tabler:mail'
+    title: 'Shops',
+    path: '/shop',
+    icon: 'tabler:building-warehouse'
   },
   {
     path: '/acl',

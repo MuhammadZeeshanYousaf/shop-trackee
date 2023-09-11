@@ -31,8 +31,6 @@ const UserProfileHeader = ({ user }) => {
   const router = useRouter()
   const theme = useTheme()
 
-  console.log({ user })
-
   return (
     <Card>
       <CardMedia
@@ -54,7 +52,7 @@ const UserProfileHeader = ({ user }) => {
         }}
       >
         {user?.avatar ? (
-          <ProfilePicture src={`${process.env.NEXT_PUBLIC_IMAGE_URL}${user?.avatar}`} alt='profile-picture' />
+          <ProfilePicture src={`${process.env.NEXT_PUBLIC_API_HOST_URL}${user?.avatar}`} alt='profile-picture' />
         ) : (
           <MuiAvatar variant='rounded' sx={{ width: 108, height: 108, bgcolor: theme.palette.secondary }}>
             {user?.name[0]?.toUpperCase()}
@@ -84,6 +82,10 @@ const UserProfileHeader = ({ user }) => {
               <Box sx={{ mr: 4, display: 'flex', alignItems: 'center', '& svg': { mr: 1.5, color: 'text.secondary' } }}>
                 <Icon fontSize='1.25rem' icon='tabler:map-pin' />
                 <Typography sx={{ color: 'text.secondary' }}>{user?.country}</Typography>
+              </Box>
+              <Box sx={{ mr: 4, display: 'flex', alignItems: 'center', '& svg': { mr: 1.5, color: 'text.secondary' } }}>
+                <Icon fontSize='1.25rem' icon='tabler:crown' />
+                <Typography sx={{ color: 'text.secondary' }}>{user?.role}</Typography>
               </Box>
             </Box>
           </Box>

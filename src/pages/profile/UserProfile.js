@@ -5,10 +5,20 @@ const UserProfile = ({ user }) => {
   const data = {
     contacts: [
       {
+        icon: 'tabler:at',
+        property: 'Email',
+        value: user?.email
+      },
+      {
         icon: 'tabler:phone-call',
         property: 'Contact',
         value: user?.phone
       },
+      {
+        icon: 'tabler:location-pin',
+        property: 'Address',
+        value: user?.address
+      }
     ],
     about: [
       { property: 'Full Name', value: user?.name, icon: 'tabler:user' },
@@ -39,7 +49,7 @@ const UserProfile = ({ user }) => {
   return (
     <Grid container spacing={6}>
       <Grid item lg={4} md={5} xs={12}>
-        <AboutOverivew about={data.about} contacts={data.contacts}  overview={data.overview} />
+        <AboutOverivew about={data.about} contacts={data.contacts} overview={data.overview} />
       </Grid>
     </Grid>
   )
