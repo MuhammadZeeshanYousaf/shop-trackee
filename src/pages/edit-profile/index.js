@@ -96,7 +96,7 @@ const EditProfile = () => {
     setValue('gender', response.data.resource_owner.gender)
 
     if (response.data.resource_owner?.avatar) {
-      setImgSrc(`${process.env.NEXT_PUBLIC_IMAGE_URL}/${response.data.resource_owner?.avatar}`)
+      setImgSrc(`${process.env.NEXT_PUBLIC_API_HOST_URL}/${response.data.resource_owner?.avatar}`)
     }
   }
 

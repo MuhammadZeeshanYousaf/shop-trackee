@@ -42,7 +42,6 @@ const UserDropdown = props => {
 
   const user = JSON.parse(localStorage.getItem('userData'))
 
-
   // ** States
   const [anchorEl, setAnchorEl] = useState(null)
 
@@ -105,7 +104,7 @@ const UserDropdown = props => {
         {user?.avatar ? (
           <Avatar
             alt={user?.name}
-            src={`${process.env.NEXT_PUBLIC_IMAGE_URL}${user?.avatar}`}
+            src={`${process.env.NEXT_PUBLIC_API_HOST_URL}${user?.avatar}`}
             onClick={handleDropdownOpen}
             sx={{ width: 38, height: 38 }}
           />
@@ -136,7 +135,7 @@ const UserDropdown = props => {
               {user?.avatar ? (
                 <Avatar
                   alt={user?.name}
-                  src={`${process.env.NEXT_PUBLIC_IMAGE_URL}${user?.avatar}`}
+                  src={`${process.env.NEXT_PUBLIC_API_HOST_URL}${user?.avatar}`}
                   sx={{ width: '2.5rem', height: '2.5rem' }}
                 />
               ) : (
