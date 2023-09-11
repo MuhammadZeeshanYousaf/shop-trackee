@@ -1,4 +1,4 @@
-import { Box, Grid } from '@mui/material'
+import { Box, Grid, MenuItem, Select, FormControl, InputLabel } from '@mui/material'
 import SplitButton from './SplitButton'
 import { useRouter } from 'next/router'
 import { useLoader } from 'src/hooks'
@@ -14,6 +14,7 @@ const ProductandServices = () => {
   const [product, setProducts] = useState([])
   const [anchorEl, setAnchorEl] = useState(null)
   const [services, setServices] = useState([])
+  const [mode, setMode] = useState('Both')
 
   const getProducts = async () => {
     setLoader(true)
@@ -54,25 +55,40 @@ const ProductandServices = () => {
         <SplitButton shopId={query.shopId} />
       </Box>
 
-      <Grid container spacing={5}>
+      <Box sx={{ display: 'flex', justifyContent: 'center' }}>
+        <FormControl sx={{ width: '50%' }}>
+          <InputLabel id='demo-simple-select-label'>Filter By</InputLabel>
+          <Select label='Filter By' value={mode} onChange={e => setMode(e.target.value)}>
+            <MenuItem value='Both'>Both</MenuItem>
+            <MenuItem value='Products'>Products</MenuItem>
+            <MenuItem value='Services'>Services</MenuItem>
+          </Select>
+        </FormControl>
+      </Box>
+
+      <Grid sx={{ mt: 5 }} container spacing={5}>
         {/* Products */}
-        <Grid item md={6}>
-          {product?.map((product, i) => (
-            <ProductCard
-              key={i}
-              product={product}
-              deleteProduct={deleteProduct}
-              anchorEl={anchorEl}
-              setAnchorEl={setAnchorEl}
-            />
-          ))}
-        </Grid>
+        {mode == 'Both' || mode == 'Products' ? (
+          <Grid item md={6}>
+            {product?.map((product, i) => (
+              <ProductCard
+                key={i}
+                product={product}
+                deleteProduct={deleteProduct}
+                anchorEl={anchorEl}
+                setAnchorEl={setAnchorEl}
+              />
+            ))}
+          </Grid>
+        ) : null}
         {/* Services */}
-        <Grid item md={6}>
-          {services?.map((service, i) => (
-            <ServiceCard service={service} key={i} />
-          ))}
-        </Grid>
+        {mode == 'Both' || mode == 'Services' ? (
+          <Grid item md={6}>
+            {services?.map((service, i) => (
+              <ServiceCard service={service} key={i} />
+            ))}
+          </Grid>
+        ) : null}
       </Grid>
     </>
   )
