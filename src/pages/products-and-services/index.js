@@ -44,6 +44,16 @@ const ProductandServices = () => {
     getProducts()
   }
 
+  const deleteService = async id => {
+    setLoader(true)
+    const response = await Network.delete(Url.deleteService(query.shopId, id))
+    setLoader(false)
+    if (!response.ok) return showErrorMessage(response.data.message)
+    showSuccessMessage(response.data.message)
+
+    getServices()
+  }
+
   useEffect(() => {
     getProducts()
     getServices()
@@ -85,7 +95,7 @@ const ProductandServices = () => {
         {mode == 'Both' || mode == 'Services' ? (
           <Grid item md={6}>
             {services?.map((service, i) => (
-              <ServiceCard service={service} key={i} />
+              <ServiceCard service={service} key={i} deleteService={deleteService} />
             ))}
           </Grid>
         ) : null}

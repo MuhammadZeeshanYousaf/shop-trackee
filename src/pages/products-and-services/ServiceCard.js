@@ -7,7 +7,7 @@ const StyledBox = styled(Box)(({ theme }) => ({
   }
 }))
 
-const ServiceCard = ({ service }) => {
+const ServiceCard = ({ service, deleteService }) => {
   return (
     <Card sx={{ mt: 5 }}>
       <Grid container spacing={6}>
@@ -84,7 +84,14 @@ const ServiceCard = ({ service }) => {
                 <span>5 Tips For Offshore</span>
                 <span>Software Development</span>
               </Typography>
-              <Button variant='contained'>Contact Now</Button>
+              <Box>
+                <Button variant='contained' onClick={() => deleteService(service?.id)}>
+                  Delete
+                </Button>
+                <Button sx={{ ml: 1 }} variant='contained'>
+                  Edit
+                </Button>
+              </Box>
             </div>
           </CardContent>
         </Grid>
