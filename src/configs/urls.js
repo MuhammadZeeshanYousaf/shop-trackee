@@ -23,5 +23,7 @@ export default {
   recognizeServiceImages: (shopId, serviceId, imageId) =>
     `/shops/${shopId}/services/${serviceId}/images/${imageId}/recognize`,
 
-  getServices: shopId => `/shops/${shopId}/services`
+  getServices: shopId => `/shops/${shopId}/services`,
+
+  deleteService: (shopId, serviceId) => `/shops/${shopId}/services/${serviceId}`
 }
