@@ -106,6 +106,7 @@ const ProductForm = () => {
     setValue('price', 10)
     setValue('stock_quantity', productResponses[currentResponse]?.stock_quantity)
     setValue('category_name', productResponses[currentResponse]?.category_name)
+
     // reset({
     //   name: productResponses[currentResponse]?.name,
     //   description: productResponses[currentResponse]?.description,
@@ -151,7 +152,6 @@ const ProductForm = () => {
 
   useEffect(() => {
     setResponse()
-  
   }, [productResponses, currentResponse])
 
   useEffect(() => {
@@ -180,7 +180,7 @@ const ProductForm = () => {
                       />
                       <CardContent>
                         <img
-                          src={`${process.env.NEXT_PUBLIC_IMAGE_URL}${path}`}
+                          src={`${process.env.NEXT_PUBLIC_API_HOST_URL}${path}`}
                           style={{ objectFit: 'cover', maxHeight: '100%', maxWidth: '100%' }}
                         />
                       </CardContent>

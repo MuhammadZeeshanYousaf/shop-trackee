@@ -46,7 +46,7 @@ const ProductCard = ({ product, deleteProduct, anchorEl, setAnchorEl }) => {
               width={137}
               height={176}
               alt='Apple iPhone 11 Pro'
-              src={`${process.env.NEXT_PUBLIC_IMAGE_URL}${product?.images[0]?.path}`}
+              src={`${process.env.NEXT_PUBLIC_API_HOST_URL}${product?.images[0]?.path}`}
             />
           </CardContent>
         </StyledGrid>
