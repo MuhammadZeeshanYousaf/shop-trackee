@@ -34,7 +34,10 @@ const ProductForm = () => {
     control,
     setError,
     handleSubmit,
+    reset,
     setValue,
+    getValues,
+    watch,
     formState: { errors }
   } = useForm({
     mode: 'onBlur',
@@ -90,10 +93,11 @@ const ProductForm = () => {
   const recognizeImage = async id => {
     setLoader(true)
     const response = await Network.get(Url.recognizeProductImages(query.shopId, product?.id, id))
+
+    console.log({ response })
     setLoader(false)
     setProductResponses(response.data)
     setCurrentResponse(1)
-    setResponse()
   }
 
   const setResponse = () => {
@@ -102,6 +106,13 @@ const ProductForm = () => {
     setValue('price', 10)
     setValue('stock_quantity', productResponses[currentResponse]?.stock_quantity)
     setValue('category_name', productResponses[currentResponse]?.category_name)
+    // reset({
+    //   name: productResponses[currentResponse]?.name,
+    //   description: productResponses[currentResponse]?.description,
+    //   price: 10,
+    //   stock_quantity: productResponses[currentResponse]?.stock_quantity,
+    //   category_name: productResponses[currentResponse]?.category_name
+    // })
   }
 
   const nextReponse = () => {
@@ -139,8 +150,15 @@ const ProductForm = () => {
   }
 
   useEffect(() => {
+    setResponse()
+  
+  }, [productResponses, currentResponse])
+
+  useEffect(() => {
     newProductForm()
   }, [])
+
+  console.log('category', getValues('category_name'))
 
   return (
     <>
@@ -260,6 +278,7 @@ const ProductForm = () => {
                   <Controller
                     name='category_name'
                     control={control}
+                    defaultValue='category_name'
                     rules={{ required: true }}
                     render={({ field: { value, onChange, onBlur } }) => (
                       <CustomTextField
@@ -267,6 +286,7 @@ const ProductForm = () => {
                         fullWidth
                         label='Category'
                         id='select-controlled'
+                        value={value}
                         onBlur={onBlur}
                         placeholder='category'
                         error={Boolean(errors.category_name)}
