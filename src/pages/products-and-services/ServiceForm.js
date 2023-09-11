@@ -48,7 +48,7 @@ const ServiceForm = () => {
     const response = await Network.get(Url.newService(query.shopId))
     setLoader(false)
     if (!response.ok) return showErrorMessage(response.data.message)
-    console.log({ response })
+
     setCategories(response.data.categories)
     setChargeBy(response.data.service.charge_by)
   }
@@ -101,21 +101,18 @@ const ServiceForm = () => {
   }
 
   const setResponse = () => {
-    console.log('ok', serviceResponses[currentResponse])
-    console.log('Sarim', serviceResponses[currentResponse]?.category_name)
-
-    reset({
-      name: serviceResponses[currentResponse]?.name,
-      description: serviceResponses[currentResponse]?.description,
-      rate: serviceResponses[currentResponse]?.rate,
-      charge_by: serviceResponses[currentResponse]?.charge_by,
-      category_name: serviceResponses[currentResponse]?.category_name
-    })
-    // setValue('name', serviceResponses[currentResponse]?.name)
-    // setValue('description', serviceResponses[currentResponse]?.description)
-    // setValue('rate', serviceResponses[currentResponse]?.rate)
-    // setValue('charge_by', serviceResponses[currentResponse]?.charge_by)
-    // setValue('category_name', serviceResponses[currentResponse]?.category_name)
+    // reset({
+    //   name: serviceResponses[currentResponse]?.name,
+    //   description: serviceResponses[currentResponse]?.description,
+    //   rate: serviceResponses[currentResponse]?.rate,
+    //   charge_by: serviceResponses[currentResponse]?.charge_by,
+    //   category_name: serviceResponses[currentResponse]?.category_name
+    // })
+    setValue('name', serviceResponses[currentResponse]?.name)
+    setValue('description', serviceResponses[currentResponse]?.description)
+    setValue('rate', serviceResponses[currentResponse]?.rate)
+    setValue('charge_by', serviceResponses[currentResponse]?.charge_by)
+    setValue('category_name', serviceResponses[currentResponse]?.category_name)
   }
 
   const recognizeImage = async id => {
@@ -124,7 +121,6 @@ const ServiceForm = () => {
     setLoader(false)
     setServiceResponses(response.data)
     setCurrentResponse(1)
-    setResponse()
   }
 
   const nextReponse = () => {
@@ -134,10 +130,13 @@ const ServiceForm = () => {
   }
 
   const previousReponse = () => {
-    if (currentResponse < 0) return
+    if (currentResponse < 1) return
     setCurrentResponse(prev => prev - 1)
     setResponse()
   }
+  useEffect(() => {
+    setResponse()
+  }, [serviceResponses, currentResponse])
 
   useEffect(() => {
     newServiceForm()
@@ -252,7 +251,7 @@ const ServiceForm = () => {
                 <Controller
                   name='category_name'
                   control={control}
-                  defaultValue=''
+                  defaultValue='category_name'
                   rules={{ required: true }}
                   render={({ field: { value, onChange, onBlur } }) => {
                     console.log({ value })
@@ -284,7 +283,7 @@ const ServiceForm = () => {
                 <Controller
                   name='charge_by'
                   control={control}
-                  defaultValue=''
+                  defaultValue='charge_by'
                   rules={{ required: true }}
                   render={({ field: { value, onChange, onBlur } }) => (
                     <CustomTextField
