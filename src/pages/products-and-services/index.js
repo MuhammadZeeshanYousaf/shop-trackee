@@ -64,7 +64,7 @@ const ProductandServices = () => {
         <SplitButton shopId={query.shopId} />
       </Box>
 
-      <Box sx={{ display: 'flex', justifyContent: 'center', mt: 4 }}>
+      <Box sx={{ display: 'flex', justifyContent: 'center' }}>
         <FormControl sx={{ width: '50%' }}>
           <InputLabel id='demo-simple-select-label'>Filter By</InputLabel>
           <Select label='Filter By' value={mode} onChange={e => setMode(e.target.value)}>

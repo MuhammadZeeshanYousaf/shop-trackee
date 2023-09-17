@@ -49,7 +49,11 @@ const ProductForm = () => {
     const response = await Network.get(Url.newProduct(query.shopId))
     setLoader(false)
     if (!response.ok) return showErrorMessage(response.data.message)
+<<<<<<< HEAD
     
+=======
+    console.log(response)
+>>>>>>> 985b27c87a387587497ab6f4ac258b2bb7e40291
     setCategories(response.data.categories)
   }
 
@@ -148,7 +152,6 @@ const ProductForm = () => {
   useEffect(() => {
     newProductForm()
   }, [])
-
 
 
   return (
