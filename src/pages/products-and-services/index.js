@@ -50,7 +50,6 @@ const ProductandServices = () => {
     setLoader(false)
     if (!response.ok) return showErrorMessage(response.data.message)
     showSuccessMessage(response.data.message)
-
     getServices()
   }
 
@@ -65,7 +64,7 @@ const ProductandServices = () => {
         <SplitButton shopId={query.shopId} />
       </Box>
 
-      <Box sx={{ display: 'flex', justifyContent: 'center' }}>
+      <Box sx={{ display: 'flex', justifyContent: 'center', mt: 4 }}>
         <FormControl sx={{ width: '50%' }}>
           <InputLabel id='demo-simple-select-label'>Filter By</InputLabel>
           <Select label='Filter By' value={mode} onChange={e => setMode(e.target.value)}>
@@ -87,6 +86,7 @@ const ProductandServices = () => {
                 deleteProduct={deleteProduct}
                 anchorEl={anchorEl}
                 setAnchorEl={setAnchorEl}
+                shopId={query?.shopId}
               />
             ))}
           </Grid>

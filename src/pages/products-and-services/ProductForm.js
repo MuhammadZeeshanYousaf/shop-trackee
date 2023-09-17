@@ -49,7 +49,7 @@ const ProductForm = () => {
     const response = await Network.get(Url.newProduct(query.shopId))
     setLoader(false)
     if (!response.ok) return showErrorMessage(response.data.message)
-    console.log(response)
+    
     setCategories(response.data.categories)
   }
 
@@ -93,8 +93,6 @@ const ProductForm = () => {
   const recognizeImage = async id => {
     setLoader(true)
     const response = await Network.get(Url.recognizeProductImages(query.shopId, product?.id, id))
-
-    console.log({ response })
     setLoader(false)
     setProductResponses(response.data)
     setCurrentResponse(1)
@@ -106,13 +104,6 @@ const ProductForm = () => {
     setValue('price', 10)
     setValue('stock_quantity', productResponses[currentResponse]?.stock_quantity)
     setValue('category_name', productResponses[currentResponse]?.category_name)
-    // reset({
-    //   name: productResponses[currentResponse]?.name,
-    //   description: productResponses[currentResponse]?.description,
-    //   price: 10,
-    //   stock_quantity: productResponses[currentResponse]?.stock_quantity,
-    //   category_name: productResponses[currentResponse]?.category_name
-    // })
   }
 
   const nextReponse = () => {
@@ -130,7 +121,7 @@ const ProductForm = () => {
   const uploadMore = () => {}
 
   const onSubmit = async data => {
-    console.log({ data })
+    
     setLoader(true)
     const response = await Network.put(Url.createProduct(query.shopId, product?.id), data)
     setLoader(false)
@@ -158,7 +149,7 @@ const ProductForm = () => {
     newProductForm()
   }, [])
 
-  console.log('category', getValues('category_name'))
+
 
   return (
     <>

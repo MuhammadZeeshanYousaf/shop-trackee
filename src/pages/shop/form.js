@@ -1,4 +1,15 @@
-import { Button, Card, CardContent, CardHeader, FormLabel, Grid, MenuItem, CardActions, Box } from '@mui/material'
+import {
+  Button,
+  Card,
+  CardContent,
+  CardHeader,
+  FormLabel,
+  Grid,
+  MenuItem,
+  CardActions,
+  Box,
+  InputLabel
+} from '@mui/material'
 import { useRouter } from 'next/router'
 import * as yup from 'yup'
 import { yupResolver } from '@hookform/resolvers/yup'
@@ -95,26 +106,27 @@ const Form = () => {
   }
 
   const onSubmit = async data => {
-    const social_links = []
+    console.log({ data })
+    // const social_links = []
 
-    socialLinks.forEach(item => {
-      social_links.push(item.link)
-    })
+    // socialLinks.forEach(item => {
+    //   social_links.push(item.link)
+    // })
 
-    const payload = {
-      ...data,
-      social_links
-    }
+    // const payload = {
+    //   ...data,
+    //   social_links
+    // }
 
-    const request = mode == 'Add' ? 'post' : 'put'
-    const route = mode == 'Add' ? Url.getShops : `${Url.getShops}/${id}`
+    // const request = mode == 'Add' ? 'post' : 'put'
+    // const route = mode == 'Add' ? Url.getShops : `${Url.getShops}/${id}`
 
-    setLoader(true)
-    const response = await Network[request](route, payload)
-    setLoader(false)
-    if (!response.ok) return showErrorMessage(response.data.message)
-    showSuccessMessage('Shop Created Successfully')
-    router.push('/shop')
+    // setLoader(true)
+    // const response = await Network[request](route, payload)
+    // setLoader(false)
+    // if (!response.ok) return showErrorMessage(response.data.message)
+    // showSuccessMessage('Shop Created Successfully')
+    // router.push('/shop')
   }
 
   const getShop = async () => {
@@ -152,6 +164,22 @@ const Form = () => {
         <form onSubmit={handleSubmit(onSubmit)}>
           {/* name and contact */}
           <Grid container spacing={5} sx={{ marginTop: '5px' }}>
+            <Grid item xs={12} md={12}>
+              <Controller
+                name='address'
+                control={control}
+                rules={{ required: true }}
+                render={({ field: { value, onChange } }) => (
+                  <GooglePlacesAutocomplete
+                    apiKey='AIzaSyAPBI4e19Or0KAphAP7v-3QRQwghlG_TkA'
+                    selectProps={{
+                      value,
+                      onChange
+                    }}
+                  />
+                )}
+              />
+            </Grid>
             <Grid item xs={12} md={6}>
               <Controller
                 name='name'
@@ -288,26 +316,6 @@ const Form = () => {
                 }}
               />
             </Grid>
-            <Grid item xs={12} md={6}>
-              <Controller
-                name='address'
-                control={control}
-                defaultValue=''
-                rules={{ required: true }}
-                render={({ field: { value, onChange, onBlur } }) => (
-                  <CustomTextField
-                    fullWidth
-                    label='Address'
-                    value={value}
-                    onBlur={onBlur}
-                    onChange={onChange}
-                    placeholder='Enter your address'
-                    error={Boolean(errors.address)}
-                    {...(errors.address && { helperText: errors.address.message })}
-                  />
-                )}
-              />
-            </Grid>
           </Grid>
 
           <Box
@@ -368,9 +376,7 @@ const Form = () => {
             </Grid>
           </Grid>
 
-          {/* <Grid container spacing={5} sx={{ marginTop: '5px' }}>
-            <GooglePlacesAutocomplete apiKey='AIzaSyDoN2CpVkzIUTZfg46lJljBmEbaJqWxYg8' />
-          </Grid> */}
+          <Grid container spacing={5} sx={{ marginTop: '5px' }}></Grid>
 
           <CardActions sx={{ justifyContent: 'end' }}>
             <Button type='submit' variant='contained'>

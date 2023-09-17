@@ -12,6 +12,8 @@ export default {
 
   getProducts: shopId => `/shops/${shopId}/products`,
 
+  getProduct: (shopId, productId) => `/shops/${shopId}/products/${productId}`,
+
   deleteProduct: (shopId, productId) => `/shops/${shopId}/products/${productId}`,
 
   newService: shopId => `/shops/${shopId}/services/new`,
@@ -25,5 +27,7 @@ export default {
 
   getServices: shopId => `/shops/${shopId}/services`,
 
-  deleteService: (shopId, serviceId) => `/shops/${shopId}/services/${serviceId}`
+  deleteService: (shopId, serviceId) => `/shops/${shopId}/services/${serviceId}`,
+
+  uploadProductMoreImages: (shopId, productId) => `/shops/${shopId}/products/${productId}/images`
 }

@@ -13,9 +13,11 @@ import {
 } from '@mui/material'
 import Icon from 'src/@core/components/icon'
 import { useState } from 'react'
+import { useRouter } from 'next/router'
 
-const ProductCard = ({ product, deleteProduct, anchorEl, setAnchorEl }) => {
+const ProductCard = ({ product, deleteProduct, anchorEl, setAnchorEl, shopId }) => {
   const open = Boolean(anchorEl)
+  const router = useRouter()
 
   const handleClick = event => {
     setAnchorEl(event.currentTarget)
@@ -23,6 +25,11 @@ const ProductCard = ({ product, deleteProduct, anchorEl, setAnchorEl }) => {
 
   const handleClose = () => {
     setAnchorEl(false)
+  }
+
+  const handleEdit = () => {
+    router.push(`/products-and-services/EditProduct?shopId=${shopId}&productId=${product?.id}`)
+    setAnchorEl(null)
   }
 
   const StyledGrid = styled(Grid)(({ theme }) => ({
@@ -105,7 +112,7 @@ const ProductCard = ({ product, deleteProduct, anchorEl, setAnchorEl }) => {
                 <MenuItem onClick={() => deleteProduct(product?.id)}>
                   <Icon icon='tabler:trash' />
                 </MenuItem>
-                <MenuItem onClick={handleClose}>
+                <MenuItem onClick={() => handleEdit()}>
                   <Icon icon='tabler:pencil' />
                 </MenuItem>
               </Menu>
