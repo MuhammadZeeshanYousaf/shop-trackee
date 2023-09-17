@@ -21,6 +21,7 @@ import { useTheme } from '@mui/material/styles'
 import { useState, useEffect } from 'react'
 import { v4 as uuid } from 'uuid'
 import Icon from 'src/@core/components/icon'
+import { geocodeByAddress } from 'react-google-places-autocomplete'
 import GooglePlacesAutocomplete from 'react-google-places-autocomplete'
 import { Network, Url } from '../../configs'
 import { showErrorMessage, showSuccessMessage, CustomInput, DatePickerWrapper } from '../../components'
@@ -60,7 +61,7 @@ const Form = () => {
   const schema = yup.object().shape({
     name: yup.string().required(),
     description: yup.string(),
-    address: yup.string().required(),
+    address: yup.object().required,
     contact: yup.string().required(),
     opening_time: yup.string(),
     closing_time: yup.string(),
@@ -106,7 +107,15 @@ const Form = () => {
   }
 
   const onSubmit = async data => {
-    console.log({ data })
+    console.log('address', data.address)
+
+    const location = await geocodeByAddress(data.address.value.description)
+
+    console.log({ location })
+
+    console.log('lat', location[0].geometry.location.lat())
+    console.log('lng', location[0].geometry.location.lng())
+
     // const social_links = []
 
     // socialLinks.forEach(item => {
@@ -169,13 +178,10 @@ const Form = () => {
                 name='address'
                 control={control}
                 rules={{ required: true }}
-                render={({ field: { value, onChange } }) => (
+                render={({ field }) => (
                   <GooglePlacesAutocomplete
+                    selectProps={{ ...field }}
                     apiKey='AIzaSyAPBI4e19Or0KAphAP7v-3QRQwghlG_TkA'
-                    selectProps={{
-                      value,
-                      onChange
-                    }}
                   />
                 )}
               />
