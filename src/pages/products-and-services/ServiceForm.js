@@ -54,7 +54,12 @@ const ServiceForm = () => {
   }
 
   const onSubmit = async data => {
-    console.log({ data })
+    setLoader(true)
+    const response = await Network.put(Url.createService(query.shopId, services?.id), data)
+    setLoader(false)
+    if (!response) return showErrorMessage(response.data.message)
+     showSuccessMessage(response.data.message)
+     router.push(`/products-and-services?shopId=${query.shopId}`)
   }
 
   const handleServicesImages = event => {

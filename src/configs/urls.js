@@ -28,5 +28,7 @@ export default {
   getServices: shopId => `/shops/${shopId}/services`,
 
   deleteService: (shopId, serviceId) => `/shops/${shopId}/services/${serviceId}`,
-  uploadProductMoreImages: (shopId, productId) => `/shops/${shopId}/products/${productId}/images`
+  uploadProductMoreImages: (shopId, productId) => `/shops/${shopId}/products/${productId}/images`,
+
+  createService: (shopId, serviceId) => `/shops/${shopId}/services/${serviceId}`
 }
