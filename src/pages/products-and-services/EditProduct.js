@@ -62,7 +62,6 @@ const EditProduct = () => {
     setValue('category_name', response.data.category_name)
     setValue('price', response.data.price)
     setValue('stock_quantity', response.data.stock_quantity)
-
     setImageLinks(response.data.images)
   }
 
@@ -77,7 +76,7 @@ const EditProduct = () => {
 
   const recognizeImage = async id => {
     setLoader(true)
-    const response = await Network.get(Url.recognizeProductImages(query.shopId, product?.id, id))
+    const response = await Network.get(Url.recognizeProductImages(query.shopId, query.productId, id))
     setLoader(false)
     setProduct(response.data)
     setCurrentResponse(1)
@@ -318,7 +317,7 @@ const EditProduct = () => {
                 type='reset'
                 color='secondary'
                 variant='tonal'
-                onClick={() => router.push('/products-and-services')}
+                onClick={() => router.push(`/products-and-services?shopId=${query.shopId}`)}
               >
                 Back
               </Button>

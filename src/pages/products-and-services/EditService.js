@@ -1,27 +1,25 @@
-import { useRouter } from 'next/router'
-import { Url, Network, multipartConfig } from '../../configs'
 import { useEffect, useState } from 'react'
-import { showErrorMessage, showSuccessMessage } from 'src/components'
 import { useLoader } from 'src/hooks'
+import { Network, Url, multipartConfig } from 'src/configs'
+import { useRouter } from 'next/router'
 import { useForm, Controller } from 'react-hook-form'
 import { yupResolver } from '@hookform/resolvers/yup'
 import * as yup from 'yup'
 import CustomTextField from 'src/@core/components/mui/text-field'
 import Icon from 'src/@core/components/icon'
+import { Card, CardContent, Box, CardHeader, CardActions, Button, Grid, MenuItem, Typography } from '@mui/material'
+import { showErrorMessage, showSuccessMessage } from 'src/components'
 
-import { Grid, Card, CardHeader, CardActions, CardContent, MenuItem, Button, Typography, Box } from '@mui/material'
-
-const ServiceForm = () => {
-  const router = useRouter()
-  const { setLoader } = useLoader()
-  const { query } = useRouter()
+const EditService = () => {
   const [categories, setCategories] = useState([])
   const [chargeBy, setChargeBy] = useState([])
-  const [images, setImages] = useState([])
-  const [imagesLinks, setImagesLinks] = useState([])
-  const [services, setServices] = useState(null)
   const [serviceResponses, setServiceResponses] = useState([])
   const [currentResponse, setCurrentResponse] = useState(1)
+  const [imagesLinks, setImagesLinks] = useState([])
+  const [images, setImages] = useState([])
+  const router = useRouter()
+  const { query } = router
+  const { setLoader } = useLoader()
 
   const schema = yup.object().shape({
     name: yup.string().required(),
@@ -54,12 +52,13 @@ const ServiceForm = () => {
   }
 
   const onSubmit = async data => {
+    if (imagesLinks.length == 0) return showErrorMessage('Please Select Images')
     setLoader(true)
-    const response = await Network.put(Url.createService(query.shopId, services?.id), data)
+    const response = await Network.put(Url.createService(query.shopId, query.serviceId), data)
     setLoader(false)
     if (!response) return showErrorMessage(response.data.message)
-     showSuccessMessage(response.data.message)
-     router.push(`/products-and-services?shopId=${query.shopId}`)
+    showSuccessMessage(response.data.message)
+    router.push(`/products-and-services?shopId=${query.shopId}`)
   }
 
   const handleServicesImages = event => {
@@ -67,56 +66,31 @@ const ServiceForm = () => {
     setImages(prevImg => [...prevImg, ...servicesImages])
   }
 
-  const handleDeleteImage = index => {
-    const updatedImages = [...images]
-    updatedImages.splice(index, 1)
-    setImages(updatedImages)
-  }
-
-  const uploadImages = async () => {
-    if (images.length == 0) return showErrorMessage('Please Select Images')
-    const formData = new FormData()
-    images.map(image => {
-      formData.append('images[]', image)
-    })
-    setLoader(true)
-    const response = await Network.put(
-      Url.uploadServiceImages(query.shopId),
-      formData,
-      (
-        await multipartConfig()
-      ).headers
-    )
-    setLoader(false)
-    if (!response.ok) return showErrorMessage(response.data.message)
-    showSuccessMessage(response.data.message)
-    setServices(response.data.services)
-    setImagesLinks(response.data.services.images)
-
-    setImages([])
-  }
-
   const handleDeleteUploadedImages = async id => {
     setLoader(true)
-    const response = await Network.delete(Url.deleteServiceImage(query.shopId, services?.id, id))
+    const response = await Network.delete(Url.deleteServiceImage(query.shopId, query.serviceId, id))
     setLoader(false)
     if (!response.ok) return showErrorMessage(response.data.message)
     const updatedImages = imagesLinks.filter(obj => obj.id != id)
     setImagesLinks(updatedImages)
   }
 
-  const setResponse = () => {
-
-    setValue('name', serviceResponses[currentResponse]?.name)
-    setValue('description', serviceResponses[currentResponse]?.description)
-    setValue('rate', serviceResponses[currentResponse]?.rate)
-    setValue('charge_by', serviceResponses[currentResponse]?.charge_by)
-    setValue('category_name', serviceResponses[currentResponse]?.category_name)
+  const getService = async () => {
+    setLoader(true)
+    const response = await Network.get(Url.getService(query.shopId, query.serviceId))
+    setLoader(false)
+    if (!response.ok) return showErrorMessage(response.data.message)
+    setValue('name', response.data.name)
+    setValue('description', response.data.description)
+    setValue('rate', response.data.rate)
+    setValue('category_name', response.data.category_name)
+    setValue('charge_by', response.data.charge_by)
+    setImagesLinks(response.data.images)
   }
 
   const recognizeImage = async id => {
     setLoader(true)
-    const response = await Network.get(Url.recognizeServiceImages(query.shopId, services?.id, id))
+    const response = await Network.get(Url.recognizeServiceImages(query.shopId, query.serviceId, id))
     setLoader(false)
     setServiceResponses(response.data)
     setCurrentResponse(1)
@@ -133,13 +107,44 @@ const ServiceForm = () => {
     setCurrentResponse(prev => prev - 1)
     setResponse()
   }
-  useEffect(() => {
-    setResponse()
-  }, [serviceResponses, currentResponse])
+
+  const setResponse = () => {
+    setValue('name', serviceResponses[currentResponse]?.name)
+    setValue('description', serviceResponses[currentResponse]?.description)
+    setValue('rate', serviceResponses[currentResponse]?.rate)
+    setValue('charge_by', serviceResponses[currentResponse]?.charge_by)
+    setValue('category_name', serviceResponses[currentResponse]?.category_name)
+  }
+
+  const uploadImages = async () => {
+    if (images.length == 0) return showErrorMessage('Please Select Images')
+    const formData = new FormData()
+    images.map(image => {
+      formData.append('images[]', image)
+    })
+
+    setLoader(true)
+    const response = await Network.put(
+      Url.uploadServicestMoreImages(query.shopId, query.serviceId),
+      formData,
+      (
+        await multipartConfig()
+      ).headers
+    )
+    setLoader(false)
+    if (!response.ok) return showErrorMessage(response.data.message)
+    setImagesLinks(response.data.services.images)
+    showSuccessMessage(response.data.message)
+  }
 
   useEffect(() => {
+    getService()
     newServiceForm()
   }, [])
+  useEffect(() => {
+    if (!serviceResponses) return
+    setResponse()
+  }, [serviceResponses, currentResponse])
 
   return (
     <>
@@ -172,23 +177,7 @@ const ServiceForm = () => {
                   </Grid>
                 )
               })
-            : images?.map((image, index) => {
-                return (
-                  <Grid item xs={12} md={2} sx={{ display: 'flex', justifyContent: 'center' }}>
-                    <Card>
-                      <CardHeader
-                        title={<Icon icon='tabler:trash' fontSize={20} onClick={() => handleDeleteImage(index)} />}
-                      />
-                      <CardContent>
-                        <img
-                          src={URL.createObjectURL(image)}
-                          style={{ objectFit: 'contain', maxHeight: '100%', maxWidth: '100%' }}
-                        />
-                      </CardContent>
-                    </Card>
-                  </Grid>
-                )
-              })}
+            : null}
         </Grid>
         <CardActions sx={{ justifyContent: 'end' }}>
           <Button variant='contained' onClick={() => uploadImages()}>
@@ -338,7 +327,7 @@ const ServiceForm = () => {
                 type='reset'
                 color='secondary'
                 variant='tonal'
-                onClick={() => router.push('/products-and-services')}
+                onClick={() => router.push(`/products-and-services?shopId=${query.shopId}`)}
               >
                 Back
               </Button>
@@ -350,4 +339,4 @@ const ServiceForm = () => {
   )
 }
 
-export default ServiceForm
+export default EditService

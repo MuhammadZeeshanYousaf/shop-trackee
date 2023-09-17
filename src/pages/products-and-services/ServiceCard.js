@@ -1,5 +1,6 @@
 import { Grid, Button, Divider, Typography, Card, CardContent, Box, styled } from '@mui/material'
 import Icon from 'src/@core/components/icon'
+import { useRouter } from 'next/router'
 
 const StyledBox = styled(Box)(({ theme }) => ({
   [theme.breakpoints.up('sm')]: {
@@ -7,7 +8,12 @@ const StyledBox = styled(Box)(({ theme }) => ({
   }
 }))
 
-const ServiceCard = ({ service, deleteService }) => {
+const ServiceCard = ({ service, deleteService, shopId }) => {
+  const router = useRouter()
+
+  const handleEdit = () => {
+    router.push(`/products-and-services/EditService?shopId=${shopId}&serviceId=${service?.id}`)
+  }
   return (
     <Card sx={{ mt: 5 }}>
       <Grid container spacing={6}>
@@ -88,7 +94,7 @@ const ServiceCard = ({ service, deleteService }) => {
                 <Button variant='contained' onClick={() => deleteService(service?.id)}>
                   Delete
                 </Button>
-                <Button sx={{ ml: 1 }} variant='contained'>
+                <Button sx={{ ml: 1 }} variant='contained' onClick={() => handleEdit()}>
                   Edit
                 </Button>
               </Box>
