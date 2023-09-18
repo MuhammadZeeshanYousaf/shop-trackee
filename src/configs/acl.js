@@ -17,6 +17,8 @@ const defineRulesFor = (role, subject) => {
     can('read', 'edit-product')
     can('read', 'service-form')
     can('read', 'edit-service')
+    can('read', 'profile')
+    can('read', 'edit-profile')
   } else if (role === 'customer') {
     can(['read'], 'acl-page')
     can(['read'], 'listing')

@@ -38,4 +38,9 @@ const Profile = () => {
   )
 }
 
+Profile.acl = {
+  subject: 'profile',
+  action: 'read'
+}
+
 export default Profile

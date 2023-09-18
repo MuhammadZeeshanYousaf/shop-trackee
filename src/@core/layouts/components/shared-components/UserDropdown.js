@@ -156,6 +156,12 @@ const UserDropdown = props => {
           </Box>
         </MenuItemStyled>
         <MenuItemStyled sx={{ p: 0 }} onClick={() => handleDropdownClose()}>
+          <Box sx={styles} onClick={() => router.push('/shop')}>
+            <Icon icon='tabler:brand-shopee' />
+            Order Requests
+          </Box>
+        </MenuItemStyled>
+        {/* <MenuItemStyled sx={{ p: 0 }} onClick={() => handleDropdownClose()}>
           <Box sx={styles}>
             <Icon icon='tabler:settings' />
             Settings
@@ -185,7 +191,7 @@ const UserDropdown = props => {
             <Icon icon='tabler:currency-dollar' />
             Pricing
           </Box>
-        </MenuItemStyled>
+        </MenuItemStyled> */}
         <Divider sx={{ my: theme => `${theme.spacing(2)} !important` }} />
         <MenuItemStyled sx={{ p: 0 }} onClick={handleLogout}>
           <Box sx={styles}>

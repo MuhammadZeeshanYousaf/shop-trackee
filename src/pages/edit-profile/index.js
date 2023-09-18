@@ -266,4 +266,8 @@ const EditProfile = () => {
   )
 }
 
+EditProfile.acl = {
+  subject: 'edit-profile',
+  action: 'read'
+}
 export default EditProfile

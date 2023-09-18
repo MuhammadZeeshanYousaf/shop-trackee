@@ -17,13 +17,6 @@ const navigation = () => [
     icon: 'tabler:building-warehouse',
     action: 'read',
     subject: 'listing'
-  },
-  {
-    path: '/acl',
-    action: 'read',
-    subject: 'acl-page',
-    title: 'Access Control',
-    icon: 'tabler:shield'
   }
 ]
 
