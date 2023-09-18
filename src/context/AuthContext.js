@@ -78,7 +78,8 @@ const AuthProvider = ({ children }) => {
         // params.rememberMe ? window.localStorage.setItem('userData', JSON.stringify(response.data.resource_owner)) : null
         console.log('Signed in Successfully :)')
         const redirectURL = returnUrl && returnUrl !== '/' ? returnUrl : '/'
-        router.replace(redirectURL)
+        if (response.data.resource_owner.role == 'seller') router.replace('/shop')
+        if (response.data.resource_owner.role == 'customer') router.replace('/listing')
       })
       .catch(err => {
         if (errorCallback) errorCallback(err)

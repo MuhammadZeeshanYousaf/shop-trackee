@@ -58,4 +58,9 @@ const Shop = () => {
   )
 }
 
+Shop.acl = {
+  action: 'read',
+  subject: 'shop'
+}
+
 export default Shop
