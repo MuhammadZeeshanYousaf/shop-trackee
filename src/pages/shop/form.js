@@ -398,4 +398,9 @@ const Form = () => {
   )
 }
 
+Form.acl = {
+  subject: 'shop-form',
+  action: 'read'
+}
+
 export default Form

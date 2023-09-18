@@ -58,8 +58,8 @@ const ServiceForm = () => {
     const response = await Network.put(Url.createService(query.shopId, services?.id), data)
     setLoader(false)
     if (!response) return showErrorMessage(response.data.message)
-     showSuccessMessage(response.data.message)
-     router.push(`/products-and-services?shopId=${query.shopId}`)
+    showSuccessMessage(response.data.message)
+    router.push(`/products-and-services?shopId=${query.shopId}`)
   }
 
   const handleServicesImages = event => {
@@ -106,7 +106,6 @@ const ServiceForm = () => {
   }
 
   const setResponse = () => {
-
     setValue('name', serviceResponses[currentResponse]?.name)
     setValue('description', serviceResponses[currentResponse]?.description)
     setValue('rate', serviceResponses[currentResponse]?.rate)
@@ -338,7 +337,7 @@ const ServiceForm = () => {
                 type='reset'
                 color='secondary'
                 variant='tonal'
-                onClick={() => router.push('/products-and-services')}
+                onClick={() => router.push(`/products-and-services?shopId=${query.shopId}`)}
               >
                 Back
               </Button>
@@ -348,6 +347,11 @@ const ServiceForm = () => {
       </Card>
     </>
   )
+}
+
+ServiceForm.acl = {
+  subject: 'service-form',
+  action: 'read'
 }
 
 export default ServiceForm

@@ -329,4 +329,9 @@ const EditProduct = () => {
   )
 }
 
+EditProduct.acl = {
+  subject: 'edit-product',
+  action: 'read'
+}
+
 export default EditProduct

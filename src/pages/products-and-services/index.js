@@ -104,4 +104,9 @@ const ProductandServices = () => {
   )
 }
 
+ProductandServices.acl = {
+  subject: 'products-and-services',
+  action: 'read'
+}
+
 export default ProductandServices

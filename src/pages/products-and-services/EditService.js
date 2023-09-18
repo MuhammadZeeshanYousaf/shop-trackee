@@ -339,4 +339,9 @@ const EditService = () => {
   )
 }
 
+EditService.acl = {
+  subject: 'edit-service',
+  action: 'read'
+}
+
 export default EditService

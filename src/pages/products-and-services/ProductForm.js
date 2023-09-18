@@ -49,11 +49,7 @@ const ProductForm = () => {
     const response = await Network.get(Url.newProduct(query.shopId))
     setLoader(false)
     if (!response.ok) return showErrorMessage(response.data.message)
-<<<<<<< HEAD
-    
-=======
-    console.log(response)
->>>>>>> 985b27c87a387587497ab6f4ac258b2bb7e40291
+
     setCategories(response.data.categories)
   }
 
@@ -125,7 +121,6 @@ const ProductForm = () => {
   const uploadMore = () => {}
 
   const onSubmit = async data => {
-    
     setLoader(true)
     const response = await Network.put(Url.createProduct(query.shopId, product?.id), data)
     setLoader(false)
@@ -146,13 +141,11 @@ const ProductForm = () => {
 
   useEffect(() => {
     setResponse()
-  
   }, [productResponses, currentResponse])
 
   useEffect(() => {
     newProductForm()
   }, [])
-
 
   return (
     <>
@@ -359,6 +352,11 @@ const ProductForm = () => {
       ) : null}
     </>
   )
+}
+
+ProductForm.acl = {
+  subject: 'product-form',
+  action: 'read'
 }
 
 export default ProductForm
