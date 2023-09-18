@@ -337,7 +337,7 @@ const ServiceForm = () => {
                 type='reset'
                 color='secondary'
                 variant='tonal'
-                onClick={() => router.push(`/products-and-services?shopId=${query.shopId}`)}
+                onClick={() => router.push(`/products-and-services?shopId=${query.shopId}`) }
               >
                 Back
               </Button>
