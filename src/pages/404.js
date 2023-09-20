@@ -34,6 +34,10 @@ const Img = styled('img')(({ theme }) => ({
 }))
 
 const Error404 = () => {
+  const user = JSON.parse(localStorage.getItem('userData'))
+
+  const route = user.role == 'seller' ? '/shop-dashboard' : '/customer-dashboard'
+
   return (
     <Box className='content-center'>
       <Box sx={{ p: 5, display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center' }}>
@@ -44,7 +48,7 @@ const Error404 = () => {
           <Typography sx={{ mb: 6, color: 'text.secondary' }}>
             Oops! 😖 The requested URL was not found on this server.
           </Typography>
-          <Button href='/' component={Link} variant='contained'>
+          <Button href={route} component={Link} variant='contained'>
             Back to Home
           </Button>
         </BoxWrapper>
