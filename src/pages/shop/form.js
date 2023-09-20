@@ -61,7 +61,7 @@ const Form = () => {
   const schema = yup.object().shape({
     name: yup.string().required(),
     description: yup.string(),
-    address: yup.object().required,
+    address: yup.string().required,
     contact: yup.string().required(),
     opening_time: yup.string(),
     closing_time: yup.string(),
@@ -109,12 +109,12 @@ const Form = () => {
   const onSubmit = async data => {
     console.log('address', data.address)
 
-    const location = await geocodeByAddress(data.address.value.description)
+    // const location = await geocodeByAddress(data.address.value.description)
 
-    console.log({ location })
+    // console.log({ location })
 
-    console.log('lat', location[0].geometry.location.lat())
-    console.log('lng', location[0].geometry.location.lng())
+    // console.log('lat', location[0].geometry.location.lat())
+    // console.log('lng', location[0].geometry.location.lng())
 
     // const social_links = []
 
@@ -173,14 +173,33 @@ const Form = () => {
         <form onSubmit={handleSubmit(onSubmit)}>
           {/* name and contact */}
           <Grid container spacing={5} sx={{ marginTop: '5px' }}>
-            <Grid item xs={12} md={12}>
+            <Grid item xs={12} md={12} style={{ zIndex: 99999 }}>
               <Controller
                 name='address'
                 control={control}
                 rules={{ required: true }}
-                render={({ field }) => (
+                label='Address'
+                render={({ field: { onChange, value } }) => (
                   <GooglePlacesAutocomplete
-                    selectProps={{ ...field }}
+                    selectProps={{
+                      value: value,
+                      onChange: address => {
+                        let event = {
+                          target: {
+                            value: address.value.description,
+                            name: 'address'
+                          }
+                        }
+                        onChange(event)
+                      },
+                      isClearable: true,
+                      styles: {
+                        input: provided => ({
+                          ...provided,
+                          zIndex: 9999
+                        })
+                      }
+                    }}
                     apiKey='AIzaSyAPBI4e19Or0KAphAP7v-3QRQwghlG_TkA'
                   />
                 )}
