@@ -2,9 +2,10 @@ import React, { useEffect, useState, useCallback } from 'react'
 import { useLoader } from 'src/hooks'
 import { GoogleMap, useJsApiLoader, Marker } from '@react-google-maps/api'
 
-const AnyReactComponent = ({ text }) => <div>{text}</div>
-
 const Map = ({ longitude, latitude }) => {
+  console.log({ longitude })
+  console.log({ latitude })
+
   const center = {
     lat: latitude,
     lng: longitude
@@ -24,7 +25,7 @@ const Map = ({ longitude, latitude }) => {
   const onLoad = useCallback(
     function callback(map) {
       // This is just an example of getting and using the map instance!!! don't just blindly copy!
-      const bounds = new window.google.maps.LatLngBounds(center)
+       const bounds = new window.google.maps.LatLngBounds(center)
       map.fitBounds(bounds)
 
       setMap(map)

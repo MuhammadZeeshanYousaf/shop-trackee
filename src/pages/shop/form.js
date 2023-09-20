@@ -68,7 +68,9 @@ const Form = () => {
     contact: yup.string().required(),
     opening_time: yup.string(),
     closing_time: yup.string(),
-    closing_days: yup.array()
+    closing_days: yup.array(),
+    longitude: yup.string(),
+    latitude: yup.string()
   })
 
   const {
@@ -76,6 +78,7 @@ const Form = () => {
     setError,
     handleSubmit,
     setValue,
+    getValues,
     formState: { errors }
   } = useForm({
     mode: 'onBlur',
@@ -110,7 +113,6 @@ const Form = () => {
   }
 
   const onSubmit = async data => {
-  
     const location = await geocodeByAddress(data.address.value.description)
     const social_links = []
     socialLinks.forEach(item => {
@@ -141,7 +143,51 @@ const Form = () => {
     if (!response.ok) return showErrorMessage(response.data.message)
     setValue('name', response.data.name)
     setValue('description', response.data.description)
-    setValue('address', response.data.address)
+    setValue('address', {
+      label: 'Lahore, Pakistan',
+      value: {
+        description: 'Lahore, Pakistan',
+        matched_substrings: [
+          {
+            length: 6,
+            offset: 0
+          },
+          {
+            length: 5,
+            offset: 8
+          }
+        ],
+        place_id: 'ChIJ2QeB5YMEGTkRYiR-zGy-OsI',
+        reference: 'ChIJ2QeB5YMEGTkRYiR-zGy-OsI',
+        structured_formatting: {
+          main_text: 'Lahore',
+          main_text_matched_substrings: [
+            {
+              length: 6,
+              offset: 0
+            }
+          ],
+          secondary_text: 'Pakistan',
+          secondary_text_matched_substrings: [
+            {
+              length: 5,
+              offset: 0
+            }
+          ]
+        },
+        terms: [
+          {
+            offset: 0,
+            value: 'Lahore'
+          },
+          {
+            offset: 8,
+            value: 'Pakistan'
+          }
+        ],
+        types: ['locality', 'political', 'geocode']
+      }
+    })
     setValue('contact', response.data.contact)
     setValue('opening_time', response.data.opening_time ? new Date(response.data.opening_time) : '')
     setValue('closing_time', response.data.closing_time ? new Date(response.data.closing_time) : '')
@@ -157,25 +203,29 @@ const Form = () => {
   }
 
   useEffect(() => {
-    if (navigator.geolocation) {
-      navigator.geolocation.getCurrentPosition(function (position) {
-        setLatitude(position?.coords?.latitude)
-        setLongitude(position?.coords?.longitude)
-      })
-    } else {
-      console.log('Geolocation is not supported by this browser.')
-    }
-
     if (mode == 'Edit') {
       getShop()
     }
   }, [])
 
+  useEffect(() => {
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(function (position) {
+        setLongitude(position?.coords?.longitude)
+        setLatitude(position?.coords?.latitude)
+      })
+    } else {
+      console.log('Geolocation is not supported by this browser.')
+    }
+  }, [longitude, latitude])
+
+  // console.log(getValues('address'))
+
   return (
     <Card>
       <CardHeader title={`${mode} Shop Details`} />
       <CardContent>
-        {/* <Map latitude={latitude} longitude={longitude} /> */}
+        <Map latitude={latitude} longitude={longitude} />
         <form onSubmit={handleSubmit(onSubmit)}>
           {/* name and contact */}
           <Grid container spacing={5} sx={{ marginTop: '5px' }}>
@@ -190,9 +240,9 @@ const Form = () => {
                 render={({ field: { onChange, value } }) => {
                   return (
                     <GooglePlacesAutocomplete
-                      value={value}
                       selectProps={{
                         defaultInputValue: value,
+                        value: value,
                         //onChange: value => onChange({ target: { value: value?.label, name: 'address' } }),
                         onChange: onChange,
                         isClearable: true
