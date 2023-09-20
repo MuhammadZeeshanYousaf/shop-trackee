@@ -1,8 +1,10 @@
 const navigation = () => [
   {
-    title: 'Home',
-    path: '/home',
-    icon: 'tabler:smart-home'
+    title: 'Dashboard',
+    path: '/shop-dashboard',
+    icon: 'tabler:smart-home',
+    action: 'read',
+    subject: 'shop-dashboard'
   },
   {
     title: 'Shops',
