@@ -2,7 +2,7 @@ const navigation = () => [
   {
     title: 'Dashboard',
     path: '/shop-dashboard',
-    icon: 'tabler:smart-home',
+    icon: 'tabler:apps-filled',
     action: 'read',
     subject: 'shop-dashboard'
   },
