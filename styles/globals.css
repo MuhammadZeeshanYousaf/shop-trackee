@@ -22,3 +22,7 @@ code:not([class*='language-']):after {
 code[class*='language-'] {
   padding: 0;
 }
+
+.css-1nmdiq5-menu {
+  background-color: red;
+}

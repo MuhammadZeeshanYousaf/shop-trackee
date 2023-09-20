@@ -26,7 +26,7 @@ import GooglePlacesAutocomplete from 'react-google-places-autocomplete'
 import { Network, Url } from '../../configs'
 import { showErrorMessage, showSuccessMessage, CustomInput, DatePickerWrapper } from '../../components'
 import { useLoader } from '../../hooks'
-import moment from 'moment-timezone'
+import Map from './Map'
 
 const Form = () => {
   const router = useRouter()
@@ -34,6 +34,9 @@ const Form = () => {
   const theme = useTheme()
   const { direction } = theme
   const { setLoader } = useLoader()
+
+  const [longitude, setLongitude] = useState(null)
+  const [latitude, setLatitude] = useState(null)
 
   const [socialLinks, setSocialLinks] = useState([
     {
@@ -61,7 +64,7 @@ const Form = () => {
   const schema = yup.object().shape({
     name: yup.string().required(),
     description: yup.string(),
-    address: yup.string().required,
+    address: yup.string().required(),
     contact: yup.string().required(),
     opening_time: yup.string(),
     closing_time: yup.string(),
@@ -107,35 +110,27 @@ const Form = () => {
   }
 
   const onSubmit = async data => {
-    console.log('address', data.address)
+    const location = await geocodeByAddress(data.address)
+    const social_links = []
+    socialLinks.forEach(item => {
+      social_links.push(item.link)
+    })
+    const payload = {
+      ...data,
+      social_links,
+      longitude: location[0].geometry.location.lng(),
+      latitude: location[0].geometry.location.lat()
+    }
 
-    // const location = await geocodeByAddress(data.address.value.description)
+    const request = mode == 'Add' ? 'post' : 'put'
+    const route = mode == 'Add' ? Url.getShops : `${Url.getShops}/${id}`
 
-    // console.log({ location })
-
-    // console.log('lat', location[0].geometry.location.lat())
-    // console.log('lng', location[0].geometry.location.lng())
-
-    // const social_links = []
-
-    // socialLinks.forEach(item => {
-    //   social_links.push(item.link)
-    // })
-
-    // const payload = {
-    //   ...data,
-    //   social_links
-    // }
-
-    // const request = mode == 'Add' ? 'post' : 'put'
-    // const route = mode == 'Add' ? Url.getShops : `${Url.getShops}/${id}`
-
-    // setLoader(true)
-    // const response = await Network[request](route, payload)
-    // setLoader(false)
-    // if (!response.ok) return showErrorMessage(response.data.message)
-    // showSuccessMessage('Shop Created Successfully')
-    // router.push('/shop')
+    setLoader(true)
+    const response = await Network[request](route, payload)
+    setLoader(false)
+    if (!response.ok) return showErrorMessage(response.data.message)
+    showSuccessMessage('Shop Created Successfully')
+    router.push('/shop')
   }
 
   const getShop = async () => {
@@ -161,6 +156,15 @@ const Form = () => {
   }
 
   useEffect(() => {
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(function (position) {
+        setLatitude(position?.coords?.latitude)
+        setLongitude(position?.coords?.longitude)
+      })
+    } else {
+      console.log('Geolocation is not supported by this browser.')
+    }
+
     if (mode == 'Edit') {
       getShop()
     }
@@ -170,40 +174,33 @@ const Form = () => {
     <Card>
       <CardHeader title={`${mode} Shop Details`} />
       <CardContent>
+        {/* <Map latitude={latitude} longitude={longitude} /> */}
         <form onSubmit={handleSubmit(onSubmit)}>
           {/* name and contact */}
           <Grid container spacing={5} sx={{ marginTop: '5px' }}>
-            <Grid item xs={12} md={12} style={{ zIndex: 99999 }}>
+            <Grid item xs={12} md={12} style={{ zIndex: 10 }}>
+              <InputLabel>Address</InputLabel>
               <Controller
                 name='address'
                 control={control}
+                defaultValue={null}
                 rules={{ required: true }}
                 label='Address'
-                render={({ field: { onChange, value } }) => (
-                  <GooglePlacesAutocomplete
-                    selectProps={{
-                      value: value,
-                      onChange: address => {
-                        let event = {
-                          target: {
-                            value: address.value.description,
-                            name: 'address'
-                          }
-                        }
-                        onChange(event)
-                      },
-                      isClearable: true,
-                      styles: {
-                        input: provided => ({
-                          ...provided,
-                          zIndex: 9999
-                        })
-                      }
-                    }}
-                    apiKey='AIzaSyAPBI4e19Or0KAphAP7v-3QRQwghlG_TkA'
-                  />
-                )}
+                render={({ field: { onChange, value } }) => {
+                  return (
+                    <GooglePlacesAutocomplete
+                      value={value}
+                      selectProps={{
+                        defaultInputValue: value,
+                        onChange: value => onChange({ target: { value: value?.label, name: 'address' } }),
+                        isClearable: true
+                      }}
+                      apiKey='AIzaSyAPBI4e19Or0KAphAP7v-3QRQwghlG_TkA'
+                    />
+                  )
+                }}
               />
+              {errors.address && <span style={{ color: '#EC6364' }}>{errors.address.message}</span>}
             </Grid>
             <Grid item xs={12} md={6}>
               <Controller
@@ -259,6 +256,7 @@ const Form = () => {
                   <DatePickerWrapper>
                     <Box className='demo-space-x'>
                       <DatePicker
+                        autoComplete='off'
                         showTimeSelect
                         showTimeSelectOnly
                         selected={value}
@@ -284,6 +282,7 @@ const Form = () => {
                   <DatePickerWrapper>
                     <Box className='demo-space-x'>
                       <DatePicker
+                        autoComplete='off'
                         showTimeSelect
                         showTimeSelectOnly
                         selected={value}
