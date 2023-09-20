@@ -11,7 +11,7 @@ const ShopCard = ({ shop, deleteShop }) => {
 
   return (
     <Grid item xs={12} sm={6} md={4}>
-      <Card sx={{ position: 'relative' }}>
+      <Card sx={{ position: 'relative', minHeight: '100%' }}>
         <OptionsMenu
           iconButtonProps={{
             size: 'small',

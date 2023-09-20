@@ -64,7 +64,7 @@ const Form = () => {
   const schema = yup.object().shape({
     name: yup.string().required(),
     description: yup.string(),
-    address: yup.string().required(),
+    address: yup.object().required(),
     contact: yup.string().required(),
     opening_time: yup.string(),
     closing_time: yup.string(),
@@ -110,7 +110,8 @@ const Form = () => {
   }
 
   const onSubmit = async data => {
-    const location = await geocodeByAddress(data.address)
+  
+    const location = await geocodeByAddress(data.address.value.description)
     const social_links = []
     socialLinks.forEach(item => {
       social_links.push(item.link)
@@ -192,7 +193,8 @@ const Form = () => {
                       value={value}
                       selectProps={{
                         defaultInputValue: value,
-                        onChange: value => onChange({ target: { value: value?.label, name: 'address' } }),
+                        //onChange: value => onChange({ target: { value: value?.label, name: 'address' } }),
+                        onChange: onChange,
                         isClearable: true
                       }}
                       apiKey='AIzaSyAPBI4e19Or0KAphAP7v-3QRQwghlG_TkA'
