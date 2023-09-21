@@ -23,12 +23,16 @@ const AppBarContent = props => {
   // ** Hooks
   const theme = useTheme()
 
+  const user = JSON.parse(localStorage.getItem('userData'))
+
+  const route = user.role == 'seller' ? '/shop-dashboard' : '/customer/dashboard'
+
   return (
     <Box sx={{ width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
       {userAppBarBranding ? (
         userAppBarBranding(props)
       ) : (
-        <LinkStyled href='/'>
+        <LinkStyled href={route}>
           {/* <svg width={34} viewBox='0 0 32 22' fill='none' xmlns='http://www.w3.org/2000/svg'>
             <path
               fillRule='evenodd'

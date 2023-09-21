@@ -210,7 +210,7 @@ const Form = () => {
 
   useEffect(() => {
     if (navigator.geolocation) {
-      navigator.geolocation.getCurrentPosition(function (position) {
+      navigator.geolocation.getCurrentPosition(position => {
         setLongitude(position?.coords?.longitude)
         setLatitude(position?.coords?.latitude)
       })
