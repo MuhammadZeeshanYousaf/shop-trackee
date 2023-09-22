@@ -21,7 +21,7 @@ import { useTheme } from '@mui/material/styles'
 import { useState, useEffect } from 'react'
 import { v4 as uuid } from 'uuid'
 import Icon from 'src/@core/components/icon'
-import { geocodeByAddress } from 'react-google-places-autocomplete'
+import { geocodeByPlaceId } from 'react-google-places-autocomplete'
 import GooglePlacesAutocomplete from 'react-google-places-autocomplete'
 import { Network, Url } from '../../configs'
 import { showErrorMessage, showSuccessMessage, CustomInput, DatePickerWrapper } from '../../components'
@@ -113,7 +113,6 @@ const Form = () => {
   }
 
   const onSubmit = async data => {
-    const location = await geocodeByAddress(data.address.value.description)
     const social_links = []
     socialLinks.forEach(item => {
       social_links.push(item.link)
@@ -121,8 +120,8 @@ const Form = () => {
     const payload = {
       ...data,
       social_links,
-      longitude: location[0].geometry.location.lng(),
-      latitude: location[0].geometry.location.lat()
+      longitude: longitude,
+      latitude: latitude
     }
 
     const request = mode == 'Add' ? 'post' : 'put'
@@ -143,55 +142,13 @@ const Form = () => {
     if (!response.ok) return showErrorMessage(response.data.message)
     setValue('name', response.data.name)
     setValue('description', response.data.description)
-    setValue('address', {
-      label: 'Lahore, Pakistan',
-      value: {
-        description: 'Lahore, Pakistan',
-        matched_substrings: [
-          {
-            length: 6,
-            offset: 0
-          },
-          {
-            length: 5,
-            offset: 8
-          }
-        ],
-        place_id: 'ChIJ2QeB5YMEGTkRYiR-zGy-OsI',
-        reference: 'ChIJ2QeB5YMEGTkRYiR-zGy-OsI',
-        structured_formatting: {
-          main_text: 'Lahore',
-          main_text_matched_substrings: [
-            {
-              length: 6,
-              offset: 0
-            }
-          ],
-          secondary_text: 'Pakistan',
-          secondary_text_matched_substrings: [
-            {
-              length: 5,
-              offset: 0
-            }
-          ]
-        },
-        terms: [
-          {
-            offset: 0,
-            value: 'Lahore'
-          },
-          {
-            offset: 8,
-            value: 'Pakistan'
-          }
-        ],
-        types: ['locality', 'political', 'geocode']
-      }
-    })
+    setValue('address', response.data.address)
     setValue('contact', response.data.contact)
     setValue('opening_time', response.data.opening_time ? new Date(response.data.opening_time) : '')
     setValue('closing_time', response.data.closing_time ? new Date(response.data.closing_time) : '')
     setValue('closing_days', response.data.closing_days)
+    setLongitude(response.data.longitude)
+    setLatitude(response.data.latitude)
 
     const social_links = response.data.social_links.map(link => {
       return {
@@ -209,15 +166,24 @@ const Form = () => {
   }, [])
 
   useEffect(() => {
-    if (navigator.geolocation) {
-      navigator.geolocation.getCurrentPosition(position => {
-        setLongitude(position?.coords?.longitude)
-        setLatitude(position?.coords?.latitude)
-      })
-    } else {
-      console.log('Geolocation is not supported by this browser.')
+    if (mode !== 'Edit') {
+      if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(function (position) {
+          setLoader(true)
+          setLongitude(position?.coords?.longitude)
+          setLatitude(position?.coords?.latitude)
+          setLoader(false)
+        }),
+          {
+            enableHighAccuracy: true,
+            timeout: 10000,
+            maximumAge: 0
+          }
+      } else {
+        console.log('Geolocation is not supported by this browser.')
+      }
     }
-  }, [longitude, latitude])
+  }, [])
 
   // console.log(getValues('address'))
 
@@ -240,14 +206,24 @@ const Form = () => {
                 render={({ field: { onChange, value } }) => {
                   return (
                     <GooglePlacesAutocomplete
+                      onLoadFailed={error => console.error('Could not inject Google script', error)}
+                      fetchDetails={true}
                       selectProps={{
-                        defaultInputValue: value,
+                        // defaultInputValue: value,
                         value: value,
                         //onChange: value => onChange({ target: { value: value?.label, name: 'address' } }),
-                        onChange: onChange,
+                        onChange: async value => {
+                          if (value) {
+                            onChange(value)
+
+                            const location = await geocodeByPlaceId(value.value.place_id)
+
+                            setLongitude(location[0].geometry.location.lng())
+                            setLatitude(location[0].geometry.location.lat())
+                          }
+                        },
                         isClearable: true
                       }}
-                      apiKey='AIzaSyAPBI4e19Or0KAphAP7v-3QRQwghlG_TkA'
                     />
                   )
                 }}
@@ -290,7 +266,9 @@ const Form = () => {
                     onChange={onChange}
                     placeholder='Enter your phone #'
                     error={Boolean(errors.contact)}
-                    {...(errors.contact && { helperText: errors.contact.message })}
+                    {...(errors.contact && {
+                      helperText: errors.contact.message
+                    })}
                   />
                 )}
               />
@@ -367,7 +345,9 @@ const Form = () => {
                       label='Closing Days'
                       id='select-multiple-chip'
                       error={Boolean(errors.closing_days)}
-                      {...(errors.closing_days && { helperText: errors.closing_days.message })}
+                      {...(errors.closing_days && {
+                        helperText: errors.closing_days.message
+                      })}
                       SelectProps={{
                         MenuProps,
                         multiple: true,
@@ -445,7 +425,9 @@ const Form = () => {
                     onChange={onChange}
                     placeholder='Enter description'
                     error={Boolean(errors.description)}
-                    {...(errors.description && { helperText: errors.description.message })}
+                    {...(errors.description && {
+                      helperText: errors.description.message
+                    })}
                   />
                 )}
               />
