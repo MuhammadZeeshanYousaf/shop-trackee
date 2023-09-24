@@ -26,9 +26,12 @@ const WelcomeCard = () => {
         <Typography variant='h5' sx={{ mb: 0.5 }}>
           Welcome {user?.name}
         </Typography>
-        <Typography sx={{ mb: 2, color: 'text.secondary' }}>to Shop Trackee</Typography>
-        <Typography variant='h4' sx={{ mb: 0.75, color: 'primary.main' }}></Typography>
-        <Button sx={{ mt: 3 }} variant='contained' onClick={()=>route.push('/shop')}>
+        <Typography sx={{ color: 'text.secondary' }}>to Shop Trackee</Typography>
+
+        <Typography variant='h4' sx={{ color: 'primary.main' }}>
+          &nbsp;
+        </Typography>
+        <Button sx={{ mt: 2.5 }} variant='contained' onClick={() => route.push('/shop')}>
           View Shops
         </Button>
         <Illustration width={116} alt='congratulations john' src='/images/congratulations-john.png' />

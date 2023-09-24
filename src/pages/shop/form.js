@@ -64,13 +64,11 @@ const Form = () => {
   const schema = yup.object().shape({
     name: yup.string().required(),
     description: yup.string(),
-    address: yup.object().required(),
+    address: yup.object(),
     contact: yup.string().required(),
     opening_time: yup.string(),
     closing_time: yup.string(),
-    closing_days: yup.array(),
-    longitude: yup.string(),
-    latitude: yup.string()
+    closing_days: yup.array()
   })
 
   const {
@@ -180,7 +178,7 @@ const Form = () => {
             maximumAge: 0
           }
       } else {
-        console.log('Geolocation is not supported by this browser.')
+        showErrorMessage('It is better to select location')
       }
     }
   }, [])
@@ -209,15 +207,11 @@ const Form = () => {
                       onLoadFailed={error => console.error('Could not inject Google script', error)}
                       fetchDetails={true}
                       selectProps={{
-                        // defaultInputValue: value,
                         value: value,
-                        //onChange: value => onChange({ target: { value: value?.label, name: 'address' } }),
                         onChange: async value => {
                           if (value) {
                             onChange(value)
-
                             const location = await geocodeByPlaceId(value.value.place_id)
-
                             setLongitude(location[0].geometry.location.lng())
                             setLatitude(location[0].geometry.location.lat())
                           }

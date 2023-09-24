@@ -17,30 +17,34 @@ const data = [
     color: 'info',
     stats: '8.549k',
     title: 'Customers',
-    icon: 'tabler:users'
+    icon: 'tabler:users',
+    key: 'customers'
   },
   {
     color: 'error',
     stats: '1.423k',
     title: 'Products',
-    icon: 'tabler:shopping-cart'
+    icon: 'tabler:shopping-cart',
+    key: 'products'
   },
   {
     stats: '230k',
     title: 'Services',
     color: 'primary',
-    icon: 'tabler:chart-pie-2'
+    icon: 'tabler:chart-pie-2',
+    key: 'services'
   },
 
   {
     stats: '$9745',
     color: 'success',
     title: 'Revenue',
-    icon: 'tabler:currency-dollar'
+    icon: 'tabler:currency-dollar',
+    key: 'revenue'
   }
 ]
 
-const renderStats = () => {
+const renderStats = shopStats => {
   return data.map((sale, index) => (
     <Grid item xs={6} md={3} key={index}>
       <Box key={index} sx={{ display: 'flex', alignItems: 'center' }}>
@@ -48,7 +52,7 @@ const renderStats = () => {
           <Icon icon={sale.icon} fontSize='1.5rem' />
         </CustomAvatar>
         <Box sx={{ display: 'flex', flexDirection: 'column' }}>
-          <Typography variant='h5'>{sale.stats}</Typography>
+          <Typography variant='h5'>{shopStats[sale.key]}</Typography>
           <Typography variant='body2'>{sale.title}</Typography>
         </Box>
       </Box>
@@ -56,7 +60,7 @@ const renderStats = () => {
   ))
 }
 
-const EcommerceStatistics = () => {
+const EcommerceStatistics = ({ shopStats }) => {
   return (
     <Card>
       <CardHeader
@@ -72,7 +76,7 @@ const EcommerceStatistics = () => {
         sx={{ pt: theme => `${theme.spacing(7)} !important`, pb: theme => `${theme.spacing(7.5)} !important` }}
       >
         <Grid container spacing={6}>
-          {renderStats()}
+          {renderStats(shopStats)}
         </Grid>
       </CardContent>
     </Card>

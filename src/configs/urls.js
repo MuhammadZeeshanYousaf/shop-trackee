@@ -33,5 +33,9 @@ export default {
 
   getService: (shopId, serviceId) => `/shops/${shopId}/services/${serviceId}`,
 
-  uploadServicestMoreImages: (shopId, serviceId) => `/shops/${shopId}/services/${serviceId}/images`
+  uploadServicestMoreImages: (shopId, serviceId) => `/shops/${shopId}/services/${serviceId}/images`,
+
+  // Shop Dashboard
+
+  shopDashboard: '/seller/stats'
 }

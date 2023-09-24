@@ -2,30 +2,47 @@ import KeenSliderWrapper from 'src/@core/styles/libs/keen-slider'
 import ApexChartWrapper from 'src/@core/styles/libs/react-apexcharts'
 import { Grid } from '@mui/material'
 import CardStatsWithAreaChart from 'src/@core/components/card-statistics/card-stats-with-area-chart'
-import { AnalyticsEarningReports, WelcomeCard, EcommerceStatistics, PopularProducts } from '../../components'
+import OrderRequestTable from './OrderRequestTable'
+import {
+  AnalyticsEarningReports,
+  WelcomeCard,
+  EcommerceStatistics,
+  PopularProducts,
+  showErrorMessage
+} from '../../components'
+import { useEffect, useState } from 'react'
+import { Network, Url } from 'src/configs'
+import { useLoader } from 'src/hooks'
 
 const ShopDashboard = () => {
+  const { setLoader } = useLoader()
+  const [shopStats, setShopStats] = useState([])
+
+  const getStats = async () => {
+    setLoader(true)
+    const response = await Network.get(Url.shopDashboard)
+    setLoader(false)
+    if (!response.ok) return showErrorMessage(response.data.message)
+
+    setShopStats(response.data)
+  }
+  useEffect(() => {
+    getStats()
+  }, [])
+
   return (
     <ApexChartWrapper>
       <KeenSliderWrapper>
         <Grid container spacing={5}>
           <Grid item xs={12} md={4}>
-            {/* <CardStatsWithAreaChart
-              stats='97.5k'
-              chartColor='success'
-              avatarColor='success'
-              title='Revenue Generated'
-              avatarIcon='tabler:credit-card'
-              chartSeries={[{ data: [6, 35, 25, 61, 32, 84, 70] }]}
-            /> */}
             <WelcomeCard />
           </Grid>
           <Grid item xs={12} md={8}>
             {/* <AnalyticsEarningReports /> */}
-            <EcommerceStatistics />
+            <EcommerceStatistics shopStats={shopStats} />
           </Grid>
-          <Grid item xs={12} md={6} lg={4}>
-            <PopularProducts />
+          <Grid item xs={12} md={12} lg={12}>
+            <OrderRequestTable />
           </Grid>
         </Grid>
       </KeenSliderWrapper>
