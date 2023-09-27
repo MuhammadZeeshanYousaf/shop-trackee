@@ -24,17 +24,16 @@ import Webcam from 'react-webcam'
 
 const ProductForm = () => {
   const router = useRouter()
-  const [images, setImages] = useState([])
   const { query } = router
   const { setLoader } = useLoader()
   const webcamRef = useRef(null)
 
-  const [imagesLinks, setImagesLinks] = useState([])
   const [product, setProduct] = useState(null)
   const [productResponses, setProductResponses] = useState([])
-  const [currentResponse, setCurrentResponse] = useState(1)
+  const [currentResponse, setCurrentResponse] = useState(0)
+  const [allResponses, setAllResponses] = useState([])
   const [categories, setCategories] = useState([])
-  const [webcamOpen, setWebcamOpen] = useState(false)
+
   const [base64Images, setBase64Images] = useState([])
 
   const schema = yup.object().shape({
@@ -53,10 +52,17 @@ const ProductForm = () => {
     setValue,
     getValues,
     watch,
+
     formState: { errors }
   } = useForm({
     mode: 'onBlur',
-    resolver: yupResolver(schema)
+    resolver: yupResolver(schema),
+    defaultValues: {
+      name: '',
+      description: '',
+      price: '',
+      category_name: ''
+    }
   })
 
   const newProductForm = async () => {
@@ -70,8 +76,6 @@ const ProductForm = () => {
 
   const handleProductImages = event => {
     const productImages = Array.from(event.target.files)
-    setImages(prevImg => [...prevImg, ...productImages])
-
     Promise.all(
       productImages.map(file => {
         return new Promise((resolve, reject) => {
@@ -103,13 +107,13 @@ const ProductForm = () => {
     setBase64Images(updatedImages)
   }
 
-  const handleDeleteUploadedImages = async id => {
+  const handleDeleteUploadedImages = async (index, id) => {
     setLoader(true)
     const response = await Network.delete(Url.deleteProductImage(query.shopId, product?.id, id))
     setLoader(false)
     if (!response.ok) return showErrorMessage(response.data.message)
-    const updatedImages = imagesLinks.filter(obj => obj.id != id)
-    setImagesLinks(updatedImages)
+    handleDeleteImage(index)
+    showSuccessMessage(response.data.message)
   }
 
   const uploadImages = async () => {
@@ -124,16 +128,25 @@ const ProductForm = () => {
     if (!response.ok) return showErrorMessage(response.data.message)
     showSuccessMessage(response.data.message)
     setProduct(response.data.products)
-
-    console.log({ response })
+    setBase64Images(response.data.products.images)
   }
 
   const recognizeImage = async id => {
     setLoader(true)
     const response = await Network.get(Url.recognizeProductImages(query.shopId, product?.id, id))
     setLoader(false)
-    setProductResponses(response.data)
-    setCurrentResponse(1)
+    setAllResponses(response.data)
+    reset({
+      name: response.data[0]?.name,
+      description: response.data[0]?.description,
+      category_name: response.data[0]?.category_name,
+      price: response.data[0]?.price
+    })
+    // setValue('name', response.data[1]?.name)
+    // setValue('description', response.data[1]?.description)
+    // setValue('category_name', response.data[1]?.category_name)
+    // setValue('price', response.data[1]?.price)
+    // setCurrentResponse(1)
   }
 
   const setResponse = () => {
@@ -145,9 +158,27 @@ const ProductForm = () => {
   }
 
   const nextReponse = () => {
-    if (currentResponse > 4) return
-    setCurrentResponse(prev => prev + 1)
-    setResponse()
+    const currentIndex = allResponses.indexOf(getValues())
+
+    const index = currentResponse
+    console.log({ currentResponse })
+    reset(
+      {
+        name: allResponses[currentResponse]?.name,
+        description: allResponses[currentResponse]?.description,
+        category_name: allResponses[currentResponse]?.category_name,
+        price: allResponses[currentResponse]?.price
+      },
+      { keepDirtyValues: true, keepDirty: true }
+    )
+    // if (currentResponse > 4) return
+
+    // console.log(allResponses[currentResponse])
+
+    // setValue('name', allResponses[currentResponse]?.name)
+    // setValue('description', allResponses[currentResponse]?.description)
+    // setValue('category_name', allResponses[currentResponse]?.category_name)
+    // setValue('price', allResponses[currentResponse]?.price)
   }
 
   const previousReponse = () => {
@@ -156,7 +187,28 @@ const ProductForm = () => {
     setResponse()
   }
 
-  const uploadMore = () => {}
+  const uploadMore = async () => {
+    const images = base64Images.filter(image => {
+      if (typeof image != 'object') return image
+    })
+
+    const formData = new FormData()
+    images.map(image => {
+      formData.append('images[]', image)
+    })
+    setLoader(true)
+    const response = await Network.put(
+      Url.uploadProductMoreImages(query.shopId, product?.id),
+      formData,
+      (
+        await multipartConfig()
+      ).headers
+    )
+    setLoader(false)
+    if (!response.ok) return showErrorMessage(response.data.message)
+    setProduct(response.data.products)
+    setBase64Images(response.data.products.images)
+  }
 
   const onSubmit = async data => {
     setLoader(true)
@@ -179,7 +231,6 @@ const ProductForm = () => {
 
   const capture = useCallback(() => {
     const imageSrc = webcamRef.current.getScreenshot()
-    console.log(imageSrc)
 
     setBase64Images(prev => [...prev, imageSrc])
   }, [webcamRef])
@@ -217,38 +268,77 @@ const ProductForm = () => {
             <button onClick={capture}>Capture photo</button>
           </Grid>
           {base64Images?.map((image, index) => {
-            return (
-              <Grid item xs={12} md={2} sx={{ display: 'flex', justifyContent: 'center' }}>
-                <Card>
-                  <CardHeader
-                    title={<Icon icon='tabler:trash' fontSize={20} onClick={() => handleDeleteImage(index)} />}
-                  />
-                  <CardContent>
-                    <img src={image} style={{ objectFit: 'contain', maxHeight: '100%', maxWidth: '100%' }} />
-                  </CardContent>
-                </Card>
-              </Grid>
-            )
+            if (typeof image == 'object')
+              return (
+                <Grid item xs={12} md={2} sx={{ display: 'flex', justifyContent: 'center' }}>
+                  <Card>
+                    <CardHeader
+                      title={
+                        <Icon
+                          icon='tabler:trash'
+                          fontSize={20}
+                          onClick={() => handleDeleteUploadedImages(index, image.id)}
+                        />
+                      }
+                    />
+                    <CardContent>
+                      <img
+                        src={`${process.env.NEXT_PUBLIC_IMAGE_URL}${image.path}`}
+                        style={{ objectFit: 'contain', maxHeight: '100%', maxWidth: '100%' }}
+                      />
+                    </CardContent>
+                    <CardActions>
+                      <Button onClick={() => recognizeImage(image.id)}>Recognize Image</Button>
+                    </CardActions>
+                  </Card>
+                </Grid>
+              )
+            else {
+              return (
+                <Grid item xs={12} md={2} sx={{ display: 'flex', justifyContent: 'center' }}>
+                  <Card>
+                    <CardHeader
+                      title={<Icon icon='tabler:trash' fontSize={20} onClick={() => handleDeleteImage(index)} />}
+                    />
+                    <CardContent>
+                      <img src={image} style={{ objectFit: 'contain', maxHeight: '100%', maxWidth: '100%' }} />
+                    </CardContent>
+                  </Card>
+                </Grid>
+              )
+            }
           })}
         </Grid>
         <CardActions sx={{ justifyContent: 'end' }}>
-          <Button variant='contained' onClick={() => uploadImages()}>
-            Upload
-          </Button>
+          {base64Images.some(item => typeof item === 'object') ? (
+            <Button variant='contained' onClick={() => uploadMore()}>
+              Upload More
+            </Button>
+          ) : (
+            <Button variant='contained' onClick={() => uploadImages()}>
+              Upload
+            </Button>
+          )}
         </CardActions>
       </Card>
 
-      {imagesLinks.length > 0 ? (
+      {base64Images.length > 0 ? (
         <Card sx={{ mt: 5 }}>
           <CardHeader title='Add Product' />
 
           <CardContent>
+            {/* <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
+              <Button onClick={() => previousReponse()}>Previous</Button>
+              <Button
+                onClick={() => {
+                  setCurrentResponse(prev => prev + 1)
+                  nextReponse()
+                }}
+              >
+                Next
+              </Button>
+            </Box> */}
             <form onSubmit={handleSubmit(onSubmit)}>
-              <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
-                <Button onClick={() => previousReponse()}>Previous</Button>
-                <Button onClick={() => nextReponse()}>Next</Button>
-              </Box>
-
               <Grid container spacing={5} sx={{ marginTop: '5px' }}>
                 <Grid item xs={12} md={6}>
                   <Controller
@@ -294,7 +384,7 @@ const ProductForm = () => {
                   <Controller
                     name='category_name'
                     control={control}
-                    defaultValue='category_name'
+                    defaultValue={''}
                     rules={{ required: true }}
                     render={({ field: { value, onChange, onBlur } }) => (
                       <CustomTextField

@@ -2,7 +2,11 @@ export default {
   getUser: '/users/tokens/info',
   updateUser: '/user',
   getShops: '/shops',
+
   uploadImages: shopId => `/shops/${shopId}/products/images`,
+
+uploadMoreProductImages:()=>``,
+
   deleteProductImage: (shopId, productId, imageId) => `/shops/${shopId}/products/${productId}/images/${imageId}`,
   recognizeProductImages: (shopId, productId, imageId) =>
     `/shops/${shopId}/products/${productId}/images/${imageId}/recognize`,
@@ -28,7 +32,9 @@ export default {
   getServices: shopId => `/shops/${shopId}/services`,
 
   deleteService: (shopId, serviceId) => `/shops/${shopId}/services/${serviceId}`,
+
   uploadProductMoreImages: (shopId, productId) => `/shops/${shopId}/products/${productId}/images`,
+  
   createService: (shopId, serviceId) => `/shops/${shopId}/services/${serviceId}`,
 
   getService: (shopId, serviceId) => `/shops/${shopId}/services/${serviceId}`,
