@@ -87,7 +87,7 @@ const ShopCard = ({ shop, deleteShop }) => {
               <Button
                 sx={{ mr: 4, '& svg': { mr: 2 } }}
                 variant={true ? 'contained' : 'tonal'}
-                onClick={() => router.push(`/products-and-services?shopId=${shop?.id}`)}
+                onClick={() => router.push(`/shop/products-and-services?shopId=${shop?.id}`)}
               >
                 Show
               </Button>

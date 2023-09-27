@@ -1,6 +1,6 @@
 import { useEffect, useState, useCallback, useRef } from 'react'
 import { useLoader } from 'src/hooks'
-import { Network, Url, multipartConfig } from '../../configs'
+import { Network, Url, multipartConfig } from '../../../configs'
 import { useRouter } from 'next/router'
 import { useForm, Controller } from 'react-hook-form'
 import { yupResolver } from '@hookform/resolvers/yup'
@@ -131,7 +131,7 @@ const EditProduct = () => {
     setLoader(false)
     if (!response) return showErrorMessage(response.data.message)
     showSuccessMessage(response.data.message)
-    router.push(`/products-and-services?shopId=${query.shopId}`)
+    router.push(`/shop/products-and-services?shopId=${query.shopId}`)
   }
 
   const setResponse = () => {
@@ -408,7 +408,7 @@ const EditProduct = () => {
                 type='reset'
                 color='secondary'
                 variant='tonal'
-                onClick={() => router.push(`/products-and-services?shopId=${query.shopId}`)}
+                onClick={() => router.push(`/shop/products-and-services?shopId=${query.shopId}`)}
               >
                 Back
               </Button>

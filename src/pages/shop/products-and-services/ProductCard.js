@@ -28,7 +28,7 @@ const ProductCard = ({ product, deleteProduct, anchorEl, setAnchorEl, shopId }) 
   }
 
   const handleEdit = () => {
-    router.push(`/products-and-services/EditProduct?shopId=${shopId}&productId=${product?.id}`)
+    router.push(`/shop/products-and-services/EditProduct?shopId=${shopId}&productId=${product?.id}`)
     setAnchorEl(null)
   }
 

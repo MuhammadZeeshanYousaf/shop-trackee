@@ -18,7 +18,7 @@ import { useRouter } from 'next/router'
 import { useState, useEffect, useRef, useCallback } from 'react'
 import Icon from 'src/@core/components/icon'
 import { showErrorMessage, showSuccessMessage } from 'src/components'
-import { Network, Url, multipartConfig } from '../../configs'
+import { Network, Url, multipartConfig } from '../../../configs'
 import { useLoader } from 'src/hooks'
 import Webcam from 'react-webcam'
 
@@ -460,7 +460,7 @@ const ProductForm = () => {
                   type='reset'
                   color='secondary'
                   variant='tonal'
-                  onClick={() => router.push('/products-and-services')}
+                  onClick={() => router.push('/shop/products-and-services')}
                 >
                   Back
                 </Button>

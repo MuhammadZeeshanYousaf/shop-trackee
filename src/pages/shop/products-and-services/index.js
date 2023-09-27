@@ -2,7 +2,7 @@ import { Box, Grid, MenuItem, Select, FormControl, InputLabel } from '@mui/mater
 import SplitButton from './SplitButton'
 import { useRouter } from 'next/router'
 import { useLoader } from 'src/hooks'
-import { Url, Network } from '../../configs'
+import { Url, Network } from '../../../configs'
 import { showErrorMessage, showSuccessMessage } from 'src/components'
 import { useEffect, useState } from 'react'
 import ProductCard from './ProductCard'

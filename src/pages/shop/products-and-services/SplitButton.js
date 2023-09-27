@@ -28,9 +28,9 @@ const ButtonGroupSplit = ({ shopId }) => {
 
   const handleMenuItemClick = option => {
     if (option == 'Product') {
-      return router.push(`/products-and-services/ProductForm?shopId=${shopId}`)
+      return router.push(`/shop/products-and-services/ProductForm?shopId=${shopId}`)
     }
-    router.push(`/products-and-services/ServiceForm?shopId=${shopId}`)
+    router.push(`/shop/products-and-services/ServiceForm?shopId=${shopId}`)
     setOpen(false)
   }
 

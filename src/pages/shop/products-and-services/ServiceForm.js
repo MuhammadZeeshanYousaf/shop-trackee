@@ -1,5 +1,5 @@
 import { useRouter } from 'next/router'
-import { Url, Network, multipartConfig } from '../../configs'
+import { Url, Network, multipartConfig } from '../../../configs'
 import { useEffect, useState } from 'react'
 import { showErrorMessage, showSuccessMessage } from 'src/components'
 import { useLoader } from 'src/hooks'
@@ -337,7 +337,7 @@ const ServiceForm = () => {
                 type='reset'
                 color='secondary'
                 variant='tonal'
-                onClick={() => router.push(`/products-and-services?shopId=${query.shopId}`) }
+                onClick={() => router.push(`/products-and-services?shopId=${query.shopId}`)}
               >
                 Back
               </Button>
