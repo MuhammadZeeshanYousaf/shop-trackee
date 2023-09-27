@@ -1,14 +1,26 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useCallback, useRef } from 'react'
 import { useLoader } from 'src/hooks'
 import { Network, Url, multipartConfig } from '../../configs'
 import { useRouter } from 'next/router'
 import { useForm, Controller } from 'react-hook-form'
 import { yupResolver } from '@hookform/resolvers/yup'
 import * as yup from 'yup'
-import { Grid, Card, CardHeader, CardContent, Box, Button, CardActions, MenuItem, Typography } from '@mui/material'
+import {
+  Grid,
+  Card,
+  CardHeader,
+  CardContent,
+  Box,
+  Button,
+  CardActions,
+  MenuItem,
+  Typography,
+  Divider
+} from '@mui/material'
 import CustomTextField from 'src/@core/components/mui/text-field'
 import { showErrorMessage, showSuccessMessage } from 'src/components'
 import Icon from 'src/@core/components/icon'
+import Webcam from 'react-webcam'
 
 const EditProduct = () => {
   const { setLoader } = useLoader()
@@ -17,8 +29,10 @@ const EditProduct = () => {
   const [product, setProduct] = useState(null)
   const [imagesLinks, setImageLinks] = useState([])
   const [currentResponse, setCurrentResponse] = useState(1)
+  const [base64Images, setBase64Images] = useState([])
   const [images, setImages] = useState([])
   const { query } = router
+  const webcamRef = useRef(null)
 
   const schema = yup.object().shape({
     name: yup.string().required(),
@@ -39,8 +53,20 @@ const EditProduct = () => {
     formState: { errors }
   } = useForm({
     mode: 'onBlur',
+    defaultValues: {
+      name: '',
+      description: '',
+      price: '',
+      category_name: ''
+    },
     resolver: yupResolver(schema)
   })
+
+  const capture = useCallback(() => {
+    const imageSrc = webcamRef.current.getScreenshot()
+
+    setBase64Images(prev => [...prev, imageSrc])
+  }, [webcamRef])
 
   const newProductForm = async () => {
     setLoader(true)
@@ -56,34 +82,50 @@ const EditProduct = () => {
     const response = await Network.get(Url.getProduct(query.shopId, query.productId))
     setLoader(false)
     if (!response.ok) return showErrorMessage(response.data.message)
+
+    console.log({ response })
+
     setProduct(response.data)
     setValue('name', response.data.name)
     setValue('description', response.data.description)
     setValue('category_name', response.data.category_name)
     setValue('price', response.data.price)
     setValue('stock_quantity', response.data.stock_quantity)
-    setImageLinks(response.data.images)
+    // setImageLinks(response.data.images)
+    setBase64Images(response.data.images)
   }
 
-  const handleDeleteUploadedImages = async id => {
+  const handleDeleteUploadedImages = async (index, id) => {
     setLoader(true)
     const response = await Network.delete(Url.deleteProductImage(query.shopId, query.productId, id))
     setLoader(false)
     if (!response.ok) return showErrorMessage(response.data.message)
-    const updatedImages = imagesLinks.filter(obj => obj.id != id)
-    setImageLinks(updatedImages)
+    handleDeleteImage(index)
+    showSuccessMessage(response.data.message)
   }
 
   const recognizeImage = async id => {
     setLoader(true)
     const response = await Network.get(Url.recognizeProductImages(query.shopId, query.productId, id))
     setLoader(false)
-    setProduct(response.data)
-    setCurrentResponse(1)
+
+    reset({
+      name: response.data[0]?.name,
+      description: response.data[0]?.description,
+      category_name: response.data[0]?.category_name,
+      price: response.data[0]?.price,
+      quantity: product?.quantity
+    })
+  }
+
+  const handleDeleteImage = index => {
+    const updatedImages = [...base64Images]
+    updatedImages.splice(index, 1)
+    setBase64Images(updatedImages)
   }
 
   const onSubmit = async data => {
-    if (imagesLinks.length == 0) return showErrorMessage('Please Select Images')
+    if (base64Images.length == 0) return showErrorMessage('Please Select Images')
     setLoader(true)
     const response = await Network.put(Url.createProduct(query.shopId, query.productId), data)
     setLoader(false)
@@ -113,12 +155,14 @@ const EditProduct = () => {
   }
 
   const uploadMore = async () => {
-    if (images.length == 0) return showErrorMessage('Please Select Images')
+    const images = base64Images.filter(image => {
+      if (typeof image != 'object') return image
+    })
+
     const formData = new FormData()
     images.map(image => {
       formData.append('images[]', image)
     })
-
     setLoader(true)
     const response = await Network.put(
       Url.uploadProductMoreImages(query.shopId, query.productId),
@@ -129,19 +173,36 @@ const EditProduct = () => {
     )
     setLoader(false)
     if (!response.ok) return showErrorMessage(response.data.message)
-    setImageLinks(response.data.products.images)
-    showSuccessMessage(response.data.message)
+
+    setBase64Images(response.data.products.images)
   }
 
   const handleProductImages = event => {
     const productImages = Array.from(event.target.files)
-    setImages(prevImg => [...prevImg, ...productImages])
-  }
+    Promise.all(
+      productImages.map(file => {
+        return new Promise((resolve, reject) => {
+          const reader = new FileReader()
 
-  useEffect(() => {
-    if (!product) return
-    setResponse()
-  }, [product, currentResponse])
+          reader.onload = e => {
+            resolve(e.target.result)
+          }
+
+          reader.onerror = error => {
+            reject(error)
+          }
+
+          reader.readAsDataURL(file)
+        })
+      })
+    )
+      .then(base64Images => {
+        setBase64Images(prev => [...prev, ...base64Images])
+      })
+      .catch(error => {
+        console.error('Error converting images to base64:', error)
+      })
+  }
 
   useEffect(() => {
     newProductForm()
@@ -150,40 +211,70 @@ const EditProduct = () => {
 
   return (
     <>
+      <Grid container>
+        <Webcam height={200} width={200} audio={false} ref={webcamRef} screenshotFormat='image/jpeg' />
+      </Grid>
+
       <Card sx={{ p: 4 }}>
         <Grid container spacing={5}>
           <Grid item xs={12} md={12}>
             <Typography sx={{ mb: 2 }}>Product Images</Typography>
             <input type='file' onChange={event => handleProductImages(event)} multiple capture />
+            <Divider
+              sx={{
+                color: 'text.disabled',
+                '& .MuiDivider-wrapper': { px: 6 }
+              }}
+            >
+              or
+            </Divider>
+            <button onClick={capture}>Capture photo</button>
           </Grid>
-          {imagesLinks.length > 0
-            ? imagesLinks.map(({ id, path }) => {
-                return (
-                  <Grid item xs={12} md={2} sx={{ display: 'flex', justifyContent: 'center' }}>
-                    <Card>
-                      <CardHeader
-                        title={
-                          <Icon icon='tabler:trash' fontSize={20} onClick={() => handleDeleteUploadedImages(id)} />
-                        }
-                      />
-                      <CardContent>
-                        <img
-                          src={`${process.env.NEXT_PUBLIC_IMAGE_URL}${path}`}
-                          style={{ objectFit: 'cover', maxHeight: '100%', maxWidth: '100%' }}
+          {base64Images?.map((image, index) => {
+            if (typeof image == 'object')
+              return (
+                <Grid item xs={12} md={2} sx={{ display: 'flex', justifyContent: 'center' }}>
+                  <Card>
+                    <CardHeader
+                      title={
+                        <Icon
+                          icon='tabler:trash'
+                          fontSize={20}
+                          onClick={() => handleDeleteUploadedImages(index, image.id)}
                         />
-                      </CardContent>
-                      <CardActions>
-                        <Button onClick={() => recognizeImage(id)}>Recognize Image</Button>
-                      </CardActions>
-                    </Card>
-                  </Grid>
-                )
-              })
-            : null}
+                      }
+                    />
+                    <CardContent>
+                      <img
+                        src={`${process.env.NEXT_PUBLIC_IMAGE_URL}${image.path}`}
+                        style={{ objectFit: 'contain', maxHeight: '100%', maxWidth: '100%' }}
+                      />
+                    </CardContent>
+                    <CardActions>
+                      <Button onClick={() => recognizeImage(image.id)}>Recognize Image</Button>
+                    </CardActions>
+                  </Card>
+                </Grid>
+              )
+            else {
+              return (
+                <Grid item xs={12} md={2} sx={{ display: 'flex', justifyContent: 'center' }}>
+                  <Card>
+                    <CardHeader
+                      title={<Icon icon='tabler:trash' fontSize={20} onClick={() => handleDeleteImage(index)} />}
+                    />
+                    <CardContent>
+                      <img src={image} style={{ objectFit: 'contain', maxHeight: '100%', maxWidth: '100%' }} />
+                    </CardContent>
+                  </Card>
+                </Grid>
+              )
+            }
+          })}
         </Grid>
-        <CardActions sx={{ justifyContent: 'flex-end' }}>
+        <CardActions sx={{ justifyContent: 'end' }}>
           <Button variant='contained' onClick={() => uploadMore()}>
-            Upload more
+            Upload More
           </Button>
         </CardActions>
       </Card>
@@ -192,10 +283,10 @@ const EditProduct = () => {
         <CardHeader title='Edit Product' />
         <CardContent>
           <form onSubmit={handleSubmit(onSubmit)}>
-            <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
+            {/* <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
               <Button onClick={() => previousReponse()}>Previous</Button>
               <Button onClick={() => nextReponse()}>Next</Button>
-            </Box>
+            </Box> */}
             <Grid container spacing={5} sx={{ marginTop: '5px' }}>
               <Grid item xs={12} md={6}>
                 <Controller
@@ -241,7 +332,7 @@ const EditProduct = () => {
                 <Controller
                   name='category_name'
                   control={control}
-                  defaultValue='category_name'
+                  defaultValue=''
                   rules={{ required: true }}
                   render={({ field: { value, onChange, onBlur } }) => (
                     <CustomTextField
