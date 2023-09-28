@@ -30,7 +30,7 @@ const ServiceCard = ({ service, deleteService, shopId }) => {
               <Grid item xs={12} sm={12}>
                 <Box
                   sx={{
-                    mb: 6.75,
+                    mt: 1,
                     display: 'flex',
                     alignItems: 'center',
                     '& svg': { color: 'primary.main', mr: 2.75 }
@@ -39,9 +39,17 @@ const ServiceCard = ({ service, deleteService, shopId }) => {
                   <Icon icon='tabler:category' fontSize={20} />
                   <Typography sx={{ color: 'text.secondary' }}>Category: {service?.category_name}</Typography>
                 </Box>
-                <Box sx={{ display: 'flex', alignItems: 'center', '& svg': { color: 'primary.main', mr: 2.75 } }}>
+                <Box
+                  sx={{ display: 'flex', alignItems: 'center', '& svg': { color: 'primary.main', mr: 2.75, mt: 1 } }}
+                >
                   <Icon icon='tabler:businessplan' fontSize={20} />
                   <Typography sx={{ color: 'text.secondary' }}>Charge by : {service?.charge_by}</Typography>
+                </Box>
+                <Box
+                  sx={{ display: 'flex', alignItems: 'center', '& svg': { color: 'primary.main', mr: 2.75, mt: 1 } }}
+                >
+                  <Icon icon='tabler:cash-banknote' fontSize={20} />
+                  <Typography sx={{ color: 'text.secondary' }}>Rate : {service?.rate}</Typography>
                 </Box>
               </Grid>
               {/* <Grid item xs={12} sm={7}>
@@ -69,7 +77,7 @@ const ServiceCard = ({ service, deleteService, shopId }) => {
         </Grid>
         <Grid item sm={5} md={7} xs={12}>
           <img
-            style={{ minHeight: '100%', objectFit: 'contain' }}
+            style={{ minHeight: '100%', objectFit: 'contain', width: '100%' }}
             src={`${process.env.NEXT_PUBLIC_IMAGE_URL}${service?.images[0]?.path}`}
           />
         </Grid>

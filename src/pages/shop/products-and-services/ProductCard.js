@@ -49,7 +49,7 @@ const ProductCard = ({ product, deleteProduct, anchorEl, setAnchorEl, shopId }) 
       <Grid container spacing={6} sx={{ p: 0 }}>
         <StyledGrid item md={6} xs={12} sx={{ p: 0 }}>
           <img
-            style={{ minHeight: '100%', objectFit: 'cover' }}
+            style={{ minHeight: '100%', objectFit: 'cover', width: '100%' }}
             alt='Apple iPhone 11 Pro'
             src={`${process.env.NEXT_PUBLIC_IMAGE_URL}${product?.images[0]?.path}`}
           />
