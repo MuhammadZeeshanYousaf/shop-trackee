@@ -79,7 +79,7 @@ const EditService = () => {
     setLoader(false)
     if (!response) return showErrorMessage(response.data.message)
     showSuccessMessage(response.data.message)
-    router.push(`/products-and-services?shopId=${query.shopId}`)
+    router.push(`/shop/products-and-services?shopId=${query.shopId}`)
   }
 
   const handleServicesImages = event => {
