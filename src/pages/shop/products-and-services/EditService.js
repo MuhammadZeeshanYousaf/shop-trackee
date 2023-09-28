@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useCallback, useRef } from 'react'
 import { useLoader } from 'src/hooks'
 import { Network, Url, multipartConfig } from 'src/configs'
 import { useRouter } from 'next/router'
@@ -7,8 +7,20 @@ import { yupResolver } from '@hookform/resolvers/yup'
 import * as yup from 'yup'
 import CustomTextField from 'src/@core/components/mui/text-field'
 import Icon from 'src/@core/components/icon'
-import { Card, CardContent, Box, CardHeader, CardActions, Button, Grid, MenuItem, Typography } from '@mui/material'
+import {
+  Card,
+  CardContent,
+  Box,
+  CardHeader,
+  CardActions,
+  Button,
+  Grid,
+  MenuItem,
+  Typography,
+  Divider
+} from '@mui/material'
 import { showErrorMessage, showSuccessMessage } from 'src/components'
+import Webcam from 'react-webcam'
 
 const EditService = () => {
   const [categories, setCategories] = useState([])
@@ -16,10 +28,12 @@ const EditService = () => {
   const [serviceResponses, setServiceResponses] = useState([])
   const [currentResponse, setCurrentResponse] = useState(1)
   const [imagesLinks, setImagesLinks] = useState([])
+  const [base64Images, setBase64Images] = useState([])
   const [images, setImages] = useState([])
   const router = useRouter()
   const { query } = router
   const { setLoader } = useLoader()
+  const webcamRef = useRef(null)
 
   const schema = yup.object().shape({
     name: yup.string().required(),
@@ -38,7 +52,14 @@ const EditService = () => {
     formState: { errors }
   } = useForm({
     mode: 'onBlur',
-    resolver: yupResolver(schema)
+    resolver: yupResolver(schema),
+    defaultValues: {
+      name: '',
+      description: '',
+      category_name: '',
+      rate: '',
+      charge_by: ''
+    }
   })
 
   const newServiceForm = async () => {
@@ -62,18 +83,51 @@ const EditService = () => {
   }
 
   const handleServicesImages = event => {
-    const servicesImages = Array.from(event.target.files)
-    setImages(prevImg => [...prevImg, ...servicesImages])
+    const serviceImages = Array.from(event.target.files)
+    Promise.all(
+      serviceImages.map(file => {
+        return new Promise((resolve, reject) => {
+          const reader = new FileReader()
+
+          reader.onload = e => {
+            resolve(e.target.result)
+          }
+
+          reader.onerror = error => {
+            reject(error)
+          }
+
+          reader.readAsDataURL(file)
+        })
+      })
+    )
+      .then(base64Images => {
+        setBase64Images(prev => [...prev, ...base64Images])
+      })
+      .catch(error => {
+        console.error('Error converting images to base64:', error)
+      })
   }
 
-  const handleDeleteUploadedImages = async id => {
+  const handleDeleteImage = index => {
+    const updatedImages = [...base64Images]
+    updatedImages.splice(index, 1)
+    setBase64Images(updatedImages)
+  }
+  const handleDeleteUploadedImages = async (index, id) => {
     setLoader(true)
     const response = await Network.delete(Url.deleteServiceImage(query.shopId, query.serviceId, id))
     setLoader(false)
     if (!response.ok) return showErrorMessage(response.data.message)
-    const updatedImages = imagesLinks.filter(obj => obj.id != id)
-    setImagesLinks(updatedImages)
+    showSuccessMessage(response.data.message)
+    handleDeleteImage(index)
   }
+
+  const capture = useCallback(() => {
+    const imageSrc = webcamRef.current.getScreenshot()
+
+    setBase64Images(prev => [...prev, imageSrc])
+  }, [webcamRef])
 
   const getService = async () => {
     setLoader(true)
@@ -85,15 +139,21 @@ const EditService = () => {
     setValue('rate', response.data.rate)
     setValue('category_name', response.data.category_name)
     setValue('charge_by', response.data.charge_by)
-    setImagesLinks(response.data.images)
+    setBase64Images(response.data.images)
   }
 
   const recognizeImage = async id => {
     setLoader(true)
     const response = await Network.get(Url.recognizeServiceImages(query.shopId, query.serviceId, id))
     setLoader(false)
-    setServiceResponses(response.data)
-    setCurrentResponse(1)
+
+    reset({
+      name: response.data[0]?.name,
+      description: response.data[0]?.description,
+      category_name: response.data[0]?.category_name,
+      charge_by: response.data[0]?.charge_by,
+      rate: ''
+    })
   }
 
   const nextReponse = () => {
@@ -136,53 +196,107 @@ const EditService = () => {
     setImagesLinks(response.data.services.images)
     showSuccessMessage(response.data.message)
   }
+  const uploadMore = async () => {
+    const images = base64Images.filter(image => {
+      if (typeof image != 'object') return image
+    })
+
+    const formData = new FormData()
+    images.map(image => {
+      formData.append('images[]', image)
+    })
+
+    setLoader(true)
+    const response = await Network.put(
+      Url.uploadServicestMoreImages(query.shopId, query.serviceId),
+      formData,
+      (
+        await multipartConfig()
+      ).headers
+    )
+    setLoader(false)
+    if (!response.ok) return showErrorMessage(response.data.message)
+    setBase64Images(response.data.services.images)
+  }
 
   useEffect(() => {
     getService()
     newServiceForm()
   }, [])
-  useEffect(() => {
-    if (!serviceResponses) return
-    setResponse()
-  }, [serviceResponses, currentResponse])
 
   return (
     <>
+      <Grid container>
+        <Webcam height={200} width={200} audio={false} ref={webcamRef} screenshotFormat='image/jpeg' />
+      </Grid>
+
       <Card sx={{ p: 4 }}>
         <Grid container spacing={5}>
           <Grid item xs={12} md={12}>
-            <Typography sx={{ mb: 2 }}>Services Images</Typography>
+            <Typography sx={{ mb: 2 }}>Service Images</Typography>
             <input type='file' onChange={event => handleServicesImages(event)} multiple capture />
+            <Divider
+              sx={{
+                color: 'text.disabled',
+                '& .MuiDivider-wrapper': { px: 6 }
+              }}
+            >
+              or
+            </Divider>
+            <button onClick={capture}>Capture photo</button>
           </Grid>
-          {imagesLinks.length > 0
-            ? imagesLinks.map(({ id, path }) => {
-                return (
-                  <Grid item xs={12} md={2} sx={{ display: 'flex', justifyContent: 'center' }}>
-                    <Card>
-                      <CardHeader
-                        title={
-                          <Icon icon='tabler:trash' fontSize={20} onClick={() => handleDeleteUploadedImages(id)} />
-                        }
-                      />
-                      <CardContent>
-                        <img
-                          src={`${process.env.NEXT_PUBLIC_IMAGE_URL}${path}`}
-                          style={{ objectFit: 'cover', maxHeight: '100%', maxWidth: '100%' }}
+          {base64Images?.map((image, index) => {
+            if (typeof image == 'object')
+              return (
+                <Grid item xs={12} md={2} sx={{ display: 'flex', justifyContent: 'center' }}>
+                  <Card>
+                    <CardHeader
+                      title={
+                        <Icon
+                          icon='tabler:trash'
+                          fontSize={20}
+                          onClick={() => handleDeleteUploadedImages(index, image.id)}
                         />
-                      </CardContent>
-                      <CardActions>
-                        <Button onClick={() => recognizeImage(id)}>Recognize Image</Button>
-                      </CardActions>
-                    </Card>
-                  </Grid>
-                )
-              })
-            : null}
+                      }
+                    />
+                    <CardContent>
+                      <img
+                        src={`${process.env.NEXT_PUBLIC_IMAGE_URL}${image.path}`}
+                        style={{ objectFit: 'contain', maxHeight: '100%', maxWidth: '100%' }}
+                      />
+                    </CardContent>
+                    <CardActions>
+                      <Button onClick={() => recognizeImage(image.id)}>Recognize Image</Button>
+                    </CardActions>
+                  </Card>
+                </Grid>
+              )
+            else {
+              return (
+                <Grid item xs={12} md={2} sx={{ display: 'flex', justifyContent: 'center' }}>
+                  <Card>
+                    <CardHeader
+                      title={<Icon icon='tabler:trash' fontSize={20} onClick={() => handleDeleteImage(index)} />}
+                    />
+                    <CardContent>
+                      <img src={image} style={{ objectFit: 'contain', maxHeight: '100%', maxWidth: '100%' }} />
+                    </CardContent>
+                  </Card>
+                </Grid>
+              )
+            }
+          })}
         </Grid>
         <CardActions sx={{ justifyContent: 'end' }}>
-          <Button variant='contained' onClick={() => uploadImages()}>
-            Upload
-          </Button>
+          {base64Images.some(item => typeof item === 'object') ? (
+            <Button variant='contained' onClick={() => uploadMore()}>
+              Upload More
+            </Button>
+          ) : (
+            <Button variant='contained' onClick={() => uploadImages()}>
+              Upload
+            </Button>
+          )}
         </CardActions>
       </Card>
 
@@ -190,10 +304,10 @@ const EditService = () => {
         <CardHeader title='Add Service' />
         <CardContent>
           <form onSubmit={handleSubmit(onSubmit)}>
-            <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
+            {/* <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
               <Button onClick={() => previousReponse()}>Previous</Button>
               <Button onClick={() => nextReponse()}>Next</Button>
-            </Box>
+            </Box> */}
             <Grid container spacing={5}>
               <Grid item xs={12} md={6}>
                 <Controller
