@@ -64,7 +64,7 @@ const Form = () => {
   const schema = yup.object().shape({
     name: yup.string().required(),
     description: yup.string(),
-    address: yup.object(),
+    address: yup.object().nullable(),
     contact: yup.string().required(),
     opening_time: yup.string(),
     closing_time: yup.string(),
