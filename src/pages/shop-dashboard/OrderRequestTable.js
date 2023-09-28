@@ -135,7 +135,7 @@ const OrderRequestTable = ({ orderRequest }) => {
     <Card>
       <CardHeader title='Order Requests' />
       <Box sx={{ height: 500 }}>
-        <DataGrid columns={columns} rows={orderRequest} />
+        <DataGrid columns={columns} rows={orderRequest} disableColumnMenu />
       </Box>
     </Card>
   )
