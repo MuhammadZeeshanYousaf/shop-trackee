@@ -217,7 +217,7 @@ const ProductForm = () => {
     if (!response) return showErrorMessage(response.data.message)
     showSuccessMessage(response.data.message)
 
-    router.push(`/products-and-services?shopId=${query.shopId}`)
+    router.push(`/shop/products-and-services?shopId=${query.shopId}`)
 
     // if (images.length == 0) return showErrorMessage('Please Select Images')
     // const formData = new FormData()
@@ -251,7 +251,6 @@ const ProductForm = () => {
         <Webcam height={200} width={200} audio={false} ref={webcamRef} screenshotFormat='image/jpeg' />
       </Grid>
 
-      {/* <button onClick={capture}>Capture</button> */}
       <Card sx={{ p: 4 }}>
         <Grid container spacing={5}>
           <Grid item xs={12} md={12}>
@@ -460,7 +459,7 @@ const ProductForm = () => {
                   type='reset'
                   color='secondary'
                   variant='tonal'
-                  onClick={() => router.push('/shop/products-and-services')}
+                  onClick={() => router.push(`/shop/products-and-services?shopId=${query.shopId}`)}
                 >
                   Back
                 </Button>

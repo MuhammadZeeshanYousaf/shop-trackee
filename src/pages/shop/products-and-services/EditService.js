@@ -327,7 +327,7 @@ const EditService = () => {
                 type='reset'
                 color='secondary'
                 variant='tonal'
-                onClick={() => router.push(`/products-and-services?shopId=${query.shopId}`)}
+                onClick={() => router.push(`/shop/products-and-services?shopId=${query.shopId}`)}
               >
                 Back
               </Button>
