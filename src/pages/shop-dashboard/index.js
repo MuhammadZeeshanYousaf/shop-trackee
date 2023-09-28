@@ -17,6 +17,7 @@ import { useLoader } from 'src/hooks'
 const ShopDashboard = () => {
   const { setLoader } = useLoader()
   const [shopStats, setShopStats] = useState([])
+  const [orderRequest, setOrderRequests] = useState([])
 
   const getStats = async () => {
     setLoader(true)
@@ -26,8 +27,19 @@ const ShopDashboard = () => {
 
     setShopStats(response.data)
   }
+
+  const getOrderRequests = async () => {
+    setLoader(true)
+    const response = await Network.get(Url.getShopOrderRequests)
+    setLoader(false)
+    if (!response.ok) return showErrorMessage(response.data.message)
+
+    setOrderRequests(response.data)
+  }
+
   useEffect(() => {
     getStats()
+    getOrderRequests()
   }, [])
 
   return (
@@ -42,7 +54,7 @@ const ShopDashboard = () => {
             <EcommerceStatistics shopStats={shopStats} />
           </Grid>
           <Grid item xs={12} md={12} lg={12}>
-            <OrderRequestTable />
+            <OrderRequestTable orderRequest={orderRequest} />
           </Grid>
         </Grid>
       </KeenSliderWrapper>

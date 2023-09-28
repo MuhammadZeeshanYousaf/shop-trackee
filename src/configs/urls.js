@@ -5,7 +5,7 @@ export default {
 
   uploadImages: shopId => `/shops/${shopId}/products/images`,
 
-uploadMoreProductImages:()=>``,
+  uploadMoreProductImages: () => ``,
 
   deleteProductImage: (shopId, productId, imageId) => `/shops/${shopId}/products/${productId}/images/${imageId}`,
   recognizeProductImages: (shopId, productId, imageId) =>
@@ -34,7 +34,7 @@ uploadMoreProductImages:()=>``,
   deleteService: (shopId, serviceId) => `/shops/${shopId}/services/${serviceId}`,
 
   uploadProductMoreImages: (shopId, productId) => `/shops/${shopId}/products/${productId}/images`,
-  
+
   createService: (shopId, serviceId) => `/shops/${shopId}/services/${serviceId}`,
 
   getService: (shopId, serviceId) => `/shops/${shopId}/services/${serviceId}`,
@@ -43,5 +43,9 @@ uploadMoreProductImages:()=>``,
 
   // Shop Dashboard
 
-  shopDashboard: '/seller/stats'
+  shopDashboard: '/seller/stats',
+
+  //get order request for shop
+
+  getShopOrderRequests: '/order_requests'
 }
