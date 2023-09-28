@@ -2,6 +2,7 @@ import { DataGrid } from '@mui/x-data-grid'
 import CustomAvatar from 'src/@core/components/mui/avatar'
 import { Typography, Button, Card, CardHeader, Box, Chip } from '@mui/material'
 import useBgColor from 'src/@core/hooks/useBgColor'
+import dayjs from 'dayjs'
 
 const OrderRequestTable = ({ orderRequest }) => {
   const bgColors = useBgColor()
@@ -63,6 +64,26 @@ const OrderRequestTable = ({ orderRequest }) => {
       }
     },
     {
+      flex: 0.2,
+      minWidth: 110,
+      field: 'message',
+      headerName: 'Message',
+      renderCell: params => {
+        const { row } = params
+        return <Box sx={{ textOverflow: 'inherit' }}>{row?.message}</Box>
+      }
+    },
+    {
+      flex: 0.15,
+      minWidth: 110,
+      field: 'created_at',
+      headerName: 'Created At',
+      renderCell: params => {
+        const { row } = params
+        return <Box>{dayjs(row?.created_at).format('DD-MM-YY')}</Box>
+      }
+    },
+    {
       flex: 0.15,
       minWidth: 130,
       headerName: 'Location',
@@ -74,14 +95,18 @@ const OrderRequestTable = ({ orderRequest }) => {
       field: 'Status',
       headerName: 'Status',
       renderCell: params => {
-        const { rows } = params
+        const { row } = params
         return (
           <Chip
             rounded
             size='small'
             skin='light'
-            label='Pending'
-            sx={{ '& .MuiChip-label': { textTransform: 'capitalize' }, color: colors.error }}
+            label={row?.status}
+            sx={{
+              '& .MuiChip-label': { textTransform: 'capitalize' },
+              color:
+                row?.status == 'pending' ? colors.warning : row?.status == 'rejected' ? colors.error : colors.success
+            }}
           />
         )
       }
