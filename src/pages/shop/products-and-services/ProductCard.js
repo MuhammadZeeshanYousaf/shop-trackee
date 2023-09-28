@@ -46,21 +46,18 @@ const ProductCard = ({ product, deleteProduct, anchorEl, setAnchorEl, shopId }) 
 
   return (
     <Card sx={{ mt: 5 }}>
-      <Grid container spacing={6}>
-        <StyledGrid item md={5} xs={12}>
-          <CardContent sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-            <img
-              width={137}
-              height={176}
-              alt='Apple iPhone 11 Pro'
-              src={`${process.env.NEXT_PUBLIC_IMAGE_URL}${product?.images[0]?.path}`}
-            />
-          </CardContent>
+      <Grid container spacing={6} sx={{ p: 0 }}>
+        <StyledGrid item md={6} xs={12} sx={{ p: 0 }}>
+          <img
+            style={{ minHeight: '100%', objectFit: 'cover' }}
+            alt='Apple iPhone 11 Pro'
+            src={`${process.env.NEXT_PUBLIC_IMAGE_URL}${product?.images[0]?.path}`}
+          />
         </StyledGrid>
         <Grid
           item
           xs={12}
-          md={7}
+          md={6}
           sx={{
             pt: ['0 !important', '0 !important', '1.5rem !important'],
             pl: ['1.5rem !important', '1.5rem !important', '0 !important']

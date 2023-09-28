@@ -68,19 +68,10 @@ const ServiceCard = ({ service, deleteService, shopId }) => {
           </CardActions>
         </Grid>
         <Grid item sm={5} md={7} xs={12}>
-          <CardContent
-            sx={{
-              maxHeight: '100%',
-              minHeight: '100%',
-              display: 'flex',
-              textAlign: 'center',
-              alignItems: 'center',
-              justifyContent: 'center',
-              backgroundColor: 'action.hover'
-            }}
-          >
-            <img src={`${process.env.NEXT_PUBLIC_IMAGE_URL}${service?.images[0]?.path}`} />
-          </CardContent>
+          <img
+            style={{ minHeight: '100%', objectFit: 'contain' }}
+            src={`${process.env.NEXT_PUBLIC_IMAGE_URL}${service?.images[0]?.path}`}
+          />
         </Grid>
       </Grid>
     </Card>

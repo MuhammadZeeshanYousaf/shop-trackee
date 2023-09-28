@@ -28,6 +28,13 @@ const ProductForm = () => {
   const { setLoader } = useLoader()
   const webcamRef = useRef(null)
 
+  const FACING_MODE_USER = 'user'
+  const FACING_MODE_ENVIRONMENT = 'environment'
+
+  const videoConstraints = {
+    facingMode: FACING_MODE_USER
+  }
+
   const [product, setProduct] = useState(null)
   const [productResponses, setProductResponses] = useState([])
   const [currentResponse, setCurrentResponse] = useState(0)
@@ -235,6 +242,10 @@ const ProductForm = () => {
     setBase64Images(prev => [...prev, imageSrc])
   }, [webcamRef])
 
+  const switchCamera = useCallback(() => {
+    setFacingMode(prevState => (prevState === FACING_MODE_USER ? FACING_MODE_ENVIRONMENT : FACING_MODE_USER))
+  }, [])
+
   // Capture the image using webcam
 
   useEffect(() => {
@@ -248,7 +259,12 @@ const ProductForm = () => {
   return (
     <>
       <Grid container>
-        <Webcam height={200} width={200} audio={false} ref={webcamRef} screenshotFormat='image/jpeg' />
+        <Grid item md={6} xs={12}>
+          <Webcam height={200} width={200} audio={false} ref={webcamRef} screenshotFormat='image/jpeg' />
+        </Grid>
+        <Grid item md={6} xs={12} sx={{ justifyContent: 'end', display: 'flex' }}>
+          <Button onClick={switchCamera}>Switch camera</Button>
+        </Grid>
       </Grid>
 
       <Card sx={{ p: 4 }}>
