@@ -42,6 +42,7 @@ const ProductForm = () => {
   const [categories, setCategories] = useState([])
 
   const [base64Images, setBase64Images] = useState([])
+  const [facingMode, setFacingMode] = useState(FACING_MODE_USER)
 
   const schema = yup.object().shape({
     name: yup.string().required(),
@@ -260,7 +261,17 @@ const ProductForm = () => {
     <>
       <Grid container>
         <Grid item md={6} xs={12}>
-          <Webcam height={200} width={200} audio={false} ref={webcamRef} screenshotFormat='image/jpeg' />
+          <Webcam
+            height={200}
+            width={200}
+            audio={false}
+            ref={webcamRef}
+            screenshotFormat='image/jpeg'
+            videoConstraints={{
+              ...videoConstraints,
+              facingMode
+            }}
+          />
         </Grid>
         <Grid item md={6} xs={12} sx={{ justifyContent: 'end', display: 'flex' }}>
           <Button onClick={switchCamera}>Switch camera</Button>
