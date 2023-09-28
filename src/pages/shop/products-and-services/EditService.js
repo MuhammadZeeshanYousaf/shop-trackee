@@ -73,7 +73,7 @@ const EditService = () => {
   }
 
   const onSubmit = async data => {
-    if (imagesLinks.length == 0) return showErrorMessage('Please Select Images')
+    if (base64Images.length == 0) return showErrorMessage('Please Select Images')
     setLoader(true)
     const response = await Network.put(Url.createService(query.shopId, query.serviceId), data)
     setLoader(false)

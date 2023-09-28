@@ -69,7 +69,7 @@ const OrderRequestTable = ({ orderRequest }) => {
       field: 'shop_direction'
     },
     {
-      flex: 0.15,
+      flex: 0.125,
       minWidth: 120,
       field: 'Status',
       headerName: 'Status',
@@ -94,7 +94,7 @@ const OrderRequestTable = ({ orderRequest }) => {
       renderCell: params => {
         return (
           <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-            <Button size='small' variant='outlined' color='secondary' sx={{ m: 5 }}>
+            <Button size='small' variant='outlined' color='secondary' sx={{ mr: 5 }}>
               Accept
             </Button>
             <Button size='small' variant='outlined' color='secondary'>
