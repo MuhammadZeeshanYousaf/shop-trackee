@@ -15,7 +15,7 @@ const ServiceCard = ({ service, deleteService, shopId }) => {
     router.push(`/shop/products-and-services/EditService?shopId=${shopId}&serviceId=${service?.id}`)
   }
   return (
-    <Card sx={{ mt: 5 }}>
+    <Card sx={{ mt: 5 }} >
       <Grid container spacing={6}>
         <Grid item xs={12} md={5} sm={7}>
           <CardContent sx={{ p: theme => `${theme.spacing(3.25, 5.75, 6.25)} !important` }}>

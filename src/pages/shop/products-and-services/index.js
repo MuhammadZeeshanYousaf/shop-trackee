@@ -11,8 +11,8 @@ import ServiceCard from './ServiceCard'
 const ProductandServices = () => {
   const { query } = useRouter()
   const { setLoader } = useLoader()
-  const [product, setProducts] = useState([])
-  const [anchorEl, setAnchorEl] = useState(null)
+  const [products, setProducts] = useState([])
+
   const [services, setServices] = useState([])
   const [mode, setMode] = useState('Both')
 
@@ -21,7 +21,6 @@ const ProductandServices = () => {
     const response = await Network.get(Url.getProducts(query.shopId))
     setLoader(false)
     if (!response.ok) return showErrorMessage(response.data.message)
-
     setProducts(response.data)
   }
 
@@ -40,7 +39,6 @@ const ProductandServices = () => {
     setLoader(false)
     if (!response.ok) return showErrorMessage(response.data.message)
     showSuccessMessage(response.data.message)
-    setAnchorEl(null)
     getProducts()
   }
 
@@ -64,7 +62,7 @@ const ProductandServices = () => {
         <SplitButton shopId={query.shopId} />
       </Box>
 
-      <Box sx={{ display: 'flex', justifyContent: 'center',mt:5 }}>
+      <Box sx={{ display: 'flex', justifyContent: 'center', mt: 5 }}>
         <FormControl sx={{ width: '50%' }}>
           <InputLabel id='demo-simple-select-label'>Filter By</InputLabel>
           <Select label='Filter By' value={mode} onChange={e => setMode(e.target.value)}>
@@ -79,16 +77,19 @@ const ProductandServices = () => {
         {/* Products */}
         {mode == 'Both' || mode == 'Products' ? (
           <Grid item md={6}>
-            {product?.map((product, i) => (
-              <ProductCard
-                key={i}
-                product={product}
-                deleteProduct={deleteProduct}
-                anchorEl={anchorEl}
-                setAnchorEl={setAnchorEl}
-                shopId={query?.shopId}
-              />
-            ))}
+            {products?.map((product, i) => {
+              console.log('product.id', product?.id)
+
+              return (
+                <ProductCard
+                  key={product?.id}
+                  id={product?.id}
+                  product={product}
+                  deleteProduct={deleteProduct}
+                  shopId={query?.shopId}
+                />
+              )
+            })}
           </Grid>
         ) : null}
         {/* Services */}

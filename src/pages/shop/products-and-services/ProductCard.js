@@ -15,7 +15,8 @@ import Icon from 'src/@core/components/icon'
 import { useState } from 'react'
 import { useRouter } from 'next/router'
 
-const ProductCard = ({ product, deleteProduct, anchorEl, setAnchorEl, shopId }) => {
+const ProductCard = ({ product, deleteProduct, shopId, id }) => {
+  const [anchorEl, setAnchorEl] = useState(null)
   const open = Boolean(anchorEl)
   const router = useRouter()
 
@@ -28,8 +29,7 @@ const ProductCard = ({ product, deleteProduct, anchorEl, setAnchorEl, shopId }) 
   }
 
   const handleEdit = () => {
-    router.push(`/shop/products-and-services/EditProduct?shopId=${shopId}&productId=${product?.id}`)
-    setAnchorEl(null)
+    router.push(`/shop/products-and-services/EditProduct?productId=${id}&shopId=${shopId}`)
   }
 
   const StyledGrid = styled(Grid)(({ theme }) => ({
@@ -45,7 +45,7 @@ const ProductCard = ({ product, deleteProduct, anchorEl, setAnchorEl, shopId }) 
   }))
 
   return (
-    <Card sx={{ mt: 5 }}>
+    <Card sx={{ mt: 5 }} key={product?.id}>
       <Grid container spacing={6} sx={{ p: 0 }}>
         <StyledGrid item md={6} xs={12} sx={{ p: 0 }}>
           <img
@@ -82,7 +82,13 @@ const ProductCard = ({ product, deleteProduct, anchorEl, setAnchorEl, shopId }) 
             </Typography>
           </CardContent>
           <CardActions className='card-action-dense'>
-            <Box sx={{ display: 'flex', justifyContent: 'space-between', width: '100%' }}>
+            <Box
+              sx={{
+                display: 'flex',
+                justifyContent: 'space-between',
+                width: '100%'
+              }}
+            >
               <Button sx={{ '& svg': { mr: 2 } }}>
                 <Icon icon='tabler:eye' fontSize={20} />
                 Show Details
@@ -97,19 +103,20 @@ const ProductCard = ({ product, deleteProduct, anchorEl, setAnchorEl, shopId }) 
               >
                 <Icon icon='tabler:dots-vertical' fontSize={20} />
               </IconButton>
+
               <Menu
                 open={open}
-                id='long-menu'
+                id={product.id}
                 anchorEl={anchorEl}
                 onClose={handleClose}
                 MenuListProps={{
                   'aria-labelledby': 'long-button'
                 }}
               >
-                <MenuItem onClick={() => deleteProduct(product?.id)}>
+                <MenuItem value={product} onClick={() => deleteProduct(id)}>
                   <Icon icon='tabler:trash' />
                 </MenuItem>
-                <MenuItem onClick={() => handleEdit()}>
+                <MenuItem value={product} onClick={handleEdit}>
                   <Icon icon='tabler:pencil' />
                 </MenuItem>
               </Menu>
