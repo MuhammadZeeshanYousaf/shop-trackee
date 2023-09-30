@@ -35,20 +35,10 @@ const FooterContent = () => {
       </Typography>
       {hidden ? null : (
         <Box sx={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', '& :not(:last-child)': { mr: 4 } }}>
-          {/* <Typography target='_blank' component={LinkStyled} href='https://themeforest.net/licenses/standard'>
-            License
-          </Typography>
-          <Typography target='_blank' component={LinkStyled} href='https://1.envato.market/pixinvent_portfolio'>
-            More Themes
-          </Typography> */}
-          <Typography
-            target='_blank'
-            component={LinkStyled}
-            href='https://demos.pixinvent.com/vuexy-nextjs-admin-template/documentation'
-          >
+          <Typography target='_blank' component={LinkStyled} href='#'>
             Documentation
           </Typography>
-          <Typography target='_blank' component={LinkStyled} href='https://pixinvent.ticksy.com'>
+          <Typography target='_blank' component={LinkStyled} href='#'>
             Support
           </Typography>
         </Box>
