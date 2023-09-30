@@ -115,9 +115,7 @@ const LoginPage = () => {
     auth.login({ email, password, rememberMe }, error => {
       setError('email', {
         type: 'manual',
-        message: error.message
-
-        // message: 'Email or Password is invalid'
+        message: 'Incorrect email or password'
       })
     })
   }
