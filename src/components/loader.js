@@ -1,9 +1,12 @@
 import Lottie from 'lottie-react'
 
 import { LoaderAnimation } from '../assets/animations'
+import Image from 'next/image'
+import preloader from '../assets/images/preloader.gif'
 
 const Loader = ({ visible }) => {
   if (!visible) return null
+
   return (
     <div
       style={{
@@ -13,12 +16,11 @@ const Loader = ({ visible }) => {
         justifyContent: 'center',
         alignItems: 'center',
         position: 'fixed',
-        opacity: '75%',
-        background: 'white',
+        opacity: '65%',
         zIndex: 9999
       }}
     >
-      <Lottie animationData={LoaderAnimation} width={50} height={50} loop={true} />
+      <Image src={preloader} alt='Loading...' width={80} height={80} />
     </div>
   )
 }
