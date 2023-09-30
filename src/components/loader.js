@@ -2,7 +2,6 @@ import Lottie from 'lottie-react'
 
 import { LoaderAnimation } from '../assets/animations'
 import Image from 'next/image'
-import preloader from '../assets/images/preloader.gif'
 
 const Loader = ({ visible }) => {
   if (!visible) return null
@@ -20,7 +19,7 @@ const Loader = ({ visible }) => {
         zIndex: 9999
       }}
     >
-      <Image src={preloader} alt='Loading...' width={80} height={80} />
+      <Image src={'/images/preloader.gif'} alt='Loading...' width={80} height={80} />
     </div>
   )
 }
