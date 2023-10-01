@@ -2,20 +2,15 @@ import React, { useEffect, useState, useCallback } from 'react'
 import { useLoader } from 'src/hooks'
 import { GoogleMap, useJsApiLoader, Marker, LoadScript } from '@react-google-maps/api'
 
-const Map = ({ longitude, latitude }) => {
-
+const Map = ({ longitude, latitude, height = '100vh' }) => {
   const center = {
     lat: latitude,
     lng: longitude
   }
-  // const center = {
-  //   lat: 51.5072178,
-  //   lng: -0.1275862,
-  // };
 
   const containerStyle = {
     width: '100%',
-    height: '100vh'
+    height: height
   }
   const [map, setMap] = useState(null)
 

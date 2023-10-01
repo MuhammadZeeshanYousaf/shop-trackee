@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { Card, CardContent, Grid } from '@mui/material'
+import { Card, CardContent, CardHeader, Grid } from '@mui/material'
 import { AnalyticsSlider, Map } from '../../components'
 import { useLoader } from 'src/hooks'
 
@@ -32,9 +32,10 @@ const Listing = () => {
         <AnalyticsSlider />
       </Grid>
       <Grid item xs={12} lg={6}>
-        <Card>
+        <Card sx={{ height: '230px' }}>
+          <CardHeader title={'Current Location'} />
           <CardContent>
-            <Map latitude={latitude} longitude={longitude} />
+            <Map latitude={latitude} longitude={longitude} height='20vh' />
           </CardContent>
         </Card>
       </Grid>
