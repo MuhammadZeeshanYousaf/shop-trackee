@@ -3,8 +3,6 @@ import { useLoader } from 'src/hooks'
 import { GoogleMap, useJsApiLoader, Marker, LoadScript } from '@react-google-maps/api'
 
 const Map = ({ longitude, latitude }) => {
-  console.log({ longitude })
-  console.log({ latitude })
 
   const center = {
     lat: latitude,

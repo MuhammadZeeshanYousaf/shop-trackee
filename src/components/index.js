@@ -7,6 +7,8 @@ import AnalyticsEarningReports from './AnalyticsEarningReport'
 import WelcomeCard from './WelcomeCard'
 import EcommerceStatistics from './EcommerceStatistics'
 import PopularProducts from './PopularProducts'
+import AnalyticsSlider from './AnalyticsSlider'
+import Map from './Map'
 
 export {
   showErrorMessage,
@@ -18,5 +20,7 @@ export {
   AnalyticsEarningReports,
   WelcomeCard,
   EcommerceStatistics,
-  PopularProducts
+  PopularProducts,
+  AnalyticsSlider,
+  Map
 }

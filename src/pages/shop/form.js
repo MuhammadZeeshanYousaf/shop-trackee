@@ -26,7 +26,7 @@ import GooglePlacesAutocomplete from 'react-google-places-autocomplete'
 import { Network, Url } from '../../configs'
 import { showErrorMessage, showSuccessMessage, CustomInput, DatePickerWrapper } from '../../components'
 import { useLoader } from '../../hooks'
-import Map from './Map'
+import Map from '../../components'
 
 const Form = () => {
   const router = useRouter()

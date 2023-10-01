@@ -145,7 +145,7 @@ const NotificationDropdown = props => {
             '& .MuiBadge-badge': { top: 4, right: 4, boxShadow: theme => `0 0 0 2px ${theme.palette.background.paper}` }
           }}
         >
-          <Icon fontSize='1.625rem' icon='tabler:bell' />
+          <Icon fontSize='1.625rem' icon='tabler:heart-filled' />
         </Badge>
       </IconButton>
       <Menu
@@ -162,7 +162,7 @@ const NotificationDropdown = props => {
         >
           <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', width: '100%' }}>
             <Typography variant='h5' sx={{ cursor: 'text' }}>
-              Notifications
+              Favourites
             </Typography>
             <CustomChip skin='light' size='small' color='primary' label={`${notifications.length} New`} />
           </Box>
@@ -195,7 +195,7 @@ const NotificationDropdown = props => {
           }}
         >
           <Button fullWidth variant='contained' onClick={handleDropdownClose}>
-            Read All Notifications
+            View All Favourites
           </Button>
         </MenuItem>
       </Menu>
