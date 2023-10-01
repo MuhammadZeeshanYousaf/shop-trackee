@@ -3,7 +3,7 @@ import { Card, CardContent, CardHeader, Grid } from '@mui/material'
 import { AnalyticsSlider, Map } from '../../components'
 import { useLoader } from 'src/hooks'
 
-const Listing = () => {
+const CustomerDashboard = () => {
   const { setLoader } = useLoader()
   const [longitude, setLongitude] = useState(null)
   const [latitude, setLatitude] = useState(null)
@@ -43,9 +43,9 @@ const Listing = () => {
   )
 }
 
-Listing.acl = {
-  subject: 'listing',
+CustomerDashboard.acl = {
+  subject: 'customer-dashboard',
   action: 'read'
 }
 
-export default Listing
+export default CustomerDashboard
