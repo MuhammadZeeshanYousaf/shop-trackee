@@ -13,6 +13,7 @@ const Profile = () => {
   const getUserProfile = async () => {
     setLoader(true)
     const response = await Network.get(Url.getUser)
+
     setLoader(false)
     if (!response.ok) return showErrorMessage(response.data.message)
     setUser(response.data.resource_owner)

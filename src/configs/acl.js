@@ -23,6 +23,8 @@ const defineRulesFor = (role, subject) => {
   } else if (role === 'customer') {
     can(['read'], 'acl-page')
     can(['read'], 'customer-dashboard')
+    can('read', 'profile')
+    can('read', 'edit-user-profile')
   } else {
     can(['read', 'create', 'update', 'delete'], subject)
   }

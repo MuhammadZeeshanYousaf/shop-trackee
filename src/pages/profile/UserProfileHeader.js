@@ -31,6 +31,13 @@ const UserProfileHeader = ({ user }) => {
   const router = useRouter()
   const theme = useTheme()
 
+  const handleEditProfile = () => {
+    if (user?.role == 'customer') {
+      return router.push('/edit-user-profile')
+    }
+    router.push('/edit-profile')
+  }
+
   return (
     <Card>
       <CardMedia
@@ -89,7 +96,7 @@ const UserProfileHeader = ({ user }) => {
               </Box>
             </Box>
           </Box>
-          <Button variant='contained' sx={{ '& svg': { mr: 2 } }} onClick={() => router.push('/edit-profile')}>
+          <Button variant='contained' sx={{ '& svg': { mr: 2 } }} onClick={() => handleEditProfile()}>
             Edit Profile
           </Button>
         </Box>

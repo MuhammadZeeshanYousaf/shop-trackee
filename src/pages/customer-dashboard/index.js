@@ -32,11 +32,8 @@ const CustomerDashboard = () => {
         <AnalyticsSlider />
       </Grid>
       <Grid item xs={12} lg={6}>
-        <Card sx={{ height: '230px' }}>
-          <CardHeader title={'Current Location'} />
-          <CardContent>
-            <Map latitude={latitude} longitude={longitude} height='20vh' />
-          </CardContent>
+        <Card>
+          <Map latitude={latitude} longitude={longitude} height='29vh' />
         </Card>
       </Grid>
     </Grid>

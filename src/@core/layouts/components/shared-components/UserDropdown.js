@@ -155,12 +155,14 @@ const UserDropdown = props => {
             My Profile
           </Box>
         </MenuItemStyled>
-        <MenuItemStyled sx={{ p: 0 }} onClick={() => handleDropdownClose()}>
-          <Box sx={styles} onClick={() => router.push('/shop')}>
-            <Icon icon='tabler:brand-shopee' />
-            Order Requests
-          </Box>
-        </MenuItemStyled>
+        {user.role == 'shop' ? (
+          <MenuItemStyled sx={{ p: 0 }} onClick={() => handleDropdownClose()}>
+            <Box sx={styles} onClick={() => router.push('/shop')}>
+              <Icon icon='tabler:brand-shopee' />
+              Order Requests
+            </Box>
+          </MenuItemStyled>
+        ) : null}
         {/* <MenuItemStyled sx={{ p: 0 }} onClick={() => handleDropdownClose()}>
           <Box sx={styles}>
             <Icon icon='tabler:settings' />
