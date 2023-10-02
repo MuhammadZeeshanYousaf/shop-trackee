@@ -50,5 +50,5 @@ export default {
   getShopOrderRequests: '/order_requests',
 
   //get all categories
-  getAllCategories: '/categories'
+  getAllCategories: type => `/categories?type=${type}`
 }

@@ -8,14 +8,22 @@ const CustomerDashboard = () => {
   const { setLoader } = useLoader()
   const [longitude, setLongitude] = useState(null)
   const [latitude, setLatitude] = useState(null)
-  const [categories, setCategories] = useState([])
+  const [productCategories, setProductCategories] = useState([])
+  const [serviceCategories, setServiceCategories] = useState([])
 
-  const getCategories = async () => {
+  const getProductCategories = async () => {
     setLoader(true)
-    const response = await Network.get(Url.getAllCategories)
+    const response = await Network.get(Url.getAllCategories('product'))
     setLoader(false)
     if (!response.ok) return showErrorMessage(response.data.message)
-    setCategories(response.data.categories)
+    setProductCategories(response.data.categories)
+  }
+  const getServiceCategories = async () => {
+    setLoader(true)
+    const response = await Network.get(Url.getAllCategories('service'))
+    setLoader(false)
+    if (!response.ok) return showErrorMessage(response.data.message)
+    setServiceCategories(response.data.categories)
   }
 
   useEffect(() => {
@@ -37,7 +45,8 @@ const CustomerDashboard = () => {
   }, [])
 
   useEffect(() => {
-    getCategories()
+    getProductCategories()
+    getServiceCategories()
   }, [])
 
   return (
@@ -52,12 +61,26 @@ const CustomerDashboard = () => {
           </Card>
         </Grid>
       </Grid>
-      <Typography sx={{mt:5}} variant='h4'>Categories</Typography>
-      <Box sx={{ display: 'flex', justifyContent: 'space-around', overflowX: 'scroll', width: '100%' }}>
-        {categories.map(category => (
-          <Button sx={{ minWidth: '200px' }}>{category}</Button>
-        ))}
-      </Box>
+      <Card sx={{ mt: 5 }}>
+        <CardHeader title='Product Categories' />
+        <CardContent>
+          <Box sx={{ display: 'flex', justifyContent: 'space-around', overflowX: 'scroll', width: '100%', pl: 10 }}>
+            {productCategories.map(category => (
+              <Button sx={{ minWidth: '200px' }}>{category}</Button>
+            ))}
+          </Box>
+        </CardContent>
+      </Card>
+      <Card sx={{ mt: 5 }}>
+        <CardHeader title='Service Categories' />
+        <CardContent>
+          <Box sx={{ display: 'flex', justifyContent: 'space-around', overflowX: 'scroll', width: '100%', pl: 10 }}>
+            {serviceCategories.map(category => (
+              <Button sx={{ minWidth: '200px' }}>{category}</Button>
+            ))}
+          </Box>
+        </CardContent>
+      </Card>
     </>
   )
 }
