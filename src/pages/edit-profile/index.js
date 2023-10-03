@@ -45,6 +45,7 @@ const EditProfile = () => {
 
   const schema = yup.object().shape({
     name: yup.string().required(),
+    intro: yup.string(),
     phone: yup.string().required(),
     country: yup.string().required(),
     address: yup.string().required(),
@@ -73,6 +74,7 @@ const EditProfile = () => {
     formData.append('country', data.country)
     formData.append('address', data.address)
     formData.append('gender', data.gender)
+    formData.append('intro', data.intro )
     if (inputValue) formData.append('avatar', inputValue)
     setLoader(true)
     const response = await Network.put(Url.updateUser, formData, (await multipartConfig()).headers)
@@ -94,6 +96,7 @@ const EditProfile = () => {
     setValue('country', response.data.resource_owner.country)
     setValue('address', response.data.resource_owner.address)
     setValue('gender', response.data.resource_owner.gender)
+    setValue('intro', response.data.resource_owner.intro)
 
     if (response.data.resource_owner?.avatar) {
       setImgSrc(`${process.env.NEXT_PUBLIC_API_HOST_URL}/${response.data.resource_owner?.avatar}`)
@@ -143,7 +146,7 @@ const EditProfile = () => {
       <CardContent>
         <form noValidate autoComplete='off' onSubmit={handleSubmit(onSubmit)}>
           <Grid container spacing={5}>
-            <Grid item xs={12}>
+            <Grid item lg={6} xs={12}>
               <Controller
                 name='name'
                 control={control}
@@ -160,6 +163,28 @@ const EditProfile = () => {
                     placeholder='Enter your name'
                     error={Boolean(errors.name)}
                     {...(errors.name && { helperText: errors.name.message })}
+                  />
+                )}
+              />
+            </Grid>
+            <Grid item lg={6} xs={12}>
+              <Controller
+                name='intro'
+                control={control}
+                defaultValue=''
+                render={({ field: { value, onChange, onBlur } }) => (
+                  <CustomTextField
+                    fullWidth
+                    multiline
+                    rows={4}
+                    autoFocus
+                    label='Intro'
+                    value={value}
+                    onBlur={onBlur}
+                    onChange={onChange}
+                    placeholder='description'
+                    error={Boolean(errors.intro)}
+                    {...(errors.intro && { helperText: errors.intro.message })}
                   />
                 )}
               />
