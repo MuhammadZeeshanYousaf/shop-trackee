@@ -14,9 +14,9 @@ const navigation = () => [
     subject: 'shop'
   },
   {
-    title: 'Dashboard',
+    title: 'Home',
     path: '/customer-dashboard',
-    icon: 'tabler:building-warehouse',
+    icon: 'tabler:home-2',
     action: 'read',
     subject: 'customer-dashboard'
   }
