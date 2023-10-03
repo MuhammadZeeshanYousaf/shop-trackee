@@ -57,28 +57,28 @@ const CustomerDashboard = () => {
         </Grid>
         <Grid item xs={12} lg={6}>
           <Card>
-            <Map latitude={latitude} longitude={longitude} height='29vh' />
+            <Map latitude={latitude} longitude={longitude} height='227px' />
           </Card>
         </Grid>
       </Grid>
       <Card sx={{ mt: 5 }}>
         <CardHeader title='Product Categories' />
         <CardContent>
-          <Box sx={{ display: 'flex', justifyContent: 'space-around', overflowX: 'scroll', width: '100%', pl: 10 }}>
+          <div className='scroll-container'>
             {productCategories.map(category => (
               <Button sx={{ minWidth: '200px' }}>{category}</Button>
             ))}
-          </Box>
+          </div>
         </CardContent>
       </Card>
       <Card sx={{ mt: 5 }}>
         <CardHeader title='Service Categories' />
         <CardContent>
-          <Box sx={{ display: 'flex', justifyContent: 'space-around', overflowX: 'scroll', width: '100%', pl: 10 }}>
+          <div className='scroll-container'>
             {serviceCategories.map(category => (
               <Button sx={{ minWidth: '200px' }}>{category}</Button>
             ))}
-          </Box>
+          </div>
         </CardContent>
       </Card>
     </>

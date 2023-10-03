@@ -26,3 +26,27 @@ code[class*='language-'] {
 .css-1nmdiq5-menu {
   background-color: red;
 }
+
+.scroll-container {
+  display: flex;
+  justify-content: space-around;
+  overflow-x: scroll;
+  width: 100%;
+  padding-left: 10;
+}
+
+.scroll-container::-webkit-scrollbar {
+  width: 2px;
+}
+
+.scroll-container::-webkit-scrollbar-thumb {
+  background-color: blue;
+  border-radius: 10px;
+  height: 2px;
+  display: none;
+}
+
+.scroll-container::-webkit-scrollbar-track {
+  background-color: #f0f0f0;
+  display: none;
+}
