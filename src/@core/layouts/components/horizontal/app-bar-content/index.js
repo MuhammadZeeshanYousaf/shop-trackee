@@ -25,7 +25,7 @@ const AppBarContent = props => {
 
   const user = JSON.parse(localStorage.getItem('userData'))
 
-  const route = user.role == 'seller' ? '/shop-dashboard' : '/customer/dashboard'
+  const route = user.role == 'seller' ? '/shop-dashboard' : '/customer-dashboard'
 
   return (
     <Box sx={{ width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>

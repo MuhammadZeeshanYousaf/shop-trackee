@@ -66,7 +66,7 @@ const CustomerDashboard = () => {
         <CardContent>
           <div className='scroll-container'>
             {productCategories.map(category => (
-              <Button sx={{ minWidth: '200px' }}>{category}</Button>
+              <Button>{category}</Button>
             ))}
           </div>
         </CardContent>
@@ -76,7 +76,7 @@ const CustomerDashboard = () => {
         <CardContent>
           <div className='scroll-container'>
             {serviceCategories.map(category => (
-              <Button sx={{ minWidth: '200px' }}>{category}</Button>
+              <Button>{category}</Button>
             ))}
           </div>
         </CardContent>

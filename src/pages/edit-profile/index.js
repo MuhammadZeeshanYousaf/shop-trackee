@@ -74,7 +74,7 @@ const EditProfile = () => {
     formData.append('country', data.country)
     formData.append('address', data.address)
     formData.append('gender', data.gender)
-    formData.append('intro', data.intro )
+    formData.append('intro', data.intro)
     if (inputValue) formData.append('avatar', inputValue)
     setLoader(true)
     const response = await Network.put(Url.updateUser, formData, (await multipartConfig()).headers)
