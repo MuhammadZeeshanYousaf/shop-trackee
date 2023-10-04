@@ -1,4 +1,15 @@
-import { Button, Card, CardContent, CardHeader, FormLabel, Grid, MenuItem, CardActions, Box } from '@mui/material'
+import {
+  Button,
+  Card,
+  CardContent,
+  CardHeader,
+  FormLabel,
+  Grid,
+  MenuItem,
+  CardActions,
+  Box,
+  InputLabel
+} from '@mui/material'
 import { useRouter } from 'next/router'
 import * as yup from 'yup'
 import { yupResolver } from '@hookform/resolvers/yup'
@@ -10,11 +21,12 @@ import { useTheme } from '@mui/material/styles'
 import { useState, useEffect } from 'react'
 import { v4 as uuid } from 'uuid'
 import Icon from 'src/@core/components/icon'
+import { geocodeByPlaceId } from 'react-google-places-autocomplete'
 import GooglePlacesAutocomplete from 'react-google-places-autocomplete'
 import { Network, Url } from '../../configs'
 import { showErrorMessage, showSuccessMessage, CustomInput, DatePickerWrapper } from '../../components'
 import { useLoader } from '../../hooks'
-import moment from 'moment-timezone'
+import Map from '../../components'
 
 const Form = () => {
   const router = useRouter()
@@ -22,6 +34,9 @@ const Form = () => {
   const theme = useTheme()
   const { direction } = theme
   const { setLoader } = useLoader()
+
+  const [longitude, setLongitude] = useState(null)
+  const [latitude, setLatitude] = useState(null)
 
   const [socialLinks, setSocialLinks] = useState([
     {
@@ -49,7 +64,7 @@ const Form = () => {
   const schema = yup.object().shape({
     name: yup.string().required(),
     description: yup.string(),
-    address: yup.string().required(),
+    address: yup.object().nullable(),
     contact: yup.string().required(),
     opening_time: yup.string(),
     closing_time: yup.string(),
@@ -61,6 +76,7 @@ const Form = () => {
     setError,
     handleSubmit,
     setValue,
+    getValues,
     formState: { errors }
   } = useForm({
     mode: 'onBlur',
@@ -94,53 +110,16 @@ const Form = () => {
     setSocialLinks(updatedData)
   }
 
-  const simplifyTime = inputDateTime => {
-    const inputDate = new Date(inputDateTime)
-
-    const hours = inputDate.getHours()
-    const minutes = inputDate.getMinutes()
-    const ampm = hours >= 12 ? 'pm' : 'am'
-
-    // Convert hours from 24-hour format to 12-hour format
-    const hours12 = hours % 12 || 12
-
-    // Pad the minutes with a leading zero if necessary
-    const paddedMinutes = minutes < 10 ? `0${minutes}` : minutes
-
-    const formattedTime = `${hours12}:${paddedMinutes} ${ampm}`
-    return formattedTime
-  }
-
-  const convertintoTimeZone = inputTime => {
-    const [time, ampm] = inputTime.split(/[APM:]+/).filter(Boolean)
-    const [hours, minutes] = time.split(':').map(Number)
-
-    // Create a Date object with the input time in the current timezone
-    const currentTime = new Date()
-    currentTime.setHours(hours)
-    currentTime.setMinutes(minutes)
-
-    // Convert the time to the target timezone
-    const options = {
-      timeZone: 'Asia/Karachi',
-      hour12: true,
-      hour: 'numeric',
-      minute: 'numeric'
-    }
-
-    return currentTime.toLocaleString('en-US', options)
-  }
-
   const onSubmit = async data => {
     const social_links = []
-
     socialLinks.forEach(item => {
       social_links.push(item.link)
     })
-
     const payload = {
       ...data,
-      social_links
+      social_links,
+      longitude: longitude,
+      latitude: latitude
     }
 
     const request = mode == 'Add' ? 'post' : 'put'
@@ -166,6 +145,8 @@ const Form = () => {
     setValue('opening_time', response.data.opening_time ? new Date(response.data.opening_time) : '')
     setValue('closing_time', response.data.closing_time ? new Date(response.data.closing_time) : '')
     setValue('closing_days', response.data.closing_days)
+    setLongitude(response.data.longitude)
+    setLatitude(response.data.latitude)
 
     const social_links = response.data.social_links.map(link => {
       return {
@@ -182,13 +163,67 @@ const Form = () => {
     }
   }, [])
 
+  useEffect(() => {
+    if (mode !== 'Edit') {
+      if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(function (position) {
+          setLoader(true)
+          setLongitude(position?.coords?.longitude)
+          setLatitude(position?.coords?.latitude)
+          setLoader(false)
+        }),
+          {
+            enableHighAccuracy: true,
+            timeout: 10000,
+            maximumAge: 0
+          }
+      } else {
+        showErrorMessage('It is better to select location')
+      }
+    }
+  }, [])
+
+  // console.log(getValues('address'))
+
   return (
     <Card>
       <CardHeader title={`${mode} Shop Details`} />
       <CardContent>
+        <Map latitude={latitude} longitude={longitude} />
         <form onSubmit={handleSubmit(onSubmit)}>
           {/* name and contact */}
           <Grid container spacing={5} sx={{ marginTop: '5px' }}>
+            <Grid item xs={12} md={12} style={{ zIndex: 10 }}>
+              <InputLabel>Address</InputLabel>
+              <Controller
+                name='address'
+                control={control}
+                defaultValue={null}
+                rules={{ required: true }}
+                label='Address'
+                render={({ field: { onChange, value } }) => {
+                  return (
+                    <GooglePlacesAutocomplete
+                      onLoadFailed={error => console.error('Could not inject Google script', error)}
+                      fetchDetails={true}
+                      selectProps={{
+                        value: value,
+                        onChange: async value => {
+                          if (value) {
+                            onChange(value)
+                            const location = await geocodeByPlaceId(value.value.place_id)
+                            setLongitude(location[0].geometry.location.lng())
+                            setLatitude(location[0].geometry.location.lat())
+                          }
+                        },
+                        isClearable: true
+                      }}
+                    />
+                  )
+                }}
+              />
+              {errors.address && <span style={{ color: '#EC6364' }}>{errors.address.message}</span>}
+            </Grid>
             <Grid item xs={12} md={6}>
               <Controller
                 name='name'
@@ -225,7 +260,9 @@ const Form = () => {
                     onChange={onChange}
                     placeholder='Enter your phone #'
                     error={Boolean(errors.contact)}
-                    {...(errors.contact && { helperText: errors.contact.message })}
+                    {...(errors.contact && {
+                      helperText: errors.contact.message
+                    })}
                   />
                 )}
               />
@@ -243,6 +280,7 @@ const Form = () => {
                   <DatePickerWrapper>
                     <Box className='demo-space-x'>
                       <DatePicker
+                        autoComplete='off'
                         showTimeSelect
                         showTimeSelectOnly
                         selected={value}
@@ -268,6 +306,7 @@ const Form = () => {
                   <DatePickerWrapper>
                     <Box className='demo-space-x'>
                       <DatePicker
+                        autoComplete='off'
                         showTimeSelect
                         showTimeSelectOnly
                         selected={value}
@@ -300,7 +339,9 @@ const Form = () => {
                       label='Closing Days'
                       id='select-multiple-chip'
                       error={Boolean(errors.closing_days)}
-                      {...(errors.closing_days && { helperText: errors.closing_days.message })}
+                      {...(errors.closing_days && {
+                        helperText: errors.closing_days.message
+                      })}
                       SelectProps={{
                         MenuProps,
                         multiple: true,
@@ -323,26 +364,6 @@ const Form = () => {
                     </CustomTextField>
                   )
                 }}
-              />
-            </Grid>
-            <Grid item xs={12} md={6}>
-              <Controller
-                name='address'
-                control={control}
-                defaultValue=''
-                rules={{ required: true }}
-                render={({ field: { value, onChange, onBlur } }) => (
-                  <CustomTextField
-                    fullWidth
-                    label='Address'
-                    value={value}
-                    onBlur={onBlur}
-                    onChange={onChange}
-                    placeholder='Enter your address'
-                    error={Boolean(errors.address)}
-                    {...(errors.address && { helperText: errors.address.message })}
-                  />
-                )}
               />
             </Grid>
           </Grid>
@@ -398,16 +419,16 @@ const Form = () => {
                     onChange={onChange}
                     placeholder='Enter description'
                     error={Boolean(errors.description)}
-                    {...(errors.description && { helperText: errors.description.message })}
+                    {...(errors.description && {
+                      helperText: errors.description.message
+                    })}
                   />
                 )}
               />
             </Grid>
           </Grid>
 
-          {/* <Grid container spacing={5} sx={{ marginTop: '5px' }}>
-            <GooglePlacesAutocomplete apiKey='AIzaSyDoN2CpVkzIUTZfg46lJljBmEbaJqWxYg8' />
-          </Grid> */}
+          <Grid container spacing={5} sx={{ marginTop: '5px' }}></Grid>
 
           <CardActions sx={{ justifyContent: 'end' }}>
             <Button type='submit' variant='contained'>
@@ -421,6 +442,11 @@ const Form = () => {
       </CardContent>
     </Card>
   )
+}
+
+Form.acl = {
+  subject: 'shop-form',
+  action: 'read'
 }
 
 export default Form

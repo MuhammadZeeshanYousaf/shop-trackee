@@ -1,4 +1,15 @@
-import { CardHeader, Divider, Card, CardContent, Grid, Button, CardActions } from '@mui/material'
+import {
+  CardHeader,
+  Divider,
+  Card,
+  CardContent,
+  Grid,
+  Button,
+  CardActions,
+  Switch,
+  FormLabel,
+  FormControlLabel
+} from '@mui/material'
 import CustomTextField from 'src/@core/components/mui/text-field'
 import MenuItem from '@mui/material/MenuItem'
 import { Controller, useForm } from 'react-hook-form'
@@ -37,7 +48,7 @@ const ResetButtonStyled = styled(Button)(({ theme }) => ({
   }
 }))
 
-const EditProfile = () => {
+const EditUserProfile = () => {
   const [inputValue, setInputValue] = useState(null)
   const [imgSrc, setImgSrc] = useState('/images/avatars/1.png')
   const router = useRouter()
@@ -45,11 +56,13 @@ const EditProfile = () => {
 
   const schema = yup.object().shape({
     name: yup.string().required(),
-    intro: yup.string(),
     phone: yup.string().required(),
     country: yup.string().required(),
     address: yup.string().required(),
-    gender: yup.string().required()
+    gender: yup.string().required(),
+    vocation: yup.string().required(),
+    age: yup.number().required(),
+    newsletter_subscribed: yup.boolean().required()
   })
 
   useEffect(() => {
@@ -74,7 +87,9 @@ const EditProfile = () => {
     formData.append('country', data.country)
     formData.append('address', data.address)
     formData.append('gender', data.gender)
-    formData.append('intro', data.intro)
+    formData.append('vocation', data.vocation)
+    formData.append('age', data.age)
+    formData.append(' newsletter_subscribed', data.newsletter_subscribed)
     if (inputValue) formData.append('avatar', inputValue)
     setLoader(true)
     const response = await Network.put(Url.updateUser, formData, (await multipartConfig()).headers)
@@ -96,7 +111,9 @@ const EditProfile = () => {
     setValue('country', response.data.resource_owner.country)
     setValue('address', response.data.resource_owner.address)
     setValue('gender', response.data.resource_owner.gender)
-    setValue('intro', response.data.resource_owner.intro)
+    setValue('vocation', response.data.resource_owner.vocation)
+    setValue('age', response.data.resource_owner.age)
+    setValue('newsletter_subscribed', response.data.resource_owner.newsletter_subscribed)
 
     if (response.data.resource_owner?.avatar) {
       setImgSrc(`${process.env.NEXT_PUBLIC_API_HOST_URL}/${response.data.resource_owner?.avatar}`)
@@ -146,7 +163,7 @@ const EditProfile = () => {
       <CardContent>
         <form noValidate autoComplete='off' onSubmit={handleSubmit(onSubmit)}>
           <Grid container spacing={5}>
-            <Grid item lg={6} xs={12}>
+            <Grid item xs={12}>
               <Controller
                 name='name'
                 control={control}
@@ -163,28 +180,6 @@ const EditProfile = () => {
                     placeholder='Enter your name'
                     error={Boolean(errors.name)}
                     {...(errors.name && { helperText: errors.name.message })}
-                  />
-                )}
-              />
-            </Grid>
-            <Grid item lg={6} xs={12}>
-              <Controller
-                name='intro'
-                control={control}
-                defaultValue=''
-                render={({ field: { value, onChange, onBlur } }) => (
-                  <CustomTextField
-                    fullWidth
-                    multiline
-                    rows={4}
-                    autoFocus
-                    label='Intro'
-                    value={value}
-                    onBlur={onBlur}
-                    onChange={onChange}
-                    placeholder='description'
-                    error={Boolean(errors.intro)}
-                    {...(errors.intro && { helperText: errors.intro.message })}
                   />
                 )}
               />
@@ -276,6 +271,59 @@ const EditProfile = () => {
               />
               {/* <CustomTextField fullWidth label='Address' placeholder='Address' /> */}
             </Grid>
+            <Grid item xs={12}>
+              <Controller
+                name='vocation'
+                control={control}
+                defaultValue=''
+                rules={{ required: true }}
+                render={({ field: { value, onChange, onBlur } }) => (
+                  <CustomTextField
+                    fullWidth
+                    label='Vocation'
+                    value={value}
+                    onBlur={onBlur}
+                    onChange={onChange}
+                    placeholder='Enter your vocation'
+                    error={Boolean(errors.vocation)}
+                    {...(errors.vocation && { helperText: errors.vocation.message })}
+                  />
+                )}
+              />
+              {/* <CustomTextField fullWidth label='Address' placeholder='Address' /> */}
+            </Grid>
+            <Grid item xs={12}>
+              <Controller
+                name='age'
+                control={control}
+                defaultValue={0}
+                rules={{ required: true }}
+                render={({ field: { value, onChange, onBlur } }) => (
+                  <CustomTextField
+                    fullWidth
+                    label='Age'
+                    value={value}
+                    type='number'
+                    onBlur={onBlur}
+                    onChange={onChange}
+                    placeholder='Enter your age'
+                    error={Boolean(errors.age)}
+                    {...(errors.age && { helperText: errors.age.message })}
+                  />
+                )}
+              />
+              {/* <CustomTextField fullWidth label='Address' placeholder='Address' /> */}
+            </Grid>
+            <Grid item xs={12}>
+              <FormLabel>Subscribe to the News Letter</FormLabel>
+
+              <Controller
+                name='newsletter_subscribed'
+                control={control}
+                defaultValue={false} // Set your initial value here
+                render={({ field }) => <FormControlLabel control={<Switch {...field} />} />}
+              />
+            </Grid>
           </Grid>
           <CardActions sx={{ justifyContent: 'end' }}>
             <Button type='submit' variant='contained'>
@@ -291,8 +339,8 @@ const EditProfile = () => {
   )
 }
 
-EditProfile.acl = {
-  subject: 'edit-profile',
+EditUserProfile.acl = {
+  subject: 'edit-user-profile',
   action: 'read'
 }
-export default EditProfile
+export default EditUserProfile

@@ -1,23 +1,25 @@
-const navigation = () => {
-  return [
-    {
-      title: 'Home',
-      path: '/home',
-      icon: 'tabler:smart-home',
-    },
-    {
-      title: 'Second Page',
-      path: '/second-page',
-      icon: 'tabler:mail',
-    },
-    {
-      path: '/acl',
-      action: 'read',
-      subject: 'acl-page',
-      title: 'Access Control',
-      icon: 'tabler:shield',
-    }
-  ]
-}
+const navigation = () => [
+  {
+    title: 'Dashboard',
+    path: '/shop-dashboard',
+    icon: 'tabler:apps-filled',
+    action: 'read',
+    subject: 'shop-dashboard'
+  },
+  {
+    title: 'Shops',
+    path: '/shop',
+    icon: 'tabler:building-warehouse',
+    action: 'read',
+    subject: 'shop'
+  },
+  {
+    title: 'Listing',
+    path: '/listing',
+    icon: 'tabler:building-warehouse',
+    action: 'read',
+    subject: 'listing'
+  }
+]
 
 export default navigation

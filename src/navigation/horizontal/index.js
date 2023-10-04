@@ -1,20 +1,24 @@
 const navigation = () => [
   {
-    title: 'Home',
-    path: '/home',
-    icon: 'tabler:smart-home'
+    title: 'Dashboard',
+    path: '/shop-dashboard',
+    icon: 'tabler:apps-filled',
+    action: 'read',
+    subject: 'shop-dashboard'
   },
   {
     title: 'Shops',
     path: '/shop',
-    icon: 'tabler:building-warehouse'
+    icon: 'tabler:building-warehouse',
+    action: 'read',
+    subject: 'shop'
   },
   {
-    path: '/acl',
+    title: 'Home',
+    path: '/customer-dashboard',
+    icon: 'tabler:home-2',
     action: 'read',
-    subject: 'acl-page',
-    title: 'Access Control',
-    icon: 'tabler:shield'
+    subject: 'customer-dashboard'
   }
 ]
 

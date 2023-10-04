@@ -91,7 +91,7 @@ const UserDropdown = props => {
           {user?.role}
         </Typography>
       </Box>
-      <Badge
+      {/* <Badge
         overlap='circular'
         onClick={handleDropdownOpen}
         sx={{ ml: 2, cursor: 'pointer' }}
@@ -100,20 +100,20 @@ const UserDropdown = props => {
           vertical: 'bottom',
           horizontal: 'right'
         }}
-      >
-        {user?.avatar ? (
-          <Avatar
-            alt={user?.name}
-            src={`${process.env.NEXT_PUBLIC_API_HOST_URL}${user?.avatar}`}
-            onClick={handleDropdownOpen}
-            sx={{ width: 38, height: 38 }}
-          />
-        ) : (
-          <Avatar onClick={handleDropdownOpen} sx={{ width: 38, height: 38 }}>
-            {user?.name[0]?.toUpperCase()}
-          </Avatar>
-        )}
-      </Badge>
+      > */}
+      {user?.avatar ? (
+        <Avatar
+          alt={user?.name}
+          src={`${process.env.NEXT_PUBLIC_API_HOST_URL}${user?.avatar}`}
+          onClick={handleDropdownOpen}
+          sx={{ width: 38, height: 38 }}
+        />
+      ) : (
+        <Avatar onClick={handleDropdownOpen} sx={{ width: 38, height: 38 }}>
+          {user?.name[0]?.toUpperCase()}
+        </Avatar>
+      )}
+      {/* </Badge> */}
       <Menu
         anchorEl={anchorEl}
         open={Boolean(anchorEl)}
@@ -124,24 +124,24 @@ const UserDropdown = props => {
       >
         <Box sx={{ py: 1.75, px: 6 }}>
           <Box sx={{ display: 'flex', alignItems: 'center' }}>
-            <Badge
+            {/* <Badge
               overlap='circular'
               badgeContent={<BadgeContentSpan />}
               anchorOrigin={{
                 vertical: 'bottom',
                 horizontal: 'right'
               }}
-            >
-              {user?.avatar ? (
-                <Avatar
-                  alt={user?.name}
-                  src={`${process.env.NEXT_PUBLIC_API_HOST_URL}${user?.avatar}`}
-                  sx={{ width: '2.5rem', height: '2.5rem' }}
-                />
-              ) : (
-                <Avatar sx={{ width: '2.5rem', height: '2.5rem' }}>{user?.name[0]?.toUpperCase()}</Avatar>
-              )}
-            </Badge>
+            > */}
+            {user?.avatar ? (
+              <Avatar
+                alt={user?.name}
+                src={`${process.env.NEXT_PUBLIC_API_HOST_URL}${user?.avatar}`}
+                sx={{ width: '2.5rem', height: '2.5rem' }}
+              />
+            ) : (
+              <Avatar sx={{ width: '2.5rem', height: '2.5rem' }}>{user?.name[0]?.toUpperCase()}</Avatar>
+            )}
+            {/* </Badge> */}
             <Box sx={{ display: 'flex', ml: 2.5, alignItems: 'flex-start', flexDirection: 'column' }}>
               <Typography sx={{ fontWeight: 500 }}>{user?.name}</Typography>
               <Typography variant='body2'>{user?.role}</Typography>
@@ -155,7 +155,15 @@ const UserDropdown = props => {
             My Profile
           </Box>
         </MenuItemStyled>
-        <MenuItemStyled sx={{ p: 0 }} onClick={() => handleDropdownClose()}>
+        {user.role == 'shop' ? (
+          <MenuItemStyled sx={{ p: 0 }} onClick={() => handleDropdownClose()}>
+            <Box sx={styles} onClick={() => router.push('/shop')}>
+              <Icon icon='tabler:brand-shopee' />
+              Order Requests
+            </Box>
+          </MenuItemStyled>
+        ) : null}
+        {/* <MenuItemStyled sx={{ p: 0 }} onClick={() => handleDropdownClose()}>
           <Box sx={styles}>
             <Icon icon='tabler:settings' />
             Settings
@@ -185,7 +193,7 @@ const UserDropdown = props => {
             <Icon icon='tabler:currency-dollar' />
             Pricing
           </Box>
-        </MenuItemStyled>
+        </MenuItemStyled> */}
         <Divider sx={{ my: theme => `${theme.spacing(2)} !important` }} />
         <MenuItemStyled sx={{ p: 0 }} onClick={handleLogout}>
           <Box sx={styles}>
