@@ -52,5 +52,7 @@ export default {
   //get all categories
   getAllCategories: type => `/categories?type=${type}`,
 
-  customeDashboard: '/customer/home?distance=9720&latitude=48.85341&longitude=2.3488'
+  customeDashboard: '/customer/home?distance=9720&latitude=48.85341&longitude=2.3488',
+
+  search: '/search'
 }

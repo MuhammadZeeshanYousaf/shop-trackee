@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { Button, Card, CardContent, CardHeader, Grid, Box, Typography } from '@mui/material'
+import { Button, Card, CardContent, CardHeader, Grid, Box, Typography, Dialog } from '@mui/material'
 import { AnalyticsSlider, Map, showErrorMessage } from '../../components'
 import { useLoader } from 'src/hooks'
 import { Network, Url } from 'src/configs'
@@ -26,21 +26,6 @@ const CustomerDashboard = () => {
     setServices(response.data.service.data)
   }
 
-  // const getProductCategories = async () => {
-  //   setLoader(true)
-  //   const response = await Network.get(Url.getAllCategories('product'))
-  //   setLoader(false)
-  //   if (!response.ok) return showErrorMessage(response.data.message)
-  //   setProductCategories(response.data.categories)
-  // }
-  // const getServiceCategories = async () => {
-  //   setLoader(true)
-  //   const response = await Network.get(Url.getAllCategories('service'))
-  //   setLoader(false)
-  //   if (!response.ok) return showErrorMessage(response.data.message)
-  //   setServiceCategories(response.data.categories)
-  // }
-
   useEffect(() => {
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(function (position) {
@@ -60,8 +45,6 @@ const CustomerDashboard = () => {
   }, [])
 
   useEffect(() => {
-    // getProductCategories()
-    // getServiceCategories()
     getCustomerDashboard()
   }, [])
 
@@ -78,11 +61,23 @@ const CustomerDashboard = () => {
         </Grid>
       </Grid>
       <Card sx={{ mt: 5 }}>
-        <CardHeader title='Product Categories' />
+        <div
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+            paddingLeft: '20px',
+            paddingRight: '20px',
+            paddingTop: '20px'
+          }}
+        >
+          <Typography variant='h4'>Products</Typography>
+          <Button size='small'>View All</Button>
+        </div>
         <CardContent>
           <div className='scroll-container'>
             {productCategories.map(category => (
-              <Button>{category}</Button>
+              <Button size='small'>{category}</Button>
             ))}
           </div>
 
@@ -96,11 +91,23 @@ const CustomerDashboard = () => {
         </CardContent>
       </Card>
       <Card sx={{ mt: 5 }}>
-        <CardHeader title='Service Categories' />
+        <div
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+            paddingLeft: '20px',
+            paddingRight: '20px',
+            paddingTop: '20px'
+          }}
+        >
+          <Typography variant='h4'>Services</Typography>
+          <Button size='small'>View All</Button>
+        </div>
         <CardContent>
           <div className='scroll-container'>
             {serviceCategories.map(category => (
-              <Button>{category}</Button>
+              <Button size='small'>{category}</Button>
             ))}
           </div>
           <Grid container>
