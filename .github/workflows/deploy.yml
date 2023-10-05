@@ -7,10 +7,16 @@ name: Deploy Shop Trackee to AWS
 on:
   # Runs on pushes targeting the default branch
   push:
-    branches: ['main']
+    branches: ['live']
 
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
+
+# Set environment variables
+env:
+  NEXT_PUBLIC_API_V1_BASE_URL: ${{ secrets.NEXT_PUBLIC_API_V1_BASE_URL }}
+  NEXT_PUBLIC_IMAGE_URL: ${{ secrets.NEXT_PUBLIC_IMAGE_URL }}
+  NEXT_PUBLIC_API_HOST_URL: ${{ secrets.NEXT_PUBLIC_API_HOST_URL }}
 
 # Sets permissions of the GITHUB_TOKEN to allow deployment to GitHub Pages
 permissions:
