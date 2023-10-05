@@ -5,9 +5,11 @@ import { useLoader } from 'src/hooks'
 import { Network, Url } from 'src/configs'
 import ServiceCard from '../shop/products-and-services/ServiceCard'
 import ProductCard from '../shop/products-and-services/ProductCard'
+import { useRouter } from 'next/router'
 
 const CustomerDashboard = () => {
   const { setLoader } = useLoader()
+  const router = useRouter()
   const [longitude, setLongitude] = useState(null)
   const [latitude, setLatitude] = useState(null)
   const [productCategories, setProductCategories] = useState([])
@@ -72,7 +74,14 @@ const CustomerDashboard = () => {
           }}
         >
           <Typography variant='h4'>Products</Typography>
-          <Button size='small'>View All</Button>
+          <Button
+            size='small'
+            onClick={() =>
+              router.push(`/fetch-products?longitude=${longitude}&latitude=${latitude}&distance=9720&product_page=1`)
+            }
+          >
+            View All
+          </Button>
         </div>
         <CardContent>
           <div className='scroll-container'>
@@ -102,7 +111,14 @@ const CustomerDashboard = () => {
           }}
         >
           <Typography variant='h4'>Services</Typography>
-          <Button size='small'>View All</Button>
+          <Button
+            size='small'
+            onClick={() =>
+              router.push(`/fetch-services?longitude=${longitude}&latitude=${latitude}&distance=9720&product_page=1`)
+            }
+          >
+            View All
+          </Button>
         </div>
         <CardContent>
           <div className='scroll-container'>

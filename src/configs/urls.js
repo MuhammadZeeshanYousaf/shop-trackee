@@ -54,5 +54,11 @@ export default {
 
   customeDashboard: '/customer/home?distance=9720&latitude=48.85341&longitude=2.3488',
 
-  search: '/search'
+  search: '/search',
+
+  viewAllProducts: (latitude, longitude, distance, product_page) =>
+    `/search_all?type=product&latitude=${latitude}&longitude=${longitude}&distance=${distance}&product_page=${product_page}`,
+
+  viewAllServices: (latitude, longitude, distance, product_page) =>
+    `/search_all?type=service&latitude=${latitude}&longitude=${longitude}&distance=${distance}&product_page=${product_page}`
 }
