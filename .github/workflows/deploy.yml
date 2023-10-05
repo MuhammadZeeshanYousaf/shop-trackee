@@ -25,12 +25,13 @@ concurrency:
   cancel-in-progress: false
 
 jobs:
-  # Build job
-  build:
+  # Build and deploy to AWS S3 job
+  build_n_deploy:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
         uses: actions/checkout@v3
+
       - name: Detect package manager
         id: detect-package-manager
         run: |
@@ -48,11 +49,13 @@ jobs:
             echo "Unable to determine package manager"
             exit 1
           fi
+
       - name: Setup Node
         uses: actions/setup-node@v3
         with:
           node-version: '16'
           cache: ${{ steps.detect-package-manager.outputs.manager }}
+
       - name: Restore cache
         uses: actions/cache@v3
         with:
@@ -63,10 +66,13 @@ jobs:
           # If source files changed but packages didn't, rebuild from a prior cache.
           restore-keys: |
             ${{ runner.os }}-nextjs-${{ hashFiles('**/package-lock.json', '**/yarn.lock') }}-
+
       - name: Install dependencies
         run: ${{ steps.detect-package-manager.outputs.manager }} ${{ steps.detect-package-manager.outputs.command }}
+
       - name: Build with Next.js
         run: ${{ steps.detect-package-manager.outputs.runner }} next build
+
       - name: Static HTML export with Next.js
         run: ${{ steps.detect-package-manager.outputs.runner }} next export
 
@@ -77,5 +83,10 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ap-south-1
           # role-to-assume: arn:aws:iam::123456789100:role/my-github-actions-role
+
       - name: Deploy to AWS S3
         run: aws s3 sync ./out s3://shop-trackee-webapp
+        env:
+          NEXT_PUBLIC_API_V1_BASE_URL: ${{ secrets.NEXT_PUBLIC_API_V1_BASE_URL }}
+          NEXT_PUBLIC_IMAGE_URL: ${{ secrets.NEXT_PUBLIC_IMAGE_URL }}
+          NEXT_PUBLIC_API_HOST_URL: ${{ secrets.NEXT_PUBLIC_API_HOST_URL }}
