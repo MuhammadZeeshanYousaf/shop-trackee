@@ -50,5 +50,7 @@ export default {
   getShopOrderRequests: '/order_requests',
 
   //get all categories
-  getAllCategories: type => `/categories?type=${type}`
+  getAllCategories: type => `/categories?type=${type}`,
+
+  customeDashboard: '/customer/home?distance=9720&latitude=48.85341&longitude=2.3488'
 }
