@@ -29,7 +29,9 @@ const ShopCard = ({ shop, deleteShop }) => {
             <Typography variant='h4'>{shop?.name}</Typography>
             <Typography sx={{ mb: 5, color: 'text.secondary', fontWeight: 500 }}>{shop?.contact}</Typography>
             <Box sx={{ mb: 5 }}>
-              <Typography sx={{ mb: 5, color: 'text.secondary', fontWeight: 500 }}>{shop?.description}</Typography>
+              <Typography sx={{ mb: 5, color: 'text.secondary', fontWeight: 500, height: '50px', overflow: 'hidden' }}>
+                {shop?.description}
+              </Typography>
             </Box>
             <Box sx={{ mb: 5, display: 'flex', alignItems: 'center' }}>
               {shop?.opening_time ? (
