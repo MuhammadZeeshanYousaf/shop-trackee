@@ -18,7 +18,7 @@ const Loader = ({ visible }) => {
         zIndex: 9999
       }}
     >
-      <image src={'/images/preloader.gif'} alt='Loading...' width={80} height={80} />
+      <img src={'/images/preloader.gif'} alt='Loading...' width={80} height={80} />
     </div>
   )
 }
