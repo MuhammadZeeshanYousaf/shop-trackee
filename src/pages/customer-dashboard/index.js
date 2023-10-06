@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import { Button, Card, CardContent, CardHeader, Grid, Box, Typography, Dialog } from '@mui/material'
 import { AnalyticsSlider, Map, showErrorMessage } from '../../components'
-import { useLoader } from 'src/hooks'
+import { useLoader, useCoordinates } from 'src/hooks'
 import { Network, Url } from 'src/configs'
 import ServiceCard from '../shop/products-and-services/ServiceCard'
 import ProductCard from '../shop/products-and-services/ProductCard'
@@ -9,9 +9,10 @@ import { useRouter } from 'next/router'
 
 const CustomerDashboard = () => {
   const { setLoader } = useLoader()
+  const { setCoordinates, latitude, longitude } = useCoordinates()
   const router = useRouter()
-  const [longitude, setLongitude] = useState(null)
-  const [latitude, setLatitude] = useState(null)
+  // const [longitude, setLongitude] = useState(null)
+  // const [latitude, setLatitude] = useState(null)
   const [productCategories, setProductCategories] = useState([])
   const [serviceCategories, setServiceCategories] = useState([])
   const [products, setProducts] = useState([])
@@ -32,8 +33,8 @@ const CustomerDashboard = () => {
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(function (position) {
         setLoader(true)
-        setLongitude(position?.coords?.longitude)
-        setLatitude(position?.coords?.latitude)
+        setCoordinates(position?.coords?.longitude, position?.coords?.latitude)
+
         setLoader(false)
       }),
         {
@@ -90,7 +91,7 @@ const CustomerDashboard = () => {
             ))}
           </div>
 
-          <Grid container>
+          <Grid container spacing={5}>
             {products?.map((product, i) => (
               <Grid xs={12} lg={6} item>
                 <ProductCard key={product?.id} id={product?.id} product={product} deleteProduct={() => {}} shopId={1} />
@@ -126,7 +127,7 @@ const CustomerDashboard = () => {
               <Button size='small'>{category}</Button>
             ))}
           </div>
-          <Grid container>
+          <Grid container spacing={5}>
             {services?.map((service, i) => (
               <Grid xs={12} lg={6} item>
                 <ServiceCard service={service} key={i} deleteService={() => {}} shopId={1} />

@@ -1,3 +1,4 @@
 import useLoader from './useLoader'
+import useCoordinates from './useCoordinates'
 
-export { useLoader }
+export { useLoader, useCoordinates }

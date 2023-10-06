@@ -34,7 +34,7 @@ import Spinner from 'src/@core/components/spinner'
 // ** Contexts
 import { AuthProvider } from 'src/context/AuthContext'
 import { SettingsConsumer, SettingsProvider } from 'src/@core/context/settingsContext'
-import { LoaderContext } from 'src/context'
+import { LoaderContext, CoodinateContext } from 'src/context'
 
 // ** Styled Components
 import ReactHotToast from 'src/@core/styles/libs/react-hot-toast'
@@ -89,6 +89,8 @@ const App = props => {
   const { Component, emotionCache = clientSideEmotionCache, pageProps } = props
 
   const [loading, setLoading] = useState(false)
+  const [longitude, setLongitude] = useState(null)
+  const [latitude, setLatitude] = useState(null)
 
   // Variables
   const contentHeightFixed = Component.contentHeightFixed ?? false
@@ -111,25 +113,27 @@ const App = props => {
 
       <AuthProvider>
         <LoaderContext.Provider value={{ loading, setLoading }}>
-          <Loader visible={loading} />
-          <SettingsProvider {...(setConfig ? { pageSettings: setConfig() } : {})}>
-            <SettingsConsumer>
-              {({ settings }) => {
-                return (
-                  <ThemeComponent settings={settings}>
-                    <Guard authGuard={authGuard} guestGuard={guestGuard}>
-                      <AclGuard aclAbilities={aclAbilities} guestGuard={guestGuard} authGuard={authGuard}>
-                        {getLayout(<Component {...pageProps} />)}
-                      </AclGuard>
-                    </Guard>
-                    <ReactHotToast>
-                      <Toaster position={settings.toastPosition} toastOptions={{ className: 'react-hot-toast' }} />
-                    </ReactHotToast>
-                  </ThemeComponent>
-                )
-              }}
-            </SettingsConsumer>
-          </SettingsProvider>
+          <CoodinateContext.Provider value={{ latitude, setLatitude, setLongitude, longitude }}>
+            <Loader visible={loading} />
+            <SettingsProvider {...(setConfig ? { pageSettings: setConfig() } : {})}>
+              <SettingsConsumer>
+                {({ settings }) => {
+                  return (
+                    <ThemeComponent settings={settings}>
+                      <Guard authGuard={authGuard} guestGuard={guestGuard}>
+                        <AclGuard aclAbilities={aclAbilities} guestGuard={guestGuard} authGuard={authGuard}>
+                          {getLayout(<Component {...pageProps} />)}
+                        </AclGuard>
+                      </Guard>
+                      <ReactHotToast>
+                        <Toaster position={settings.toastPosition} toastOptions={{ className: 'react-hot-toast' }} />
+                      </ReactHotToast>
+                    </ThemeComponent>
+                  )
+                }}
+              </SettingsConsumer>
+            </SettingsProvider>
+          </CoodinateContext.Provider>
         </LoaderContext.Provider>
       </AuthProvider>
     </CacheProvider>

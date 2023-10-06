@@ -13,6 +13,7 @@ import { styled, useTheme } from '@mui/material/styles'
 import MuiAutocomplete from '@mui/material/Autocomplete'
 import Webcam from 'react-webcam'
 import { useRouter } from 'next/router'
+import { useCoordinates } from 'src/hooks'
 
 const notifications = [
   {
@@ -63,6 +64,7 @@ const AppBarContent = props => {
   // ** Props
   const theme = useTheme()
   const router = useRouter()
+  const { longitude, latitude } = useCoordinates()
   const { settings, saveSettings } = props
   const user = JSON.parse(localStorage.getItem('userData'))
   const [openDialog, setOpenDialog] = useState(false)
@@ -87,21 +89,17 @@ const AppBarContent = props => {
   // }, [webcamRef])
 
   const search = async text => {
-    const formData = new FormData()
-    formData.append('latitude', '48.85341')
-    formData.append('longitude', '2.3488')
-    formData.append('distance', '9720')
     if (text == 'searchByImage') {
+      setOpenDialog(false)
       const imageSrc = webcamRef.current.getScreenshot()
-      formData.append('q', imageSrc)
+      localStorage.setItem('search-image', imageSrc)
+      router.push(`/search-result?q=${imageSrc}&longitude=${longitude}&latitude=${latitude}&distance=9720&method=post`)
     } else if (text == 'searchByText') {
-      formData.append('q', searchValue)
+      setOpenDialog(false)
+      router.push(
+        `/search-result?q=${searchValue}&longitude=${longitude}&latitude=${latitude}&distance=9720&method=get`
+      )
     }
-
-    // for (var pair of formData.entries()) {
-    //   console.log(pair[0] + ', ' + pair[1])
-    // }
-    router.push(`/search-result?data=${formData}`)
   }
 
   return (
