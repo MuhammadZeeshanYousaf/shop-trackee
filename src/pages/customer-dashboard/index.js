@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import { Button, Card, CardContent, CardHeader, Grid, Box, Typography, Dialog } from '@mui/material'
-import { AnalyticsSlider, Map, showErrorMessage } from '../../components'
+import { AnalyticsSlider, Map, showErrorMessage, CustomerProductCard } from '../../components'
 import { useLoader, useCoordinates } from 'src/hooks'
 import { Network, Url } from 'src/configs'
 import ServiceCard from '../shop/products-and-services/ServiceCard'
@@ -93,13 +93,14 @@ const CustomerDashboard = () => {
 
           <Grid container spacing={5}>
             {products?.map((product, i) => (
-              <Grid xs={12} lg={6} item>
-                <ProductCard key={product?.id} id={product?.id} product={product} deleteProduct={() => {}} shopId={1} />
+              <Grid item xs={12} sm={6} md={4}>
+                <CustomerProductCard product={product} key={i} />
               </Grid>
             ))}
           </Grid>
         </CardContent>
       </Card>
+
       <Card sx={{ mt: 5 }}>
         <div
           style={{

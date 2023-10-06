@@ -45,14 +45,16 @@ const ProductCard = ({ product, deleteProduct, shopId, id }) => {
   }))
 
   return (
-    <Card sx={{ mt: 5 }} key={product?.id}>
+    <Card sx={{ mt: 5, height: '300px' }} key={product?.id}>
       <Grid container spacing={6} sx={{ p: 0 }}>
         <StyledGrid item md={6} xs={12} sx={{ p: 0 }}>
-          <img
-            style={{ minHeight: '100%', objectFit: 'cover', width: '100%' }}
-            alt='Apple iPhone 11 Pro'
-            src={`${process.env.NEXT_PUBLIC_IMAGE_URL}${product?.images[0]?.path}`}
-          />
+          <div style={{ height: '300px' }}>
+            <img
+              style={{ height: '100%', objectFit: 'contain', width: '100%' }}
+              alt='Apple iPhone 11 Pro'
+              src={`${process.env.NEXT_PUBLIC_IMAGE_URL}${product?.images[0]?.path}`}
+            />
+          </div>
         </StyledGrid>
         <Grid
           item
@@ -67,7 +69,9 @@ const ProductCard = ({ product, deleteProduct, shopId, id }) => {
             <Typography variant='h5' sx={{ mb: 2 }}>
               {product?.name}
             </Typography>
-            <Typography sx={{ mb: 3.5, color: 'text.secondary' }}>{product?.description}</Typography>
+            <Typography sx={{ mb: 3.5, color: 'text.secondary', height: '100px', overflow: 'hidden' }}>
+              {product?.description}
+            </Typography>
             <Typography sx={{ fontWeight: 500, mb: 3 }}>
               Price:{' '}
               <Box component='span' sx={{ fontWeight: 'bold' }}>

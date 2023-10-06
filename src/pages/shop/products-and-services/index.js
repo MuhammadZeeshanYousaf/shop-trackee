@@ -96,7 +96,7 @@ const ProductandServices = () => {
         {mode == 'Both' || mode == 'Services' ? (
           <Grid item md={6}>
             {services?.map((service, i) => (
-              <ServiceCard service={service} key={i} deleteService={deleteService} shopId={query?.shopId} />
+              <ServiceCard mode='shop' service={service} key={i} deleteService={deleteService} shopId={query?.shopId} />
             ))}
           </Grid>
         ) : null}

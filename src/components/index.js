@@ -9,6 +9,8 @@ import EcommerceStatistics from './EcommerceStatistics'
 import PopularProducts from './PopularProducts'
 import AnalyticsSlider from './AnalyticsSlider'
 import Map from './Map'
+import CustomerProductCard from './cards/CustomerProductCard'
+import OrderRequestModal from './modals/OrderRequestModal'
 
 export {
   showErrorMessage,
@@ -22,5 +24,7 @@ export {
   EcommerceStatistics,
   PopularProducts,
   AnalyticsSlider,
-  Map
+  Map,
+  CustomerProductCard,
+  OrderRequestModal
 }

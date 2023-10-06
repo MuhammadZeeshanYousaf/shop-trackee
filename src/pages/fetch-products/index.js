@@ -1,10 +1,9 @@
 import { useRouter } from 'next/router'
 import { useEffect, useState } from 'react'
-import { showErrorMessage } from 'src/components'
+import { showErrorMessage, CustomerProductCard } from 'src/components'
 import { Network, Url } from 'src/configs'
 import { useLoader } from 'src/hooks'
 import { Grid } from '@mui/material'
-import ProductCard from '../shop/products-and-services/ProductCard'
 
 const FetchProducts = () => {
   const router = useRouter()
@@ -28,8 +27,8 @@ const FetchProducts = () => {
   return (
     <Grid container>
       {products?.map((product, i) => (
-        <Grid xs={12} lg={6} item>
-          <ProductCard key={product?.id} id={product?.id} product={product} deleteProduct={() => {}} shopId={1} />
+        <Grid item xs={12} sm={6} md={4}>
+          <CustomerProductCard product={product} key={i} />
         </Grid>
       ))}
     </Grid>

@@ -63,5 +63,9 @@ export default {
     `/search_all?type=product&latitude=${latitude}&longitude=${longitude}&distance=${distance}&product_page=${product_page}`,
 
   viewAllServices: (latitude, longitude, distance, product_page) =>
-    `/search_all?type=service&latitude=${latitude}&longitude=${longitude}&distance=${distance}&product_page=${product_page}`
+    `/search_all?type=service&latitude=${latitude}&longitude=${longitude}&distance=${distance}&product_page=${product_page}`,
+
+  // create order request
+
+  createOrderRequest: '/customer/order_requests'
 }
