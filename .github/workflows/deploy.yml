@@ -7,7 +7,7 @@ name: Deploy Shop Trackee to AWS
 on:
   # Runs on pushes targeting the default branch
   push:
-    branches: ['live']
+    branches: ['main', 'live']
 
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
