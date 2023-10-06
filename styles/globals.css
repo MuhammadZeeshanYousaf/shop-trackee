@@ -29,12 +29,10 @@ code[class*='language-'] {
 
 .scroll-container {
   display: flex;
-
-  flex-wrap: wrap;
+  justify-content: space-around;
+  overflow-x: scroll;
   width: 100%;
-  justify-content: space-between;
-  /* overflow-x: scroll;
-  padding-left: 10; */
+  padding-left: 10;
 }
 
 .scroll-container::-webkit-scrollbar {
