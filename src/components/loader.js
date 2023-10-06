@@ -1,7 +1,3 @@
-import Lottie from 'lottie-react'
-
-import { LoaderAnimation } from '../assets/animations'
-
 const Loader = ({ visible }) => {
   if (!visible) return null
 
