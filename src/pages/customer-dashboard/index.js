@@ -37,12 +37,17 @@ const CustomerDashboard = () => {
 
   useEffect(() => {
     if (navigator.geolocation) {
-      navigator.geolocation.getCurrentPosition(function (position) {
-        setLoader(true)
-        setCoordinates(position?.coords?.longitude, position?.coords?.latitude)
-        setLoader(false)
-        getCustomerDashboard(position?.coords?.longitude, position?.coords?.latitude)
-      }),
+      navigator.geolocation.getCurrentPosition(
+        function (position) {
+          setLoader(true)
+          setCoordinates(position?.coords?.longitude, position?.coords?.latitude)
+          setLoader(false)
+          getCustomerDashboard(position?.coords?.longitude, position?.coords?.latitude)
+        },
+        error => {
+          getCustomerDashboard('', '')
+        }
+      ),
         {
           enableHighAccuracy: true,
           timeout: 10000,
@@ -50,11 +55,8 @@ const CustomerDashboard = () => {
         }
     } else {
       showErrorMessage('It is better to select location')
-      getCustomerDashboard('', '')
     }
   }, [])
-
-  // useEffect(() => {}, [])
 
   return (
     <>
