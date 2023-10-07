@@ -126,7 +126,12 @@ const AuthProvider = ({ children }) => {
         window.localStorage.setItem('userData', JSON.stringify(response.data.resource_owner))
         console.log('Signed UP Successfully :)')
         const redirectURL = returnUrl && returnUrl !== '/' ? returnUrl : '/'
-        router.replace(redirectURL)
+        if (response.data.resource_owner.role == 'seller') router.replace('/shop-dashboard')
+        if (response.data.resource_owner.role == 'customer') {
+          localStorage.setItem('distance', 5)
+          router.replace('/customer-dashboard')
+        }
+        // router.replace(redirectURL)
       })
       .catch(err => {
         if (errorCallback) errorCallback(err)

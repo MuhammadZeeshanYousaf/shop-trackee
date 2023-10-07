@@ -57,10 +57,10 @@ export const blobConfig = async () => {
 }
 
 const responseMonitor = response => {
-  if (response.status === 401) {
-    localStorage.clear()
-    window.location.href = '/'
-  }
+  // if (response.status === 401) {
+  //   localStorage.clear()
+  //   window.location.href = '/'
+  // }
 }
 
 client.addMonitor(responseMonitor)

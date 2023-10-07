@@ -17,12 +17,16 @@ const CustomerDashboard = () => {
   const [serviceCategories, setServiceCategories] = useState([])
   const [products, setProducts] = useState([])
   const [services, setServices] = useState([])
+  const [location, setLocation] = useState({
+    longitude: '',
+    latitude: ''
+  })
 
   const distance = localStorage.getItem('distance')
 
-  const getCustomerDashboard = async () => {
+  const getCustomerDashboard = async (longitude, latitude) => {
     setLoader(true)
-    const response = await Network.get(Url.customeDashboard)
+    const response = await Network.get(Url.customeDashboard(localStorage.getItem('distance'), longitude, latitude))
     setLoader(false)
 
     setProductCategories(response.data.product.categories)
@@ -36,8 +40,8 @@ const CustomerDashboard = () => {
       navigator.geolocation.getCurrentPosition(function (position) {
         setLoader(true)
         setCoordinates(position?.coords?.longitude, position?.coords?.latitude)
-
         setLoader(false)
+        getCustomerDashboard(position?.coords?.longitude, position?.coords?.latitude)
       }),
         {
           enableHighAccuracy: true,
@@ -46,12 +50,11 @@ const CustomerDashboard = () => {
         }
     } else {
       showErrorMessage('It is better to select location')
+      getCustomerDashboard('', '')
     }
   }, [])
 
-  useEffect(() => {
-    getCustomerDashboard()
-  }, [])
+  // useEffect(() => {}, [])
 
   return (
     <>
