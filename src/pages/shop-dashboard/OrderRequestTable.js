@@ -131,7 +131,7 @@ const OrderRequestTable = ({ orderRequest }) => {
     }
   ]
 
-  return (
+  return (  
     <Card>
       <CardHeader title='Order Requests' />
       <Box sx={{ height: 500 }}>

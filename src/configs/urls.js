@@ -68,5 +68,13 @@ export default {
 
   // create order request
 
-  createOrderRequest: '/customer/order_requests'
+  createOrderRequest: '/customer/order_requests',
+
+  // cancel request by customer
+
+  cancelRequestCustomer: orderId => `/customer/order_requests/${orderId}`,
+
+  //remove request by customer
+
+  removeRequestCustomer: orderId => `/customer/order_requests/${orderId}/remove`
 }
