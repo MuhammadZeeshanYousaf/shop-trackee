@@ -18,6 +18,8 @@ const CustomerDashboard = () => {
   const [products, setProducts] = useState([])
   const [services, setServices] = useState([])
 
+  const distance = localStorage.getItem('distance')
+
   const getCustomerDashboard = async () => {
     setLoader(true)
     const response = await Network.get(Url.customeDashboard)
@@ -78,7 +80,9 @@ const CustomerDashboard = () => {
           <Button
             size='small'
             onClick={() =>
-              router.push(`/fetch-products?longitude=${longitude}&latitude=${latitude}&distance=9720&product_page=1`)
+              router.push(
+                `/fetch-products?longitude=${longitude}&latitude=${latitude}&distance=${distance}&product_page=1`
+              )
             }
           >
             View All
@@ -116,7 +120,9 @@ const CustomerDashboard = () => {
           <Button
             size='small'
             onClick={() =>
-              router.push(`/fetch-services?longitude=${longitude}&latitude=${latitude}&distance=9720&product_page=1`)
+              router.push(
+                `/fetch-services?longitude=${longitude}&latitude=${latitude}&distance=${distance}&product_page=1`
+              )
             }
           >
             View All
