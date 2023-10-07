@@ -26,7 +26,7 @@ const FetchServices = () => {
   }, [])
 
   return (
-    <Grid container>
+    <Grid container spacing={5}>
       {services?.map((service, i) => (
         <Grid xs={12} lg={6} item>
           <ServiceCard service={service} key={i} deleteService={() => {}} shopId={1} />

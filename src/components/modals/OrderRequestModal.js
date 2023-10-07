@@ -7,22 +7,29 @@ import { TextField } from '@mui/material'
 import { Network, Url, multipartConfig } from 'src/configs'
 import { useLoader } from 'src/hooks'
 import { showErrorMessage, showSuccessMessage } from '../toast'
-
-const style = {
-  position: 'absolute',
-  top: '50%',
-  left: '50%',
-  transform: 'translate(-50%, -50%)',
-  width: 400,
-
-  bgcolor: 'background.paper',
-  boxShadow: 24,
-  p: 4
-}
+import { useTheme } from '@mui/material'
 
 const OrderRequestModal = ({ open, handleClose, orderableType, orderableId }) => {
   const { setLoader } = useLoader()
   const [message, setMessage] = React.useState('')
+  const theme = useTheme()
+
+  const style = theme => ({
+    position: 'absolute',
+    top: '50%',
+    left: '50%',
+    transform: 'translate(-50%, -50%)',
+    [theme.breakpoints.down('md')]: {
+      width: 300
+    },
+    [theme.breakpoints.up('md')]: {
+      width: 400
+    },
+
+    bgcolor: 'background.paper',
+    boxShadow: 24,
+    p: 4
+  })
 
   const createRequest = async () => {
     setLoader(true)

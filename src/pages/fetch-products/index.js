@@ -25,7 +25,7 @@ const FetchProducts = () => {
   }, [])
 
   return (
-    <Grid container>
+    <Grid container spacing={5}>
       {products?.map((product, i) => (
         <Grid item xs={12} sm={6} md={4}>
           <CustomerProductCard product={product} key={i} />
