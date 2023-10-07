@@ -84,13 +84,13 @@ const CustomerDashboard = () => {
             View All
           </Button>
         </div>
-        <CardContent>
-          <div className='scroll-container'>
-            {productCategories.map(category => (
-              <Button size='small'>{category}</Button>
-            ))}
-          </div>
 
+        <div className='scroll-container'>
+          {productCategories.map(category => (
+            <div style={{ marginLeft: '20px', marginRight: '20px' }}>{category}</div>
+          ))}
+        </div>
+        <CardContent>
           <Grid container spacing={5}>
             {products?.map((product, i) => (
               <Grid item xs={12} sm={6} md={4}>
