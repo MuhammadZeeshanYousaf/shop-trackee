@@ -17,7 +17,7 @@ import { Url, Network } from 'src/configs'
 import { useRouter } from 'next/router'
 import Webcam from 'react-webcam'
 import useMediaQuery from '@mui/material/useMediaQuery'
-import { useState, useRef, useCallback } from 'react'
+import { useState, useRef, useCallback, useEffect } from 'react'
 import { styled, useTheme } from '@mui/material/styles'
 
 const AppBarContent = props => {
@@ -29,6 +29,7 @@ const AppBarContent = props => {
   const webcamRef = useRef(null)
   const [searchValue, setSearchValue] = useState('')
   const theme = useTheme()
+  const [distance, setDistance] = useState(0)
 
   const FACING_MODE_USER = 'user'
   const FACING_MODE_ENVIRONMENT = 'environment'
@@ -47,14 +48,19 @@ const AppBarContent = props => {
       setOpenDialog(false)
       const imageSrc = webcamRef.current.getScreenshot()
       localStorage.setItem('search-image', imageSrc)
-      router.push(`/search-result?q=${imageSrc}&longitude=${longitude}&latitude=${latitude}&distance=9720&method=post`)
+      router.push(
+        `/search-result?q=${imageSrc}&longitude=${longitude}&latitude=${latitude}&distance=${distance}&method=post`
+      )
     } else if (text == 'searchByText') {
       setOpenDialog(false)
       router.push(
-        `/search-result?q=${searchValue}&longitude=${longitude}&latitude=${latitude}&distance=9720&method=get`
+        `/search-result?q=${searchValue}&longitude=${longitude}&latitude=${latitude}&distance=${distance}&method=get`
       )
     }
   }
+  useEffect(() => {
+    setDistance(localStorage.getItem('distance'))
+  }, [])
 
   return (
     <>
@@ -85,15 +91,6 @@ const AppBarContent = props => {
                 placeholder='Search Here'
                 value={searchValue}
                 onChange={e => setSearchValue(e.target.value)}
-                inputRef={input => {
-                  if (input) {
-                    if (openDialog) {
-                      input.focus()
-                    } else {
-                      input.blur()
-                    }
-                  }
-                }}
                 InputProps={{
                   startAdornment: (
                     <InputAdornment position='start' sx={{ color: 'text.primary' }}>
@@ -121,8 +118,17 @@ const AppBarContent = props => {
               <TextField
                 sx={{ width: '110px', ml: 1 }}
                 type='number'
+                value={distance}
                 placeholder='Distance'
-                onChange={event => console.log({ event })}
+                onChange={event => {
+                  if (event.target.value < 0) {
+                    setDistance(0)
+                    localStorage.setItem('distance', 0)
+                    return
+                  }
+                  setDistance(event.target.value)
+                  localStorage.setItem('distance', event.target.value)
+                }}
               />
               <FormLabel sx={{ ml: 1 }}>km</FormLabel>
             </Grid>

@@ -79,7 +79,10 @@ const AuthProvider = ({ children }) => {
         console.log('Signed in Successfully :)')
         const redirectURL = returnUrl && returnUrl !== '/' ? returnUrl : '/'
         if (response.data.resource_owner.role == 'seller') router.replace('/shop-dashboard')
-        if (response.data.resource_owner.role == 'customer') router.replace('/customer-dashboard')
+        if (response.data.resource_owner.role == 'customer') {
+          localStorage.setItem('distance', 5)
+          router.replace('/customer-dashboard')
+        }
       })
       .catch(err => {
         if (errorCallback) errorCallback(err)
