@@ -17,7 +17,7 @@ const GetDirectionMap = ({ origin, destination }) => {
 
   const containerStyle = {
     width: '100%',
-    height: 200
+    height: 600
   }
 
   const calculateDirection = async () => {

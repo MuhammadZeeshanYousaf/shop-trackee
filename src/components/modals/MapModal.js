@@ -19,7 +19,7 @@ const MapModal = ({ open, handleClose, destination, origin }) => {
       width: 300
     },
     [theme.breakpoints.up('md')]: {
-      width: 400
+      width: 800
     },
 
     bgcolor: 'background.paper',
