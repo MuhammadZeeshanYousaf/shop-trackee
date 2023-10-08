@@ -8,7 +8,7 @@ import { useCoordinates } from 'src/hooks'
 
 const OrderRequestTable = ({ orderRequest, handleRequest, removeRequest }) => {
   const bgColors = useBgColor()
-  const { longitude, latitude } = useCoordinates()
+  
 
   const [destination, setDestination] = useState({
     longitude: '',

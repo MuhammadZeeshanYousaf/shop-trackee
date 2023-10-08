@@ -1,14 +1,27 @@
 import { useEffect, useState } from 'react'
 import { Network, Url } from 'src/configs'
-import { useLoader } from 'src/hooks'
+import { useCoordinates, useLoader } from 'src/hooks'
 import { DataGrid } from '@mui/x-data-grid'
 import useBgColor from 'src/@core/hooks/useBgColor'
 import { Typography, Button, Card, CardHeader, Box, Chip } from '@mui/material'
 import CustomAvatar from 'src/@core/components/mui/avatar'
-import { showErrorMessage, showSuccessMessage } from 'src/components'
+import { showErrorMessage, showSuccessMessage, MapModal } from 'src/components'
 
 const OrderRequest = () => {
   const { setLoader } = useLoader()
+  const { longitude, latitude } = useCoordinates()
+  const [open, setOpen] = useState(false)
+
+  const handleClose = () => setOpen(false)
+  const [destination, setDestination] = useState({
+    longitude: '',
+    latitude: ''
+  })
+
+  const origin = {
+    latitude,
+    longitude
+  }
 
   const [orderRequest, setOrderRequest] = useState([])
 
@@ -114,6 +127,25 @@ const OrderRequest = () => {
       }
     },
     {
+      flex: 0.1,
+      width: 200,
+      headerName: 'Location',
+      field: 'shop_direction',
+      renderCell: params => {
+        const { row } = params
+        return (
+          <Button
+            onClick={() => {
+              setDestination({ latitude: row?.latitude, longitude: row?.longitude })
+              setOpen(true)
+            }}
+          >
+            Get Direction
+          </Button>
+        )
+      }
+    },
+    {
       flex: 0.125,
       minWidth: 120,
       field: 'Status',
@@ -161,12 +193,15 @@ const OrderRequest = () => {
   ]
 
   return (
-    <Card>
-      <CardHeader title='Order Requests' />
-      <Box sx={{ height: 500 }}>
-        <DataGrid pagination={false} columns={columns} rows={orderRequest} disableColumnMenu />
-      </Box>
-    </Card>
+    <>
+      <MapModal key={open} open={open} handleClose={handleClose} destination={destination} origin={origin} />
+      <Card>
+        <CardHeader title='Order Requests' />
+        <Box sx={{ height: 500 }}>
+          <DataGrid pagination={false} columns={columns} rows={orderRequest} disableColumnMenu />
+        </Box>
+      </Card>
+    </>
   )
 }
 
