@@ -155,7 +155,7 @@ const UserDropdown = props => {
             My Profile
           </Box>
         </MenuItemStyled>
-        {user.role == 'shop' ? (
+        {user.role == 'seller' ? (
           <MenuItemStyled sx={{ p: 0 }} onClick={() => handleDropdownClose()}>
             <Box sx={styles} onClick={() => router.push('/shop')}>
               <Icon icon='tabler:brand-shopee' />
