@@ -136,7 +136,7 @@ const OrderRequest = () => {
         return (
           <Button
             onClick={() => {
-              setDestination({ latitude: row?.latitude, longitude: row?.longitude })
+              setDestination({ latitude: row?.shop?.latitude, longitude: row?.shop?.longitude })
               setOpen(true)
             }}
           >
