@@ -8,7 +8,8 @@ import {
   WelcomeCard,
   EcommerceStatistics,
   PopularProducts,
-  showErrorMessage
+  showErrorMessage,
+  showSuccessMessage
 } from '../../components'
 import { useEffect, useState } from 'react'
 import { Network, Url } from 'src/configs'
@@ -37,6 +38,28 @@ const ShopDashboard = () => {
     setOrderRequests(response.data)
   }
 
+  const handleRequest = async (orderID, mode) => {
+    setLoader(true)
+    const response = await Network.patch(Url.acceptAndrejectRequest(orderID, mode))
+    setLoader(false)
+    if (!response.ok) return showErrorMessage(response.data.message)
+    showSuccessMessage(response.data.message)
+
+    getOrderRequests()
+  }
+
+  const removeRequest = async orderID => {
+    setLoader(true)
+    const response = await Network.delete(Url.removeRequestbySeller(orderID))
+    setLoader(false)
+    if (!response.ok) return showErrorMessage(response.data.message)
+    showSuccessMessage('Successfully Deleted Request')
+
+    const filterRequest = orderRequest.filter(request => request.id != orderID)
+
+    setOrderRequests(filterRequest)
+  }
+
   useEffect(() => {
     getStats()
     getOrderRequests()
@@ -54,7 +77,11 @@ const ShopDashboard = () => {
             <EcommerceStatistics shopStats={shopStats} />
           </Grid>
           <Grid item xs={12} md={12} lg={12}>
-            <OrderRequestTable orderRequest={orderRequest} />
+            <OrderRequestTable
+              removeRequest={removeRequest}
+              handleRequest={handleRequest}
+              orderRequest={orderRequest}
+            />
           </Grid>
         </Grid>
       </KeenSliderWrapper>

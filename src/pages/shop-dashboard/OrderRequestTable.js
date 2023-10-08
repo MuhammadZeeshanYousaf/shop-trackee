@@ -4,7 +4,7 @@ import { Typography, Button, Card, CardHeader, Box, Chip } from '@mui/material'
 import useBgColor from 'src/@core/hooks/useBgColor'
 import dayjs from 'dayjs'
 
-const OrderRequestTable = ({ orderRequest }) => {
+const OrderRequestTable = ({ orderRequest, handleRequest, removeRequest }) => {
   const bgColors = useBgColor()
 
   const colors = {
@@ -18,8 +18,10 @@ const OrderRequestTable = ({ orderRequest }) => {
 
   const columns = [
     {
-      flex: 0.25,
-      minWidth: 290,
+      // flex: 0.1,
+      // minWidth: 140,
+      // maxWidth: 140,
+      width: 200,
       field: 'name',
       headerName: 'Item',
       renderCell: params => {
@@ -44,8 +46,10 @@ const OrderRequestTable = ({ orderRequest }) => {
       }
     },
     {
-      flex: 0.175,
-      minWidth: 120,
+      // flex: 0.1,
+      width: 200,
+      // minWidth: 100,
+      // maxWidth: 100,
       field: 'shop_name',
       headerName: 'Shop',
       renderCell: params => {
@@ -54,8 +58,7 @@ const OrderRequestTable = ({ orderRequest }) => {
       }
     },
     {
-      flex: 0.15,
-      minWidth: 110,
+      width: 200,
       field: 'customer_name',
       headerName: 'Customer',
       renderCell: params => {
@@ -64,8 +67,7 @@ const OrderRequestTable = ({ orderRequest }) => {
       }
     },
     {
-      flex: 0.2,
-      minWidth: 110,
+      width: 200,
       field: 'message',
       headerName: 'Message',
       renderCell: params => {
@@ -74,24 +76,25 @@ const OrderRequestTable = ({ orderRequest }) => {
       }
     },
     {
-      flex: 0.15,
-      minWidth: 110,
+      width: 150,
       field: 'created_at',
       headerName: 'Created At',
       renderCell: params => {
         const { row } = params
-        return <Box>{dayjs(row?.created_at).format('DD-MM-YY')}</Box>
+        return <Box>{row?.created_at}</Box>
       }
     },
     {
-      flex: 0.15,
-      minWidth: 130,
+      width: 200,
       headerName: 'Location',
-      field: 'shop_direction'
+      field: 'shop_direction',
+      renderCell: params => {
+        const { row } = params
+        return <Button>Get Direction</Button>
+      }
     },
     {
-      flex: 0.125,
-      minWidth: 120,
+      width: 150,
       field: 'Status',
       headerName: 'Status',
       renderCell: params => {
@@ -112,30 +115,44 @@ const OrderRequestTable = ({ orderRequest }) => {
       }
     },
     {
-      flex: 0.15,
-      minWidth: 140,
+      width: 200,
       field: 'actions',
       headerName: 'Actions',
       renderCell: params => {
+        const { row } = params
         return (
           <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-            <Button size='small' variant='outlined' color='secondary' sx={{ mr: 5 }}>
-              Accept
-            </Button>
-            <Button size='small' variant='outlined' color='secondary'>
-              Reject
-            </Button>
+            {row.status == 'pending' ? (
+              <>
+                <Button
+                  size='small'
+                  variant='contained'
+                  onClick={() => handleRequest(row?.id, 'accept')}
+                  color='success'
+                  sx={{ mr: 5 }}
+                >
+                  Accept
+                </Button>
+                <Button size='small' variant='contained' color='error' onClick={() => handleRequest(row?.id, 'reject')}>
+                  Reject
+                </Button>
+              </>
+            ) : (
+              <Button size='small' variant='contained' color='error' onClick={() => removeRequest(row?.id)}>
+                Remove
+              </Button>
+            )}
           </Box>
         )
       }
     }
   ]
 
-  return (  
-    <Card>
+  return (
+    <Card sx={{ width: '100%' }}>
       <CardHeader title='Order Requests' />
-      <Box sx={{ height: 500 }}>
-        <DataGrid columns={columns} rows={orderRequest} disableColumnMenu />
+      <Box sx={{ height: 500, width: '100%' }}>
+        <DataGrid sx={{ m: 2 }} columns={columns} rows={orderRequest} disableColumnMenu />
       </Box>
     </Card>
   )

@@ -76,5 +76,9 @@ export default {
 
   //remove request by customer
 
-  removeRequestCustomer: orderId => `/customer/order_requests/${orderId}/remove`
+  removeRequestCustomer: orderId => `/customer/order_requests/${orderId}/remove`,
+
+  acceptAndrejectRequest: (orderID, mode) => `/seller/order_requests/${orderID}/${mode}`,
+
+  removeRequestbySeller: orderId => `/seller/order_requests/${orderId}/remove`
 }
