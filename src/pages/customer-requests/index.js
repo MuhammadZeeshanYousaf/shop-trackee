@@ -128,7 +128,7 @@ const OrderRequest = () => {
     },
     {
       flex: 0.1,
-      width: 200,
+      minWidth: 200,
       headerName: 'Location',
       field: 'shop_direction',
       renderCell: params => {

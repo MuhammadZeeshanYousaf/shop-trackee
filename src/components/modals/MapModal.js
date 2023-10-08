@@ -8,8 +8,6 @@ import { useTheme } from '@mui/material'
 import GetDirectionMap from '../GetDirectionMap'
 
 const MapModal = ({ open, handleClose, destination, origin }) => {
-  const { setLoader } = useLoader()
-
   const theme = useTheme()
 
   const style = theme => ({
