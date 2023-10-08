@@ -155,6 +155,7 @@ const EditProduct = () => {
   }
 
   const uploadMore = async () => {
+    if (base64Images.length == 0) return showErrorMessage('Please Select Images')
     const images = base64Images.filter(image => {
       if (typeof image != 'object') return image
     })

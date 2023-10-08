@@ -51,7 +51,6 @@ const ProductCard = ({ product, deleteProduct, shopId, id }) => {
           <div style={{ height: '300px' }}>
             <img
               style={{ height: '100%', objectFit: 'contain', width: '100%' }}
-              alt='Apple iPhone 11 Pro'
               src={`${process.env.NEXT_PUBLIC_IMAGE_URL}${product?.images[0]?.path}`}
             />
           </div>

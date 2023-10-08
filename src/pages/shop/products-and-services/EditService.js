@@ -177,7 +177,7 @@ const EditService = () => {
   }
 
   const uploadImages = async () => {
-    if (images.length == 0) return showErrorMessage('Please Select Images')
+    if (base64Images.length == 0) return showErrorMessage('Please Select Images')
     const formData = new FormData()
     images.map(image => {
       formData.append('images[]', image)
@@ -197,6 +197,7 @@ const EditService = () => {
     showSuccessMessage(response.data.message)
   }
   const uploadMore = async () => {
+    if(base64Images.length==0) return showErrorMessage('Please Select Images')
     const images = base64Images.filter(image => {
       if (typeof image != 'object') return image
     })
@@ -288,15 +289,9 @@ const EditService = () => {
           })}
         </Grid>
         <CardActions sx={{ justifyContent: 'end' }}>
-          {base64Images.some(item => typeof item === 'object') ? (
-            <Button variant='contained' onClick={() => uploadMore()}>
-              Upload More
-            </Button>
-          ) : (
-            <Button variant='contained' onClick={() => uploadImages()}>
-              Upload
-            </Button>
-          )}
+          <Button variant='contained' onClick={() => uploadMore()}>
+            Upload More
+          </Button>
         </CardActions>
       </Card>
 
