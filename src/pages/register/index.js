@@ -191,7 +191,6 @@ const Register = () => {
                   render={({ field: { value, onChange, onBlur } }) => (
                     <CustomTextField
                       fullWidth
-                      autoFocus
                       label='Email'
                       value={value}
                       onBlur={onBlur}
