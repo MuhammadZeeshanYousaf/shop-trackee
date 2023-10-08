@@ -13,12 +13,13 @@ import {
 } from '../../components'
 import { useEffect, useState } from 'react'
 import { Network, Url } from 'src/configs'
-import { useLoader } from 'src/hooks'
+import { useLoader, useCoordinates } from 'src/hooks'
 
 const ShopDashboard = () => {
   const { setLoader } = useLoader()
   const [shopStats, setShopStats] = useState([])
   const [orderRequest, setOrderRequests] = useState([])
+  const { setCoordinates } = useCoordinates()
 
   const getStats = async () => {
     setLoader(true)
@@ -63,6 +64,28 @@ const ShopDashboard = () => {
   useEffect(() => {
     getStats()
     getOrderRequests()
+  }, [])
+
+  useEffect(() => {
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(
+        function (position) {
+          setLoader(true)
+          setCoordinates(position?.coords?.longitude, position?.coords?.latitude)
+          setLoader(false)
+        },
+        error => {
+          showErrorMessage('Error in getting live location')
+        }
+      ),
+        {
+          enableHighAccuracy: true,
+          timeout: 10000,
+          maximumAge: 0
+        }
+    } else {
+      showErrorMessage('It is better to select location')
+    }
   }, [])
 
   return (

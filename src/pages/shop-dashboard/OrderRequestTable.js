@@ -2,10 +2,27 @@ import { DataGrid } from '@mui/x-data-grid'
 import CustomAvatar from 'src/@core/components/mui/avatar'
 import { Typography, Button, Card, CardHeader, Box, Chip } from '@mui/material'
 import useBgColor from 'src/@core/hooks/useBgColor'
-import dayjs from 'dayjs'
+import { useState } from 'react'
+import { MapModal } from 'src/components'
+import { useCoordinates } from 'src/hooks'
 
 const OrderRequestTable = ({ orderRequest, handleRequest, removeRequest }) => {
   const bgColors = useBgColor()
+  const { longitude, latitude } = useCoordinates()
+
+  const [destination, setDestination] = useState({
+    longitude: '',
+    latitude: ''
+  })
+
+  const [origin, setOrigin] = useState({
+    latitude: '',
+    longitude: ''
+  })
+
+  const [open, setOpen] = useState(false)
+
+  const handleClose = () => setOpen(false)
 
   const colors = {
     primary: { ...bgColors.primaryLight },
@@ -90,7 +107,17 @@ const OrderRequestTable = ({ orderRequest, handleRequest, removeRequest }) => {
       field: 'shop_direction',
       renderCell: params => {
         const { row } = params
-        return <Button>Get Direction</Button>
+        return (
+          <Button
+            onClick={() => {
+              setDestination({ latitude: row?.latitude, longitude: row?.longitude })
+              setOrigin({ latitude: row?.shop?.latitude, longitude: row?.shop?.longitude })
+              setOpen(true)
+            }}
+          >
+            Get Direction
+          </Button>
+        )
       }
     },
     {
@@ -149,12 +176,15 @@ const OrderRequestTable = ({ orderRequest, handleRequest, removeRequest }) => {
   ]
 
   return (
-    <Card sx={{ width: '100%' }}>
-      <CardHeader title='Order Requests' />
-      <Box sx={{ height: 500, width: '100%' }}>
-        <DataGrid sx={{ m: 2 }} columns={columns} rows={orderRequest} disableColumnMenu />
-      </Box>
-    </Card>
+    <>
+      <MapModal key={open} open={open} handleClose={handleClose} destination={destination} origin={origin} />
+      <Card sx={{ width: '100%' }}>
+        <CardHeader title='Order Requests' />
+        <Box sx={{ height: 500, width: '100%' }}>
+          <DataGrid sx={{ m: 2 }} columns={columns} rows={orderRequest} disableColumnMenu />
+        </Box>
+      </Card>
+    </>
   )
 }
 

@@ -17,10 +17,6 @@ const CustomerDashboard = () => {
   const [serviceCategories, setServiceCategories] = useState([])
   const [products, setProducts] = useState([])
   const [services, setServices] = useState([])
-  const [location, setLocation] = useState({
-    longitude: '',
-    latitude: ''
-  })
 
   const distance = localStorage.getItem('distance')
 

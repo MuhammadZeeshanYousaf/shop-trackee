@@ -5,12 +5,13 @@ import Typography from '@mui/material/Typography'
 import Modal from '@mui/material/Modal'
 import { TextField } from '@mui/material'
 import { Network, Url, multipartConfig } from 'src/configs'
-import { useLoader } from 'src/hooks'
+import { useLoader, useCoordinates } from 'src/hooks'
 import { showErrorMessage, showSuccessMessage } from '../toast'
 import { useTheme } from '@mui/material'
 
 const OrderRequestModal = ({ open, handleClose, orderableType, orderableId }) => {
   const { setLoader } = useLoader()
+  const { latitude, longitude } = useCoordinates()
   const [message, setMessage] = React.useState('')
   const theme = useTheme()
 
@@ -37,7 +38,9 @@ const OrderRequestModal = ({ open, handleClose, orderableType, orderableId }) =>
     const response = await Network.post(Url.createOrderRequest, {
       orderable_id: orderableId,
       orderable_type: orderableType,
-      message
+      message,
+      latitude,
+      longitude
     })
     setLoader(false)
     if (!response.ok) return showErrorMessage(response.data.message)

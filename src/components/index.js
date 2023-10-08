@@ -11,6 +11,7 @@ import AnalyticsSlider from './AnalyticsSlider'
 import Map from './Map'
 import CustomerProductCard from './cards/CustomerProductCard'
 import OrderRequestModal from './modals/OrderRequestModal'
+import MapModal from './modals/MapModal'
 
 export {
   showErrorMessage,
@@ -26,5 +27,6 @@ export {
   AnalyticsSlider,
   Map,
   CustomerProductCard,
-  OrderRequestModal
+  OrderRequestModal,
+  MapModal
 }
