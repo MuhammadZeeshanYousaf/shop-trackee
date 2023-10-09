@@ -3,10 +3,12 @@ import { useState } from 'react'
 import OrderRequestModal from '../modals/OrderRequestModal'
 import Icon from 'src/@core/components/icon'
 
-const CustomerProductCard = ({ product }) => {
+const CustomerProductCard = ({ product, handleFavourite }) => {
   const [open, setOpen] = useState(false)
 
   const handleClose = () => setOpen(false)
+
+
 
   return (
     <>
@@ -23,7 +25,21 @@ const CustomerProductCard = ({ product }) => {
             <Typography variant='h6' sx={{ mb: 2 }}>
               {product?.name}
             </Typography>
-            <Icon fontSize='1.5rem' icon='tabler:heart' color='red' />
+            {product?.is_favorite ? (
+              <Icon
+                fontSize='1.5rem'
+                icon='tabler:heart-filled'
+                color='red'
+                onClick={() => handleFavourite(product?.id, false, 'product')}
+              />
+            ) : (
+              <Icon
+                fontSize='1.5rem'
+                icon='tabler:heart'
+                color='red'
+                onClick={() => handleFavourite(product?.id, true, 'product')}
+              />
+            )}
           </div>
 
           <Typography sx={{ mb: 2 }}>Rs{product?.price}</Typography>

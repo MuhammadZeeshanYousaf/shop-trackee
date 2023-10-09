@@ -6,7 +6,8 @@ import { useLoader } from 'src/hooks'
 
 import ServiceCard from '../shop/products-and-services/ServiceCard'
 import Icon from 'src/@core/components/icon'
-import { CustomerProductCard } from 'src/components'
+import { CustomerProductCard,showErrorMessage,showSuccessMessage } from 'src/components'
+
 
 const NoResults = ({ value }) => {
   return (
@@ -56,6 +57,21 @@ const SearchResult = () => {
     setServices(response.data.services)
   }
 
+  const addToFavourite = async (id, status, type) => {
+    const payload = {
+      favoritable_id: id,
+      favoritable_type: type,
+      is_favorite: status
+    }
+    setLoader(true)
+    const response = await Network.put(Url.addToFavourite, payload)
+    setLoader(false)
+    if (!response.ok) return showErrorMessage(response.data.message)
+    showSuccessMessage(response.data.message)
+    if (method == 'get') getData()
+    if (method == 'post') getImageSearchData()
+  }
+
   useEffect(() => {
     if (method == 'get') getData()
     if (method == 'post') getImageSearchData()
@@ -67,7 +83,7 @@ const SearchResult = () => {
         {products.length > 0 ? (
           products?.map((product, i) => (
             <Grid item xs={12} sm={6} md={4}>
-              <CustomerProductCard product={product} key={i} />
+              <CustomerProductCard product={product} key={i} handleFavourite={addToFavourite} />
             </Grid>
           ))
         ) : (
@@ -79,7 +95,13 @@ const SearchResult = () => {
         {services.length > 0 ? (
           services?.map((service, i) => (
             <Grid xs={12} lg={6} item>
-              <ServiceCard service={service} key={i} deleteService={() => {}} shopId={1} />
+              <ServiceCard
+                service={service}
+                key={i}
+                handleFavourite={addToFavourite}
+                deleteService={() => {}}
+                shopId={1}
+              />
             </Grid>
           ))
         ) : (

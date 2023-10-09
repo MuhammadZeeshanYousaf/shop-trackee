@@ -1,10 +1,10 @@
 import { useEffect, useState } from 'react'
 import { Button, Card, CardContent, CardHeader, Grid, Box, Typography, Dialog } from '@mui/material'
-import { AnalyticsSlider, Map, showErrorMessage, CustomerProductCard } from '../../components'
+import { AnalyticsSlider, Map, showErrorMessage, CustomerProductCard, showSuccessMessage } from '../../components'
 import { useLoader, useCoordinates } from 'src/hooks'
 import { Network, Url } from 'src/configs'
 import ServiceCard from '../shop/products-and-services/ServiceCard'
-import ProductCard from '../shop/products-and-services/ProductCard'
+
 import { useRouter } from 'next/router'
 
 const CustomerDashboard = () => {
@@ -29,6 +29,20 @@ const CustomerDashboard = () => {
     setServiceCategories(response.data.service.categories)
     setProducts(response.data.product.data)
     setServices(response.data.service.data)
+  }
+
+  const addToFavourite = async (id, status, type) => {
+    const payload = {
+      favoritable_id: id,
+      favoritable_type: type,
+      is_favorite: status
+    }
+    setLoader(true)
+    const response = await Network.put(Url.addToFavourite, payload)
+    setLoader(false)
+    if (!response.ok) return showErrorMessage(response.data.message)
+    showSuccessMessage(response.data.message)
+    getCustomerDashboard(longitude, latitude)
   }
 
   useEffect(() => {
@@ -99,7 +113,7 @@ const CustomerDashboard = () => {
           <Grid container spacing={5}>
             {products?.map((product, i) => (
               <Grid item xs={12} sm={6} md={4}>
-                <CustomerProductCard product={product} key={i} />
+                <CustomerProductCard product={product} key={i} handleFavourite={addToFavourite} />
               </Grid>
             ))}
           </Grid>
@@ -138,7 +152,13 @@ const CustomerDashboard = () => {
           <Grid container spacing={5}>
             {services?.map((service, i) => (
               <Grid xs={12} lg={6} item>
-                <ServiceCard service={service} key={i} deleteService={() => {}} shopId={1} />
+                <ServiceCard
+                  handleFavourite={addToFavourite}
+                  service={service}
+                  key={i}
+                  deleteService={() => {}}
+                  shopId={1}
+                />
               </Grid>
             ))}
           </Grid>

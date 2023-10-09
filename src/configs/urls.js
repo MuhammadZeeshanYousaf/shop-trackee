@@ -80,5 +80,12 @@ export default {
 
   acceptAndrejectRequest: (orderID, mode) => `/seller/order_requests/${orderID}/${mode}`,
 
-  removeRequestbySeller: orderId => `/seller/order_requests/${orderId}/remove`
+  removeRequestbySeller: orderId => `/seller/order_requests/${orderId}/remove`,
+
+
+  //add to favourite
+
+
+  addToFavourite:'/favorites'
+
 }

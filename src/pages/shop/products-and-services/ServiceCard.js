@@ -10,7 +10,7 @@ const StyledBox = styled(Box)(({ theme }) => ({
   }
 }))
 
-const ServiceCard = ({ service, deleteService, shopId, mode = 'customer' }) => {
+const ServiceCard = ({ service, deleteService, shopId, mode = 'customer', handleFavourite = () => {} }) => {
   const router = useRouter()
 
   const [open, setOpen] = useState(false)
@@ -27,9 +27,29 @@ const ServiceCard = ({ service, deleteService, shopId, mode = 'customer' }) => {
         <Grid container spacing={6}>
           <Grid item xs={12} md={6} sm={7}>
             <CardContent sx={{ p: theme => `${theme.spacing(3.25, 5.75, 6.25)} !important` }}>
-              <Typography variant='h5' sx={{ mb: 3.5 }}>
-                {service?.name}
-              </Typography>
+              <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                <Typography variant='h5' sx={{ mb: 3.5 }}>
+                  {service?.name}
+                </Typography>
+                {mode == 'customer' ? (
+                  service?.is_favorite ? (
+                    <Icon
+                      fontSize='1.5rem'
+                      icon='tabler:heart-filled'
+                      color='red'
+                      onClick={() => handleFavourite(service?.id, false, 'service')}
+                    />
+                  ) : (
+                    <Icon
+                      fontSize='1.5rem'
+                      icon='tabler:heart'
+                      color='red'
+                      onClick={() => handleFavourite(service?.id, true, 'service')}
+                    />
+                  )
+                ) : null}
+              </div>
+
               <Typography sx={{ color: 'text.secondary', height: '50px', overflow: 'hidden' }}>
                 {service?.description}
               </Typography>

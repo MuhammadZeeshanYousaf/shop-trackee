@@ -1,6 +1,6 @@
 import { useRouter } from 'next/router'
 import { useEffect, useState } from 'react'
-import { showErrorMessage, CustomerProductCard } from 'src/components'
+import { showErrorMessage, CustomerProductCard,showSuccessMessage } from 'src/components'
 import { Network, Url } from 'src/configs'
 import { useLoader } from 'src/hooks'
 import { Grid } from '@mui/material'
@@ -20,6 +20,20 @@ const FetchProducts = () => {
     setProducts(response.data.product.data)
   }
 
+  const addToFavourite = async (id, status, type) => {
+    const payload = {
+      favoritable_id: id,
+      favoritable_type: type,
+      is_favorite: status
+    }
+    setLoader(true)
+    const response = await Network.put(Url.addToFavourite, payload)
+    setLoader(false)
+    if (!response.ok) return showErrorMessage(response.data.message)
+    showSuccessMessage(response.data.message)
+    getProductData()
+  }
+
   useEffect(() => {
     getProductData()
   }, [])
@@ -28,7 +42,7 @@ const FetchProducts = () => {
     <Grid container spacing={5}>
       {products?.map((product, i) => (
         <Grid item xs={12} sm={6} md={4}>
-          <CustomerProductCard product={product} key={i} />
+          <CustomerProductCard handleFavourite={addToFavourite} product={product} key={i} />
         </Grid>
       ))}
     </Grid>
