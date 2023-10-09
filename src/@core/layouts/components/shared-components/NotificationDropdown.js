@@ -104,6 +104,8 @@ const NotificationDropdown = props => {
   const router = useRouter()
   const [notifications, setNotifications] = useState([])
 
+  const user = JSON.parse(localStorage.getItem('userData'))
+
   const getFavourites = async () => {
     setLoader(true)
     const response = await Network.get(Url.addToFavourite)
@@ -113,7 +115,9 @@ const NotificationDropdown = props => {
   }
 
   useEffect(() => {
-    getFavourites()
+    if (user.role == 'customer') {
+      getFavourites()
+    }
   }, [])
 
   // ** Props

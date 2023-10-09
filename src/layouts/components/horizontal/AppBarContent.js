@@ -75,7 +75,6 @@ const AppBarContent = props => {
   const webcamRef = useRef(null)
   const [searchValue, setSearchValue] = useState('')
   const [distance, setDistance] = useState(0)
-  const [favourites, setFavourites] = useState([])
 
   const FACING_MODE_USER = 'user'
   const FACING_MODE_ENVIRONMENT = 'environment'
@@ -86,18 +85,6 @@ const AppBarContent = props => {
   }
   const switchCamera = useCallback(() => {
     setFacingMode(prevState => (prevState === FACING_MODE_USER ? FACING_MODE_ENVIRONMENT : FACING_MODE_USER))
-  }, [])
-
-  const getFavourites = async () => {
-    setLoader(true)
-    const response = await Network.get(Url.addToFavourite)
-    setLoader(false)
-    if (!response.ok) return showErrorMessage(response.data.message)
-    setFavourites(response.data)
-  }
-
-  useEffect(() => {
-    getFavourites()
   }, [])
 
   // const capture = useCallback(() => {
@@ -231,7 +218,7 @@ const AppBarContent = props => {
         {user.role == 'customer' ? (
           <Icon fontSize='1.5rem' icon='tabler:search' onClick={() => setOpenDialog(true)} />
         ) : null}
-        {user?.role == 'customer' ? <NotificationDropdown settings={settings} notifications={favourites} /> : null}
+        {user?.role == 'customer' ? <NotificationDropdown settings={settings} /> : null}
         <UserDropdown settings={settings} />
       </Box>
     </>
