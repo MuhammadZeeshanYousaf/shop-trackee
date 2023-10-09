@@ -8,13 +8,33 @@ import ServiceCard from '../shop/products-and-services/ServiceCard'
 const Favourites = () => {
   const { setLoader } = useLoader()
   const [favourites, setFavourites] = useState([])
+  const [products, setProducts] = useState([])
+  const [services, setServices] = useState([])
+
+  const filterData = data => {
+    const serviceArray = []
+    const productArray = []
+
+    data.forEach(item => {
+      if (item.favoritable_type === 'Product') {
+        productArray.push(item)
+      } else {
+        serviceArray.push(item)
+      }
+    })
+
+    return { service: serviceArray, product: productArray }
+  }
 
   const getFavourites = async () => {
     setLoader(true)
     const response = await Network.get(Url.addToFavourite)
     setLoader(false)
     if (!response.ok) return showErrorMessage(response.data.message)
-    setFavourites(response.data)
+
+    const { service, product } = filterData(response.data)
+    setProducts(product)
+    setServices(service)
   }
 
   const addToFavourite = async (id, status, type) => {
@@ -37,23 +57,30 @@ const Favourites = () => {
 
   return (
     <Grid container spacing={5}>
-      {favourites?.map((favorite, i) => {
-        return favorite?.favoritable_type == 'Product' ? (
-          <Grid item xs={12} sm={6} md={4}>
-            <CustomerProductCard product={favorite?.favoritable} key={i} handleFavourite={addToFavourite} />
-          </Grid>
-        ) : (
-          <Grid xs={12} lg={6} item>
+      <Grid item xs={12} sm={6} md={4} lg={6}>
+        {products.map((product, i) => {
+          return (
+            <div style={{ marginTop: '20px' }}>
+              {' '}
+              <CustomerProductCard product={product.favoritable} key={i} handleFavourite={addToFavourite} />
+            </div>
+          )
+        })}
+      </Grid>
+
+      <Grid xs={12} lg={6} item>
+        {services.map((service, i) => {
+          return (
             <ServiceCard
               key={i}
               handleFavourite={addToFavourite}
               deleteService={() => {}}
               shopId={1}
-              service={favorite?.favoritable}
+              service={service?.favoritable}
             />
-          </Grid>
-        )
-      })}
+          )
+        })}
+      </Grid>
     </Grid>
   )
 }
