@@ -89,7 +89,7 @@ const OrderRequestTable = ({ orderRequest, handleRequest, removeRequest }) => {
       renderCell: params => {
         const { row } = params
         return (
-          <Tooltip title={row?.message}>
+          <Tooltip placeholder='top' title={row?.message}>
             <Box sx={{ textOverflow: 'inherit' }}>{row?.message}</Box>
           </Tooltip>
         )
