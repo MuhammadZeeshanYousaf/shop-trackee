@@ -1,6 +1,6 @@
 import { useRouter } from 'next/router'
 import { useEffect, useState } from 'react'
-import { showErrorMessage, CustomerProductCard,showSuccessMessage } from 'src/components'
+import { showErrorMessage, CustomerProductCard, showSuccessMessage } from 'src/components'
 import { Network, Url } from 'src/configs'
 import { useLoader } from 'src/hooks'
 import { Grid } from '@mui/material'
@@ -14,7 +14,7 @@ const FetchProducts = () => {
 
   const getProductData = async () => {
     setLoader(true)
-    const response = await Network.get(Url.viewAllProducts(longitude, latitude, distance, product_page))
+    const response = await Network.get(Url.viewAllProducts(latitude, longitude, distance, product_page))
     setLoader(false)
     if (!response.ok) return showErrorMessage(response.data.message)
     setProducts(response.data.product.data)

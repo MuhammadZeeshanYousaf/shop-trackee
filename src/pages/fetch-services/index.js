@@ -15,7 +15,7 @@ const FetchServices = () => {
 
   const getServiceData = async () => {
     setLoader(true)
-    const response = await Network.get(Url.viewAllServices(longitude, latitude, distance, product_page))
+    const response = await Network.get(Url.viewAllServices(latitude, longitude, distance, product_page))
     setLoader(false)
     if (!response.ok) return showErrorMessage(response.data.message)
     setServices(response.data.service.data)
