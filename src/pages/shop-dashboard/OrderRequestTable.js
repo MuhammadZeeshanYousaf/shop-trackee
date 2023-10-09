@@ -1,6 +1,6 @@
 import { DataGrid } from '@mui/x-data-grid'
 import CustomAvatar from 'src/@core/components/mui/avatar'
-import { Typography, Button, Card, CardHeader, Box, Chip } from '@mui/material'
+import { Typography, Button, Card, CardHeader, Box, Chip, Tooltip } from '@mui/material'
 import useBgColor from 'src/@core/hooks/useBgColor'
 import { useState } from 'react'
 import { MapModal } from 'src/components'
@@ -8,7 +8,6 @@ import { useCoordinates } from 'src/hooks'
 
 const OrderRequestTable = ({ orderRequest, handleRequest, removeRequest }) => {
   const bgColors = useBgColor()
-  
 
   const [destination, setDestination] = useState({
     longitude: '',
@@ -89,7 +88,11 @@ const OrderRequestTable = ({ orderRequest, handleRequest, removeRequest }) => {
       headerName: 'Message',
       renderCell: params => {
         const { row } = params
-        return <Box sx={{ textOverflow: 'inherit' }}>{row?.message}</Box>
+        return (
+          <Tooltip title={row?.message}>
+            <Box sx={{ textOverflow: 'inherit' }}>{row?.message}</Box>
+          </Tooltip>
+        )
       }
     },
     {

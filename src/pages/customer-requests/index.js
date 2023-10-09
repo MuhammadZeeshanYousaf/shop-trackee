@@ -3,7 +3,7 @@ import { Network, Url } from 'src/configs'
 import { useCoordinates, useLoader } from 'src/hooks'
 import { DataGrid } from '@mui/x-data-grid'
 import useBgColor from 'src/@core/hooks/useBgColor'
-import { Typography, Button, Card, CardHeader, Box, Chip } from '@mui/material'
+import { Typography, Button, Card, CardHeader, Box, Chip, Tooltip } from '@mui/material'
 import CustomAvatar from 'src/@core/components/mui/avatar'
 import { showErrorMessage, showSuccessMessage, MapModal } from 'src/components'
 
@@ -113,7 +113,11 @@ const OrderRequest = () => {
       headerName: 'Message',
       renderCell: params => {
         const { row } = params
-        return <Box sx={{ textOverflow: 'inherit' }}>{row?.message}</Box>
+        return (
+          <Tooltip placement='top' title={row?.message}>
+            <Box sx={{ textOverflow: 'inherit' }}>{row?.message}</Box>
+          </Tooltip>
+        )
       }
     },
     {
