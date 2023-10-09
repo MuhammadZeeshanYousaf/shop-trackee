@@ -195,9 +195,16 @@ const NotificationDropdown = props => {
                   <MenuItemTitle>{notification?.favoritable?.name}</MenuItemTitle>
                   <MenuItemSubtitle variant='body2'>{notification?.favoritable_type}</MenuItemSubtitle>
                 </Box>
-                {/* <Typography variant='body2' sx={{ color: 'text.disabled' }}>
-                  {notification.meta}
-                </Typography> */}
+                {
+                  <Typography variant='body2' sx={{ color: 'text.disabled' }}>
+                    Rs.
+                    {`${
+                      notification?.favoritable_type == 'Product'
+                        ? notification?.favoritable?.price
+                        : notification?.favoritable?.rate
+                    } ${notification?.favoritable_type == 'Product' ? '' : '/hour'} `}
+                  </Typography>
+                }
               </Box>
             </MenuItem>
           ))}
