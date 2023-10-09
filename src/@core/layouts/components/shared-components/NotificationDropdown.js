@@ -11,6 +11,11 @@ import useMediaQuery from '@mui/material/useMediaQuery'
 import MuiMenu from '@mui/material/Menu'
 import MuiMenuItem from '@mui/material/MenuItem'
 import Typography from '@mui/material/Typography'
+import { useEffect } from 'react'
+import { useLoader } from 'src/hooks'
+import { showErrorMessage } from 'src/components'
+import { Network, Url } from 'src/configs'
+import { useRouter } from 'next/router'
 
 // ** Icon Imports
 import Icon from 'src/@core/components/icon'
@@ -95,8 +100,24 @@ const ScrollWrapper = ({ children, hidden }) => {
 }
 
 const NotificationDropdown = props => {
+  const { setLoader } = useLoader()
+  const router = useRouter()
+  const [notifications, setNotifications] = useState([])
+
+  const getFavourites = async () => {
+    setLoader(true)
+    const response = await Network.get(Url.addToFavourite)
+    setLoader(false)
+    if (!response.ok) return showErrorMessage(response.data.message)
+    setNotifications(response.data)
+  }
+
+  useEffect(() => {
+    getFavourites()
+  }, [])
+
   // ** Props
-  const { settings, notifications } = props
+  const { settings } = props
 
   // ** States
   const [anchorEl, setAnchorEl] = useState(null)
@@ -108,6 +129,7 @@ const NotificationDropdown = props => {
   const { direction } = settings
 
   const handleDropdownOpen = event => {
+    getFavourites()
     setAnchorEl(event.currentTarget)
   }
 
@@ -116,19 +138,16 @@ const NotificationDropdown = props => {
   }
 
   const RenderAvatar = ({ notification }) => {
-    const { avatarAlt, avatarImg, avatarIcon, avatarText, avatarColor } = notification
-    if (avatarImg) {
-      return <Avatar alt={avatarAlt} src={avatarImg} />
-    } else if (avatarIcon) {
-      return (
-        <Avatar skin='light' color={avatarColor}>
-          {avatarIcon}
-        </Avatar>
-      )
+    const { favoritable } = notification
+
+    const { images, name } = favoritable
+
+    if (images?.length > 0) {
+      return <Avatar src={`${process.env.NEXT_PUBLIC_IMAGE_URL}${images[0]?.path}`} />
     } else {
       return (
-        <Avatar skin='light' color={avatarColor}>
-          {getInitials(avatarText)}
+        <Avatar skin='light' color='primary'>
+          {getInitials(name)}
         </Avatar>
       )
     }
@@ -145,7 +164,7 @@ const NotificationDropdown = props => {
             '& .MuiBadge-badge': { top: 4, right: 4, boxShadow: theme => `0 0 0 2px ${theme.palette.background.paper}` }
           }}
         > */}
-        <Icon fontSize='1.625rem' icon='tabler:heart-filled' />
+        <Icon fontSize='1.625rem' color='red' icon='tabler:heart-filled' />
         {/* </Badge> */}
       </IconButton>
       <Menu
@@ -164,21 +183,21 @@ const NotificationDropdown = props => {
             <Typography variant='h5' sx={{ cursor: 'text' }}>
               Favourites
             </Typography>
-            <CustomChip skin='light' size='small' color='primary' label={`${notifications.length} New`} />
+            {/* <CustomChip skin='light' size='small' color='primary' label={`${notifications.length} New`} /> */}
           </Box>
         </MenuItem>
         <ScrollWrapper hidden={hidden}>
-          {notifications.map((notification, index) => (
+          {notifications?.map((notification, index) => (
             <MenuItem key={index} disableRipple disableTouchRipple onClick={handleDropdownClose}>
               <Box sx={{ width: '100%', display: 'flex', alignItems: 'center' }}>
                 <RenderAvatar notification={notification} />
                 <Box sx={{ mr: 4, ml: 2.5, flex: '1 1', display: 'flex', overflow: 'hidden', flexDirection: 'column' }}>
-                  <MenuItemTitle>{notification.title}</MenuItemTitle>
-                  <MenuItemSubtitle variant='body2'>{notification.subtitle}</MenuItemSubtitle>
+                  <MenuItemTitle>{notification?.favoritable?.name}</MenuItemTitle>
+                  <MenuItemSubtitle variant='body2'>{notification?.favoritable_type}</MenuItemSubtitle>
                 </Box>
-                <Typography variant='body2' sx={{ color: 'text.disabled' }}>
+                {/* <Typography variant='body2' sx={{ color: 'text.disabled' }}>
                   {notification.meta}
-                </Typography>
+                </Typography> */}
               </Box>
             </MenuItem>
           ))}
@@ -194,7 +213,14 @@ const NotificationDropdown = props => {
             borderTop: theme => `1px solid ${theme.palette.divider}`
           }}
         >
-          <Button fullWidth variant='contained' onClick={handleDropdownClose}>
+          <Button
+            fullWidth
+            variant='contained'
+            onClick={() => {
+              router.push('/favourites')
+              handleDropdownClose()
+            }}
+          >
             View All Favourites
           </Button>
         </MenuItem>

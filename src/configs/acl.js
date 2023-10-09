@@ -29,6 +29,7 @@ const defineRulesFor = (role, subject) => {
     can('read', 'fetch-products')
     can('read', 'fetch-services')
     can('read', 'order-request')
+    can('read', 'favourite')
   } else {
     can(['read', 'create', 'update', 'delete'], subject)
   }

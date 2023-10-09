@@ -13,7 +13,9 @@ import { styled, useTheme } from '@mui/material/styles'
 import MuiAutocomplete from '@mui/material/Autocomplete'
 import Webcam from 'react-webcam'
 import { useRouter } from 'next/router'
-import { useCoordinates } from 'src/hooks'
+import { useCoordinates, useLoader } from 'src/hooks'
+import { Network, Url } from 'src/configs'
+import { showErrorMessage } from 'src/components'
 
 const notifications = [
   {
@@ -64,6 +66,7 @@ const AppBarContent = props => {
   // ** Props
   const theme = useTheme()
   const router = useRouter()
+  const { setLoader } = useLoader()
   const { longitude, latitude } = useCoordinates()
   const { settings, saveSettings } = props
   const user = JSON.parse(localStorage.getItem('userData'))
@@ -72,6 +75,7 @@ const AppBarContent = props => {
   const webcamRef = useRef(null)
   const [searchValue, setSearchValue] = useState('')
   const [distance, setDistance] = useState(0)
+  const [favourites, setFavourites] = useState([])
 
   const FACING_MODE_USER = 'user'
   const FACING_MODE_ENVIRONMENT = 'environment'
@@ -82,6 +86,18 @@ const AppBarContent = props => {
   }
   const switchCamera = useCallback(() => {
     setFacingMode(prevState => (prevState === FACING_MODE_USER ? FACING_MODE_ENVIRONMENT : FACING_MODE_USER))
+  }, [])
+
+  const getFavourites = async () => {
+    setLoader(true)
+    const response = await Network.get(Url.addToFavourite)
+    setLoader(false)
+    if (!response.ok) return showErrorMessage(response.data.message)
+    setFavourites(response.data)
+  }
+
+  useEffect(() => {
+    getFavourites()
   }, [])
 
   // const capture = useCallback(() => {
@@ -171,7 +187,7 @@ const AppBarContent = props => {
                   if (event.target.value < 0) {
                     setDistance(0)
                     localStorage.setItem('distance', 0)
-                    return  
+                    return
                   }
                   setDistance(event.target.value)
                   localStorage.setItem('distance', event.target.value)
@@ -215,7 +231,7 @@ const AppBarContent = props => {
         {user.role == 'customer' ? (
           <Icon fontSize='1.5rem' icon='tabler:search' onClick={() => setOpenDialog(true)} />
         ) : null}
-        {user?.role == 'customer' ? <NotificationDropdown settings={settings} notifications={notifications} /> : null}
+        {user?.role == 'customer' ? <NotificationDropdown settings={settings} notifications={favourites} /> : null}
         <UserDropdown settings={settings} />
       </Box>
     </>
