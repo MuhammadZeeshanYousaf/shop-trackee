@@ -6,23 +6,25 @@ import moment from 'moment'
 import { useRouter } from 'next/router'
 import CustomAvatar from 'src/@core/components/mui/avatar'
 
-const ShopCard = ({ shop, deleteShop }) => {
+const ShopCard = ({ shop, deleteShop, role = 'Admin' }) => {
   const router = useRouter()
 
   return (
     <Grid item xs={12} sm={6} md={4}>
       <Card sx={{ position: 'relative', minHeight: '100%' }}>
-        <OptionsMenu
-          iconButtonProps={{
-            size: 'small',
-            sx: { top: 12, right: 12, position: 'absolute', color: 'text.disabled' }
-          }}
-          options={[
-            { text: 'Edit', menuItemProps: { onClick: () => router.push(`/shop/form?mode=Edit&id=${shop.id}`) } },
-            { divider: true },
-            { text: 'Delete', menuItemProps: { sx: { color: 'error.main' }, onClick: () => deleteShop(shop?.id) } }
-          ]}
-        />
+        {role == 'Admin' ? (
+          <OptionsMenu
+            iconButtonProps={{
+              size: 'small',
+              sx: { top: 12, right: 12, position: 'absolute', color: 'text.disabled' }
+            }}
+            options={[
+              { text: 'Edit', menuItemProps: { onClick: () => router.push(`/shop/form?mode=Edit&id=${shop.id}`) } },
+              { divider: true },
+              { text: 'Delete', menuItemProps: { sx: { color: 'error.main' }, onClick: () => deleteShop(shop?.id) } }
+            ]}
+          />
+        ) : null}
         <CardContent>
           <Box sx={{ display: 'flex', alignItems: 'center', flexDirection: 'column' }}>
             <CustomAvatar src={'/images/shop-icon.svg'} sx={{ p: 5, width: '6rem', height: '6rem' }} />
@@ -85,18 +87,20 @@ const ShopCard = ({ shop, deleteShop }) => {
               </Box>
             </Box>
 
-            <Box sx={{ display: 'flex', alignItems: 'center' }}>
-              <Button
-                sx={{ mr: 4, '& svg': { mr: 2 } }}
-                variant={true ? 'contained' : 'tonal'}
-                onClick={() => router.push(`/shop/products-and-services?shopId=${shop?.id}`)}
-              >
-                Show
-              </Button>
-              <Button variant='tonal' color='secondary' sx={{ p: 2, minWidth: 38 }}>
-                <Icon icon='tabler:bell-dollar' />
-              </Button>
-            </Box>
+            {role == 'Admin' ? (
+              <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                <Button
+                  sx={{ mr: 4, '& svg': { mr: 2 } }}
+                  variant={true ? 'contained' : 'tonal'}
+                  onClick={() => router.push(`/shop/products-and-services?shopId=${shop?.id}`)}
+                >
+                  Show
+                </Button>
+                <Button variant='tonal' color='secondary' sx={{ p: 2, minWidth: 38 }}>
+                  <Icon icon='tabler:bell-dollar' />
+                </Button>
+              </Box>
+            ) : null}
           </Box>
         </CardContent>
       </Card>
