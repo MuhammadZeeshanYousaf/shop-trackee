@@ -71,6 +71,10 @@ const CustomerDashboard = () => {
     }
   }, [])
 
+  const search = async text => {
+    router.push(`/search-result?q=${text}&longitude=${longitude}&latitude=${latitude}&distance=${distance}&method=get`)
+  }
+
   return (
     <>
       <Grid container spacing={6}>
@@ -110,7 +114,9 @@ const CustomerDashboard = () => {
         <CardContent>
           <div className='scroll-container'>
             {productCategories.map(category => (
-              <Button size='small'>{category}</Button>
+              <Button size='small' onClick={() => search(category)}>
+                {category}
+              </Button>
             ))}
           </div>
           <Grid container spacing={5}>
@@ -149,7 +155,9 @@ const CustomerDashboard = () => {
         <CardContent>
           <div className='scroll-container'>
             {serviceCategories.map(category => (
-              <Button size='small'>{category}</Button>
+              <Button size='small' onClick={() => search(category)}>
+                {category}
+              </Button>
             ))}
           </div>
           <Grid container spacing={5}>
