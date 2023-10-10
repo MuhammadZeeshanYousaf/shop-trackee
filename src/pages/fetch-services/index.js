@@ -3,13 +3,15 @@ import { useEffect, useState } from 'react'
 import { showErrorMessage, showSuccessMessage } from 'src/components'
 import { Network, Url } from 'src/configs'
 import { useLoader } from 'src/hooks'
-import { Grid } from '@mui/material'
+import { Grid, Typography } from '@mui/material'
 import ServiceCard from '../shop/products-and-services/ServiceCard'
+import ShopCard from '../shop/ShopCard'
 
 const FetchServices = () => {
   const router = useRouter()
   const { setLoader } = useLoader()
   const [services, setServices] = useState([])
+  const [shops, setShops] = useState([])
 
   const { longitude, latitude, distance, product_page } = router.query
 
@@ -19,6 +21,7 @@ const FetchServices = () => {
     setLoader(false)
     if (!response.ok) return showErrorMessage(response.data.message)
     setServices(response.data.service.data)
+    setShops(response.data.shop.data)
   }
 
   const addToFavourite = async (id, status, type) => {
@@ -40,13 +43,30 @@ const FetchServices = () => {
   }, [])
 
   return (
-    <Grid container spacing={5}>
-      {services?.map((service, i) => (
-        <Grid xs={12} lg={6} item>
-          <ServiceCard service={service} key={i} handleFavourite={addToFavourite} deleteService={() => {}} shopId={1} />
-        </Grid>
-      ))}
-    </Grid>
+    <>
+      <Grid container spacing={5}>
+        {services?.map((service, i) => (
+          <Grid xs={12} lg={6} item>
+            <ServiceCard
+              service={service}
+              key={i}
+              handleFavourite={addToFavourite}
+              deleteService={() => {}}
+              shopId={1}
+            />
+          </Grid>
+        ))}
+      </Grid>
+      <Typography sx={{ mt: 5 }} variant='h2'>
+        Shops
+      </Typography>
+
+      <Grid container spacing={6} sx={{ marginTop: '5px' }}>
+        {shops?.map(shop => {
+          return <ShopCard key={shop.id} shop={shop} role='customer' deleteShop={() => {}} />
+        })}
+      </Grid>
+    </>
   )
 }
 

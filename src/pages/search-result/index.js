@@ -6,8 +6,8 @@ import { useLoader } from 'src/hooks'
 
 import ServiceCard from '../shop/products-and-services/ServiceCard'
 import Icon from 'src/@core/components/icon'
-import { CustomerProductCard,showErrorMessage,showSuccessMessage } from 'src/components'
-
+import { CustomerProductCard, showErrorMessage, showSuccessMessage } from 'src/components'
+import ShopCard from '../shop/ShopCard'
 
 const NoResults = ({ value }) => {
   return (
@@ -33,6 +33,7 @@ const SearchResult = () => {
 
   const [products, setProducts] = useState([])
   const [services, setServices] = useState([])
+  const [shops, setShops] = useState([])
 
   const { setLoader } = useLoader()
   const getData = async () => {
@@ -41,6 +42,7 @@ const SearchResult = () => {
     setLoader(false)
     setProducts(response.data.products)
     setServices(response.data.services)
+    setShops(response.data.shops)
   }
 
   const getImageSearchData = async () => {
@@ -79,7 +81,10 @@ const SearchResult = () => {
 
   return (
     <div>
-      <Grid container spacing={5}>
+      <Typography sx={{ mt: 5 }} variant='h2'>
+        Products
+      </Typography>
+      <Grid sx={{ mt: 5 }} container spacing={5}>
         {products.length > 0 ? (
           products?.map((product, i) => (
             <Grid item xs={12} sm={6} md={4}>
@@ -90,6 +95,9 @@ const SearchResult = () => {
           <NoResults value={'Products'} />
         )}
       </Grid>
+      <Typography sx={{ mt: 5 }} variant='h2'>
+        Services
+      </Typography>
 
       <Grid sx={{ mt: 5 }} container spacing={5}>
         {services.length > 0 ? (
@@ -107,6 +115,15 @@ const SearchResult = () => {
         ) : (
           <NoResults value={'Services'} />
         )}
+      </Grid>
+
+      <Typography sx={{ mt: 5 }} variant='h2'>
+        Shops
+      </Typography>
+      <Grid container spacing={6} sx={{ marginTop: '5px' }}>
+        {shops?.map(shop => {
+          return <ShopCard key={shop.id} shop={shop} role='customer' deleteShop={() => {}} />
+        })}
       </Grid>
     </div>
   )
