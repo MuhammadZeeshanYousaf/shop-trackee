@@ -4,6 +4,7 @@ import { AnalyticsSlider, Map, showErrorMessage, CustomerProductCard, showSucces
 import { useLoader, useCoordinates } from 'src/hooks'
 import { Network, Url } from 'src/configs'
 import ServiceCard from '../shop/products-and-services/ServiceCard'
+import ShopCard from '../shop/ShopCard'
 
 import { useRouter } from 'next/router'
 
@@ -17,6 +18,7 @@ const CustomerDashboard = () => {
   const [serviceCategories, setServiceCategories] = useState([])
   const [products, setProducts] = useState([])
   const [services, setServices] = useState([])
+  const [shops, setShops] = useState([])
 
   const distance = localStorage.getItem('distance')
 
@@ -29,6 +31,7 @@ const CustomerDashboard = () => {
     setServiceCategories(response.data.service.categories)
     setProducts(response.data.product.data)
     setServices(response.data.service.data)
+    setShops(response.data.shop.data)
   }
 
   const addToFavourite = async (id, status, type) => {
@@ -161,6 +164,18 @@ const CustomerDashboard = () => {
                 />
               </Grid>
             ))}
+          </Grid>
+        </CardContent>
+      </Card>
+      <Card sx={{ mt: 5 }}>
+        <Typography sx={{ pt: 5, pl: 5 }} variant='h4'>
+          Shops
+        </Typography>
+        <CardContent>
+          <Grid container spacing={6} sx={{ marginTop: '5px' }}>
+            {shops?.map(shop => {
+              return <ShopCard key={shop.id} shop={shop} role='customer' deleteShop={() => {}} />
+            })}
           </Grid>
         </CardContent>
       </Card>
