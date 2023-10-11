@@ -104,6 +104,7 @@ const ShopDashboard = () => {
               removeRequest={removeRequest}
               handleRequest={handleRequest}
               orderRequest={orderRequest}
+              getOrderRequest={getOrderRequests}
             />
           </Grid>
         </Grid>

@@ -6,6 +6,7 @@ import useBgColor from 'src/@core/hooks/useBgColor'
 import { Typography, Button, Card, CardHeader, Box, Chip, Tooltip } from '@mui/material'
 import CustomAvatar from 'src/@core/components/mui/avatar'
 import { showErrorMessage, showSuccessMessage, MapModal } from 'src/components'
+import Icon from 'src/@core/components/icon'
 
 const OrderRequest = () => {
   const { setLoader } = useLoader()
@@ -200,7 +201,11 @@ const OrderRequest = () => {
     <>
       <MapModal key={open} open={open} handleClose={handleClose} destination={destination} origin={origin} />
       <Card>
-        <CardHeader title='Order Requests' />
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+          <CardHeader title='Order Requests' />
+          <Icon onClick={() => getOrderRequests()} style={{ marginRight: '10px' }} icon='tabler:refresh' />
+        </div>
+
         <Box sx={{ height: 500 }}>
           <DataGrid pagination={false} columns={columns} rows={orderRequest} disableColumnMenu />
         </Box>

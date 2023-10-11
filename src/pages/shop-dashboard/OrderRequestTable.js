@@ -5,8 +5,9 @@ import useBgColor from 'src/@core/hooks/useBgColor'
 import { useState } from 'react'
 import { MapModal } from 'src/components'
 import { useCoordinates } from 'src/hooks'
+import Icon from 'src/@core/components/icon'
 
-const OrderRequestTable = ({ orderRequest, handleRequest, removeRequest }) => {
+const OrderRequestTable = ({ orderRequest, handleRequest, removeRequest, getOrderRequest }) => {
   const bgColors = useBgColor()
 
   const [destination, setDestination] = useState({
@@ -182,7 +183,10 @@ const OrderRequestTable = ({ orderRequest, handleRequest, removeRequest }) => {
     <>
       <MapModal key={open} open={open} handleClose={handleClose} destination={destination} origin={origin} />
       <Card sx={{ width: '100%' }}>
-        <CardHeader title='Order Requests' />
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+          <CardHeader title='Order Requests' />
+          <Icon onClick={() => getOrderRequest()} style={{ marginRight: '10px' }} icon='tabler:refresh' />
+        </div>
         <Box sx={{ height: 500, width: '100%' }}>
           <DataGrid sx={{ m: 2 }} columns={columns} rows={orderRequest} disableColumnMenu />
         </Box>
