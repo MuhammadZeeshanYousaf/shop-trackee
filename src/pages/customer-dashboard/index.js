@@ -1,5 +1,18 @@
 import { useEffect, useState } from 'react'
-import { Button, Card, CardContent, CardHeader, Grid, Box, Typography, Dialog } from '@mui/material'
+import {
+  Button,
+  Card,
+  CardContent,
+  CardHeader,
+  Grid,
+  Box,
+  Typography,
+  Dialog,
+  FormControl,
+  InputLabel,
+  Select,
+  MenuItem
+} from '@mui/material'
 import { AnalyticsSlider, Map, showErrorMessage, CustomerProductCard, showSuccessMessage } from '../../components'
 import { useLoader, useCoordinates } from 'src/hooks'
 import { Network, Url } from 'src/configs'
@@ -27,8 +40,6 @@ const CustomerDashboard = () => {
     setLoader(true)
     const response = await Network.get(Url.customeDashboard(localStorage.getItem('distance'), longitude, latitude))
     setLoader(false)
-
-    console.log({ response })
 
     setProductCategories(response.data.product.categories)
     setServiceCategories(response.data.service.categories)
@@ -103,26 +114,37 @@ const CustomerDashboard = () => {
           }}
         >
           <Typography variant='h4'>Products</Typography>
-          <Button
-            size='small'
-            onClick={() =>
-              router.push(
-                `/fetch-products?longitude=${longitude}&latitude=${latitude}&distance=${distance}&product_page=1`
-              )
-            }
-          >
-            View All
-          </Button>
+          <div style={{ display: 'flex', alignItems: 'center' }}>
+            <InputLabel sx={{ mr: 1 }} id='demo-simple-select-label'>
+              Explore By
+            </InputLabel>
+            <FormControl>
+              <Select
+                defaultValue=''
+                labelId='demo-simple-select-label'
+                id='demo-simple-select'
+                onChange={e => search(e.target.value)}
+              >
+                <MenuItem value=''>Category</MenuItem>
+                {productCategories.map(category => (
+                  <MenuItem value={category}>{category}</MenuItem>
+                ))}
+              </Select>
+            </FormControl>
+            <Button
+              size='large'
+              onClick={() =>
+                router.push(
+                  `/fetch-products?longitude=${longitude}&latitude=${latitude}&distance=${distance}&product_page=1`
+                )
+              }
+            >
+              View All
+            </Button>
+          </div>
         </div>
 
         <CardContent>
-          <div className='scroll-container'>
-            {productCategories.map(category => (
-              <Button size='small' onClick={() => search(category)}>
-                {category}
-              </Button>
-            ))}
-          </div>
           <Grid container spacing={5}>
             {products?.map((product, i) => (
               <Grid item xs={12} sm={6} md={4}>
@@ -145,25 +167,37 @@ const CustomerDashboard = () => {
           }}
         >
           <Typography variant='h4'>Services</Typography>
-          <Button
-            size='small'
-            onClick={() =>
-              router.push(
-                `/fetch-services?longitude=${longitude}&latitude=${latitude}&distance=${distance}&product_page=1`
-              )
-            }
-          >
-            View All
-          </Button>
+
+          <div style={{ display: 'flex', alignItems: 'center' }}>
+            <InputLabel sx={{ mr: 1 }} id='demo-simple-select-label'>
+              Explore By
+            </InputLabel>
+            <FormControl>
+              <Select
+                defaultValue=''
+                labelId='demo-simple-select-label'
+                id='demo-simple-select'
+                onChange={e => search(e.target.value)}
+              >
+                <MenuItem value=''>Category</MenuItem>
+                {serviceCategories.map(category => (
+                  <MenuItem value={category}>{category}</MenuItem>
+                ))}
+              </Select>
+            </FormControl>
+            <Button
+              size='small'
+              onClick={() =>
+                router.push(
+                  `/fetch-services?longitude=${longitude}&latitude=${latitude}&distance=${distance}&product_page=1`
+                )
+              }
+            >
+              View All
+            </Button>
+          </div>
         </div>
         <CardContent>
-          <div className='scroll-container'>
-            {serviceCategories.map(category => (
-              <Button size='small' onClick={() => search(category)}>
-                {category}
-              </Button>
-            ))}
-          </div>
           <Grid container spacing={5}>
             {services?.map((service, i) => (
               <Grid xs={12} lg={6} item>
