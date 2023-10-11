@@ -19,6 +19,7 @@ const CustomerDashboard = () => {
   const [products, setProducts] = useState([])
   const [services, setServices] = useState([])
   const [shops, setShops] = useState([])
+  const [stats, setStats] = useState(null)
 
   const distance = localStorage.getItem('distance')
 
@@ -27,11 +28,14 @@ const CustomerDashboard = () => {
     const response = await Network.get(Url.customeDashboard(localStorage.getItem('distance'), longitude, latitude))
     setLoader(false)
 
+    console.log({ response })
+
     setProductCategories(response.data.product.categories)
     setServiceCategories(response.data.service.categories)
     setProducts(response.data.product.data)
     setServices(response.data.service.data)
     setShops(response.data.shop.data)
+    setStats(response.data.stats)
   }
 
   const addToFavourite = async (id, status, type) => {
@@ -79,7 +83,7 @@ const CustomerDashboard = () => {
     <>
       <Grid container spacing={6}>
         <Grid item xs={12} lg={6}>
-          <AnalyticsSlider />
+          <AnalyticsSlider stats={stats} />
         </Grid>
         <Grid item xs={12} lg={6}>
           <Card>

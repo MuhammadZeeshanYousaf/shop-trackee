@@ -91,19 +91,19 @@ const ShopCard = ({ shop, deleteShop, role = 'Admin' }) => {
                 }}
               >
                 <Box sx={{ display: 'flex', alignItems: 'center', flexDirection: 'column' }}>
-                  <Typography variant='h4'>10</Typography>
+                  <Typography variant='h4'>{shop?.products_count}</Typography>
                   <Typography sx={{ color: 'text.secondary' }}>Products</Typography>
                 </Box>
                 <Box sx={{ display: 'flex', alignItems: 'center', flexDirection: 'column' }}>
-                  <Typography variant='h4'>10</Typography>
+                  <Typography variant='h4'>{shop?.services_count}</Typography>
                   <Typography sx={{ color: 'text.secondary' }}>Services</Typography>
                 </Box>
                 <Box sx={{ display: 'flex', alignItems: 'center', flexDirection: 'column' }}>
-                  <Typography variant='h4'>10</Typography>
+                  <Typography variant='h4'>{shop?.order_requests_count}</Typography>
                   <Typography sx={{ color: 'text.secondary' }}>Requests</Typography>
                 </Box>
                 <Box sx={{ display: 'flex', alignItems: 'center', flexDirection: 'column' }}>
-                  <Typography variant='h4'>10</Typography>
+                  <Typography variant='h4'>{shop?.orders_count}</Typography>
                   <Typography sx={{ color: 'text.secondary' }}>Orders</Typography>
                 </Box>
               </Box>
