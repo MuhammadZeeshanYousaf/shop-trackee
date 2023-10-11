@@ -1,7 +1,7 @@
 // ** MUI Imports
 import Box from '@mui/material/Box'
 import IconButton from '@mui/material/IconButton'
-import { TextField, Button, Dialog, Grid, Typography, InputAdornment, FormLabel } from '@mui/material'
+import { TextField, Button, Dialog, Grid, Typography, InputAdornment, FormLabel, Input } from '@mui/material'
 
 // ** Icon Imports
 import Icon from 'src/@core/components/icon'
@@ -58,6 +58,20 @@ const AppBarContent = props => {
       )
     }
   }
+  const handleImage = event => {
+    const file = event.target.files[0]
+
+    const reader = new FileReader()
+
+    reader.onload = e => {
+      const base64String = e.target.result
+      router.push(
+        `/search-result?q=${base64String}&longitude=${longitude}&latitude=${latitude}&distance=${distance}&method=post`
+      )
+    }
+
+    reader.readAsDataURL(file)
+  }
   useEffect(() => {
     setDistance(localStorage.getItem('distance'))
   }, [])
@@ -113,24 +127,27 @@ const AppBarContent = props => {
               </Button>
             </Grid>
 
-            <Grid sx={{ display: 'flex', alignItems: 'center', mt: 10 }} item md={6} xs={12}>
-              <FormLabel>Search Around</FormLabel>
-              <TextField
-                sx={{ width: '110px', ml: 1 }}
-                type='number'
-                value={distance}
-                placeholder='Distance'
-                onChange={event => {
-                  if (event.target.value < 0) {
-                    setDistance(0)
-                    localStorage.setItem('distance', 0)
-                    return
-                  }
-                  setDistance(event.target.value)
-                  localStorage.setItem('distance', event.target.value)
-                }}
-              />
-              <FormLabel sx={{ ml: 1 }}>km</FormLabel>
+            <Grid sx={{ display: 'flex', alignItems: 'center', mt: 10, flexDirection: 'column' }} item md={6} xs={12}>
+              <Input type='file' sx={{ border: 'none', mb: 5 }} onChange={e => handleImage(e)} />
+              <div>
+                <FormLabel>Search Around</FormLabel>
+                <TextField
+                  sx={{ width: '110px', ml: 1 }}
+                  type='number'
+                  value={distance}
+                  placeholder='Distance'
+                  onChange={event => {
+                    if (event.target.value < 0) {
+                      setDistance(0)
+                      localStorage.setItem('distance', 0)
+                      return
+                    }
+                    setDistance(event.target.value)
+                    localStorage.setItem('distance', event.target.value)
+                  }}
+                />
+                <FormLabel sx={{ ml: 1 }}>km</FormLabel>
+              </div>
             </Grid>
 
             {/* Camera */}

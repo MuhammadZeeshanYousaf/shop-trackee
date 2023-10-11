@@ -6,7 +6,17 @@ import ModeToggler from 'src/@core/layouts/components/shared-components/ModeTogg
 import UserDropdown from 'src/@core/layouts/components/shared-components/UserDropdown'
 import NotificationDropdown from 'src/@core/layouts/components/shared-components/NotificationDropdown'
 import Icon from 'src/@core/components/icon'
-import { Dialog, TextField, InputAdornment, Typography, IconButton, Grid, Button, FormLabel } from '@mui/material'
+import {
+  Dialog,
+  TextField,
+  InputAdornment,
+  Typography,
+  IconButton,
+  Grid,
+  Button,
+  FormLabel,
+  Input
+} from '@mui/material'
 import { useState, useRef, useCallback, useEffect } from 'react'
 import useMediaQuery from '@mui/material/useMediaQuery'
 import { styled, useTheme } from '@mui/material/styles'
@@ -108,6 +118,21 @@ const AppBarContent = props => {
     }
   }
 
+  const handleImage = event => {
+    const file = event.target.files[0]
+
+    const reader = new FileReader()
+
+    reader.onload = e => {
+      const base64String = e.target.result
+      router.push(
+        `/search-result?q=${base64String}&longitude=${longitude}&latitude=${latitude}&distance=${distance}&method=post`
+      )
+    }
+
+    reader.readAsDataURL(file)
+  }
+
   useEffect(() => {
     setDistance(localStorage.getItem('distance'))
   }, [])
@@ -163,24 +188,31 @@ const AppBarContent = props => {
               </Button>
             </Grid>
 
-            <Grid sx={{ display: 'flex', alignItems: 'center' }} item xs={6}>
-              <FormLabel>Search Around</FormLabel>
-              <TextField
-                sx={{ width: '110px', ml: 1 }}
-                type='number'
-                value={distance}
-                placeholder='Distance'
-                onChange={event => {
-                  if (event.target.value < 0) {
-                    setDistance(0)
-                    localStorage.setItem('distance', 0)
-                    return
-                  }
-                  setDistance(event.target.value)
-                  localStorage.setItem('distance', event.target.value)
-                }}
-              />
-              <FormLabel sx={{ ml: 1 }}>km</FormLabel>
+            <Grid
+              sx={{ display: 'flex', alignItems: 'center', flexDirection: 'column', justifyContent: 'center' }}
+              item
+              xs={6}
+            >
+              <Input type='file' sx={{ border: 'none', mb: 5 }} onChange={e => handleImage(e)} />
+              <div style={{ display: 'flex', alignItems: 'center' }}>
+                <FormLabel>Search Around</FormLabel>
+                <TextField
+                  sx={{ width: '110px', ml: 1 }}
+                  type='number'
+                  value={distance}
+                  placeholder='Distance'
+                  onChange={event => {
+                    if (event.target.value < 0) {
+                      setDistance(0)
+                      localStorage.setItem('distance', 0)
+                      return
+                    }
+                    setDistance(event.target.value)
+                    localStorage.setItem('distance', event.target.value)
+                  }}
+                />
+                <FormLabel sx={{ ml: 1 }}>km</FormLabel>
+              </div>
             </Grid>
 
             {/* Camera */}

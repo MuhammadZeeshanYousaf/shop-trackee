@@ -25,8 +25,7 @@ const CustomerDashboard = () => {
   const { setLoader } = useLoader()
   const { setCoordinates, latitude, longitude } = useCoordinates()
   const router = useRouter()
-  // const [longitude, setLongitude] = useState(null)
-  // const [latitude, setLatitude] = useState(null)
+ 
   const [productCategories, setProductCategories] = useState([])
   const [serviceCategories, setServiceCategories] = useState([])
   const [products, setProducts] = useState([])

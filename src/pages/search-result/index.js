@@ -85,7 +85,7 @@ const SearchResult = () => {
         Products
       </Typography>
       <Grid sx={{ mt: 5 }} container spacing={5}>
-        {products.length > 0 ? (
+        {products?.length > 0 ? (
           products?.map((product, i) => (
             <Grid item xs={12} sm={6} md={4}>
               <CustomerProductCard product={product} key={i} handleFavourite={addToFavourite} />
@@ -100,7 +100,7 @@ const SearchResult = () => {
       </Typography>
 
       <Grid sx={{ mt: 5 }} container spacing={5}>
-        {services.length > 0 ? (
+        {services?.length > 0 ? (
           services?.map((service, i) => (
             <Grid xs={12} lg={6} item>
               <ServiceCard
