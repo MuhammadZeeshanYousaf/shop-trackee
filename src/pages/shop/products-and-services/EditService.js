@@ -30,6 +30,8 @@ const EditService = () => {
   const [imagesLinks, setImagesLinks] = useState([])
   const [base64Images, setBase64Images] = useState([])
   const [images, setImages] = useState([])
+  const [activeResponse, setActiveResponse] = useState(0)
+  const [allResponses, setAllResponses] = useState([])
   const router = useRouter()
   const { query } = router
   const { setLoader } = useLoader()
@@ -146,6 +148,7 @@ const EditService = () => {
     setLoader(true)
     const response = await Network.get(Url.recognizeServiceImages(query.shopId, query.serviceId, id))
     setLoader(false)
+    setAllResponses(response.data)
 
     reset({
       name: response.data[0]?.name,
@@ -156,24 +159,32 @@ const EditService = () => {
     })
   }
 
-  const nextReponse = () => {
-    if (currentResponse > 4) return
-    setCurrentResponse(prev => prev + 1)
-    setResponse()
+  const onNext = () => {
+    if (activeResponse < 5) {
+      reset({
+        name: allResponses[activeResponse + 1]?.name,
+        description: allResponses[activeResponse + 1]?.description,
+        category_name: allResponses[activeResponse + 1]?.category_name,
+        rate: allResponses[activeResponse + 1]?.rate,
+        charge_by: allResponses[activeResponse + 1]?.charge_by
+      })
+
+      setActiveResponse(activeResponse + 1)
+    }
   }
 
-  const previousReponse = () => {
-    if (currentResponse < 1) return
-    setCurrentResponse(prev => prev - 1)
-    setResponse()
-  }
+  const onPrev = () => {
+    if (activeResponse > 0) {
+      reset({
+        name: allResponses[activeResponse - 1]?.name,
+        description: allResponses[activeResponse - 1]?.description,
+        category_name: allResponses[activeResponse - 1]?.category_name,
+        rate: allResponses[activeResponse - 1]?.rate,
+        charge_by: allResponses[activeResponse - 1]?.charge_by
+      })
 
-  const setResponse = () => {
-    setValue('name', serviceResponses[currentResponse]?.name)
-    setValue('description', serviceResponses[currentResponse]?.description)
-    setValue('rate', serviceResponses[currentResponse]?.rate)
-    setValue('charge_by', serviceResponses[currentResponse]?.charge_by)
-    setValue('category_name', serviceResponses[currentResponse]?.category_name)
+      setActiveResponse(activeResponse - 1)
+    }
   }
 
   const uploadImages = async () => {
@@ -197,7 +208,7 @@ const EditService = () => {
     showSuccessMessage(response.data.message)
   }
   const uploadMore = async () => {
-    if(base64Images.length==0) return showErrorMessage('Please Select Images')
+    if (base64Images.length == 0) return showErrorMessage('Please Select Images')
     const images = base64Images.filter(image => {
       if (typeof image != 'object') return image
     })
@@ -298,11 +309,15 @@ const EditService = () => {
       <Card sx={{ mt: 4 }}>
         <CardHeader title='Add Service' />
         <CardContent>
+          <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 4 }}>
+            <Button type='button' variant='contained' disabled={activeResponse === 0} onClick={() => onPrev()}>
+              Prev
+            </Button>
+            <Button type='button' variant='contained' disabled={activeResponse === 4} onClick={() => onNext()}>
+              Next
+            </Button>
+          </Box>
           <form onSubmit={handleSubmit(onSubmit)}>
-            {/* <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
-              <Button onClick={() => previousReponse()}>Previous</Button>
-              <Button onClick={() => nextReponse()}>Next</Button>
-            </Box> */}
             <Grid container spacing={5}>
               <Grid item xs={12} md={6}>
                 <Controller

@@ -33,6 +33,8 @@ const ServiceForm = () => {
   const [serviceResponses, setServiceResponses] = useState([])
   const [currentResponse, setCurrentResponse] = useState(1)
   const [base64Images, setBase64Images] = useState([])
+  const [activeResponse, setActiveResponse] = useState(0)
+  const [allResponses, setAllResponses] = useState([])
   const webcamRef = useRef(null)
 
   const schema = yup.object().shape({
@@ -148,18 +150,39 @@ const ServiceForm = () => {
     handleDeleteImage(index)
   }
 
-  const setResponse = () => {
-    setValue('name', serviceResponses[currentResponse]?.name)
-    setValue('description', serviceResponses[currentResponse]?.description)
-    setValue('rate', serviceResponses[currentResponse]?.rate)
-    setValue('charge_by', serviceResponses[currentResponse]?.charge_by)
-    setValue('category_name', serviceResponses[currentResponse]?.category_name)
+  const onNext = () => {
+    if (activeResponse < 5) {
+      reset({
+        name: allResponses[activeResponse + 1]?.name,
+        description: allResponses[activeResponse + 1]?.description,
+        category_name: allResponses[activeResponse + 1]?.category_name,
+        rate: allResponses[activeResponse + 1]?.rate,
+        charge_by: allResponses[activeResponse + 1]?.charge_by
+      })
+
+      setActiveResponse(activeResponse + 1)
+    }
+  }
+
+  const onPrev = () => {
+    if (activeResponse > 0) {
+      reset({
+        name: allResponses[activeResponse - 1]?.name,
+        description: allResponses[activeResponse - 1]?.description,
+        category_name: allResponses[activeResponse - 1]?.category_name,
+        rate: allResponses[activeResponse - 1]?.rate,
+        charge_by: allResponses[activeResponse - 1]?.charge_by
+      })
+
+      setActiveResponse(activeResponse - 1)
+    }
   }
 
   const recognizeImage = async id => {
     setLoader(true)
     const response = await Network.get(Url.recognizeServiceImages(query.shopId, services?.id, id))
     setLoader(false)
+    setAllResponses(response.data)
 
     reset({
       name: response.data[0]?.name,
@@ -168,18 +191,6 @@ const ServiceForm = () => {
       charge_by: response.data[0]?.charge_by,
       rate: ''
     })
-  }
-
-  const nextReponse = () => {
-    if (currentResponse > 4) return
-    setCurrentResponse(prev => prev + 1)
-    setResponse()
-  }
-
-  const previousReponse = () => {
-    if (currentResponse < 1) return
-    setCurrentResponse(prev => prev - 1)
-    setResponse()
   }
 
   const uploadMore = async () => {
@@ -204,10 +215,6 @@ const ServiceForm = () => {
     if (!response.ok) return showErrorMessage(response.data.message)
     setBase64Images(response.data.services.images)
   }
-
-  // useEffect(() => {
-  //   setResponse()
-  // }, [serviceResponses, currentResponse])
 
   useEffect(() => {
     newServiceForm()
@@ -346,11 +353,15 @@ const ServiceForm = () => {
         <Card sx={{ mt: 4 }}>
           <CardHeader title='Add Service' />
           <CardContent>
+            <Box sx={{ display: 'flex', justifyContent: 'space-between',mb:4 }}>
+              <Button type='button' variant='contained' disabled={activeResponse === 0} onClick={() => onPrev()}>
+                Prev
+              </Button>
+              <Button type='button' variant='contained' disabled={activeResponse === 4} onClick={() => onNext()}>
+                Next
+              </Button>
+            </Box>
             <form onSubmit={handleSubmit(onSubmit)}>
-              {/* <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
-              <Button onClick={() => previousReponse()}>Previous</Button>
-              <Button onClick={() => nextReponse()}>Next</Button>
-            </Box> */}
               <Grid container spacing={5}>
                 <Grid item xs={12} md={6}>
                   <Controller

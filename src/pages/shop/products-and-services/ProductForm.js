@@ -36,8 +36,6 @@ const ProductForm = () => {
   }
 
   const [product, setProduct] = useState(null)
-  const [productResponses, setProductResponses] = useState([])
-  const [currentResponse, setCurrentResponse] = useState(0)
   const [allResponses, setAllResponses] = useState([])
   const [categories, setCategories] = useState([])
   const [activeResponse, setActiveResponse] = useState(0)
@@ -153,11 +151,6 @@ const ProductForm = () => {
       price: response.data[0]?.price
     })
 
-    // setValue('name', response.data[1]?.name)
-    // setValue('description', response.data[1]?.description)
-    // setValue('category_name', response.data[1]?.category_name)
-    // setValue('price', response.data[1]?.price)
-    // setCurrentResponse(1)
   }
 
   const onNext = () => {
@@ -186,13 +179,6 @@ const ProductForm = () => {
     }
   }
 
-  const setResponse = () => {
-    setValue('name', productResponses[currentResponse]?.name)
-    setValue('description', productResponses[currentResponse]?.description)
-    setValue('price', 10)
-    setValue('stock_quantity', productResponses[currentResponse]?.stock_quantity)
-    setValue('category_name', productResponses[currentResponse]?.category_name)
-  }
 
   const uploadMore = async () => {
     const images = base64Images.filter(image => {
@@ -251,7 +237,7 @@ const ProductForm = () => {
 
   useEffect(() => {
     setResponse()
-  }, [productResponses, currentResponse])
+  }, [])
 
   useEffect(() => {
     newProductForm()
