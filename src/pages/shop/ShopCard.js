@@ -130,6 +130,13 @@ const ShopCard = ({ shop, deleteShop, role = 'Admin' }) => {
                   >
                     Get Directions
                   </Button>
+                  <Button
+                    sx={{ mr: 4, '& svg': { mr: 2 } }}
+                    variant={true ? 'contained' : 'tonal'}
+                    onClick={() => router.push(`/explore-shop/?shopId=${shop?.id}&name=${shop?.name}`)}
+                  >
+                    Show
+                  </Button>
                 </Box>
               )}
             </Box>

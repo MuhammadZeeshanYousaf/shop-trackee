@@ -82,10 +82,12 @@ export default {
 
   removeRequestbySeller: orderId => `/seller/order_requests/${orderId}/remove`,
 
-
   //add to favourite
 
+  addToFavourite: '/favorites',
 
-  addToFavourite:'/favorites'
+  //Search by Shop
 
+  searchByShop: (shopId, product_page, service_page) =>
+    `search_by_shop/${shopId}?product_page=${product_page}&service_page=${service_page}`
 }
