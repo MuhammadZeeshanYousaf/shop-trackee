@@ -25,7 +25,7 @@ const CustomerDashboard = () => {
   const { setLoader } = useLoader()
   const { setCoordinates, latitude, longitude } = useCoordinates()
   const router = useRouter()
- 
+
   const [productCategories, setProductCategories] = useState([])
   const [serviceCategories, setServiceCategories] = useState([])
   const [products, setProducts] = useState([])
@@ -114,11 +114,13 @@ const CustomerDashboard = () => {
         >
           <Typography variant='h4'>Products</Typography>
           <div style={{ display: 'flex', alignItems: 'center' }}>
-            <InputLabel sx={{ mr: 1 }} id='demo-simple-select-label'>
-              Explore By
-            </InputLabel>
+            <InputLabel sx={{ mr: 1 }}>Explore By</InputLabel>
             <FormControl>
+              <InputLabel sx={{ mr: 1 }} id='demo-simple-select-label'>
+                Category
+              </InputLabel>
               <Select
+                label='Category'
                 defaultValue=''
                 labelId='demo-simple-select-label'
                 id='demo-simple-select'
@@ -168,14 +170,16 @@ const CustomerDashboard = () => {
           <Typography variant='h4'>Services</Typography>
 
           <div style={{ display: 'flex', alignItems: 'center' }}>
-            <InputLabel sx={{ mr: 1 }} id='demo-simple-select-label'>
-              Explore By
-            </InputLabel>
+            <InputLabel sx={{ mr: 1 }}>Explore By</InputLabel>
+
             <FormControl>
+              <InputLabel sx={{ mr: 1 }} id='demo-simple-select-label'>
+                Category
+              </InputLabel>
               <Select
-                defaultValue=''
                 labelId='demo-simple-select-label'
-                id='demo-simple-select'
+                label='Category'
+                defaultValue=''
                 onChange={e => search(e.target.value)}
               >
                 <MenuItem value=''>Category</MenuItem>
