@@ -46,6 +46,13 @@ const SearchResult = () => {
   }
 
   const getImageSearchData = async () => {
+    // const formData = new FormData()
+
+    // formData.append('q', q)
+    // formData.append('distance', distance)
+    // formData.append('longitude', longitude)
+    // formData.append('latitude', latitude)
+
     const payload = {
       q,
       distance,
