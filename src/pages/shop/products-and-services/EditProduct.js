@@ -31,6 +31,8 @@ const EditProduct = () => {
   const [currentResponse, setCurrentResponse] = useState(1)
   const [base64Images, setBase64Images] = useState([])
   const [images, setImages] = useState([])
+  const [allResponses, setAllResponses] = useState([])
+  const [activeResponse, setActiveResponse] = useState(0)
   const { query } = router
   const webcamRef = useRef(null)
 
@@ -108,6 +110,7 @@ const EditProduct = () => {
     setLoader(true)
     const response = await Network.get(Url.recognizeProductImages(query.shopId, query.productId, id))
     setLoader(false)
+    setAllResponses(response.data)
 
     reset({
       name: response.data[0]?.name,
@@ -142,16 +145,30 @@ const EditProduct = () => {
     setValue('category_name', product[currentResponse]?.category_name)
   }
 
-  const nextReponse = () => {
-    if (currentResponse > 4) return
-    setCurrentResponse(prev => prev + 1)
-    setResponse()
+  const onNext = () => {
+    if (activeResponse < 5) {
+      reset({
+        name: allResponses[activeResponse + 1]?.name,
+        description: allResponses[activeResponse + 1]?.description,
+        category_name: allResponses[activeResponse + 1]?.category_name,
+        price: allResponses[activeResponse + 1]?.price
+      })
+
+      setActiveResponse(activeResponse + 1)
+    }
   }
 
-  const previousReponse = () => {
-    if (currentResponse < 0) return
-    setCurrentResponse(prev => prev - 1)
-    setResponse()
+  const onPrev = () => {
+    if (activeResponse > 0) {
+      reset({
+        name: allResponses[activeResponse - 1]?.name,
+        description: allResponses[activeResponse - 1]?.description,
+        category_name: allResponses[activeResponse - 1]?.category_name,
+        price: allResponses[activeResponse - 1]?.price
+      })
+
+      setActiveResponse(activeResponse - 1)
+    }
   }
 
   const uploadMore = async () => {
@@ -283,11 +300,15 @@ const EditProduct = () => {
       <Card sx={{ mt: 5 }}>
         <CardHeader title='Edit Product' />
         <CardContent>
+          <Box sx={{ display: 'flex', justifyContent: 'space-between', width: '100%' }}>
+            <Button type='button' variant='contained' disabled={activeResponse === 0} onClick={() => onPrev()}>
+              Prev
+            </Button>
+            <Button type='button' variant='contained' disabled={activeResponse === 4} onClick={() => onNext()}>
+              Next
+            </Button>
+          </Box>
           <form onSubmit={handleSubmit(onSubmit)}>
-            {/* <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
-              <Button onClick={() => previousReponse()}>Previous</Button>
-              <Button onClick={() => nextReponse()}>Next</Button>
-            </Box> */}
             <Grid container spacing={5} sx={{ marginTop: '5px' }}>
               <Grid item xs={12} md={6}>
                 <Controller

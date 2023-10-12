@@ -194,37 +194,6 @@ const ProductForm = () => {
     setValue('category_name', productResponses[currentResponse]?.category_name)
   }
 
-  const nextReponse = () => {
-    const currentIndex = allResponses.indexOf(getValues())
-
-    const index = currentResponse
-    console.log({ currentResponse })
-    reset(
-      {
-        name: allResponses[currentResponse]?.name,
-        description: allResponses[currentResponse]?.description,
-        category_name: allResponses[currentResponse]?.category_name,
-        price: allResponses[currentResponse]?.price
-      },
-      { keepDirtyValues: true, keepDirty: true }
-    )
-
-    // if (currentResponse > 4) return
-
-    // console.log(allResponses[currentResponse])
-
-    // setValue('name', allResponses[currentResponse]?.name)
-    // setValue('description', allResponses[currentResponse]?.description)
-    // setValue('category_name', allResponses[currentResponse]?.category_name)
-    // setValue('price', allResponses[currentResponse]?.price)
-  }
-
-  const previousReponse = () => {
-    if (currentResponse < 0) return
-    setCurrentResponse(prev => prev - 1)
-    setResponse()
-  }
-
   const uploadMore = async () => {
     const images = base64Images.filter(image => {
       if (typeof image != 'object') return image
