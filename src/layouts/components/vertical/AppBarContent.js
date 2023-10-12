@@ -49,7 +49,9 @@ const AppBarContent = props => {
       const imageSrc = webcamRef.current.getScreenshot()
       localStorage.setItem('search-image', imageSrc)
       router.push(
-        `/search-result?q=${imageSrc}&longitude=${longitude}&latitude=${latitude}&distance=${distance}&method=post`
+        `/search-result?q=${encodeURIComponent(
+          imageSrc
+        )}&longitude=${longitude}&latitude=${latitude}&distance=${distance}&method=post`
       )
     } else if (text == 'searchByText') {
       setOpenDialog(false)
@@ -66,7 +68,9 @@ const AppBarContent = props => {
     reader.onload = e => {
       const base64String = e.target.result
       router.push(
-        `/search-result?q=${base64String}&longitude=${longitude}&latitude=${latitude}&distance=${distance}&method=post`
+        `/search-result?q=${encodeURIComponent(
+          base64String
+        )}&longitude=${longitude}&latitude=${latitude}&distance=${distance}&method=post`
       )
     }
 

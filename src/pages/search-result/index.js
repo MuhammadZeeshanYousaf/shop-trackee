@@ -54,7 +54,7 @@ const SearchResult = () => {
     // formData.append('latitude', latitude)
 
     const payload = {
-      q,
+      q: decodeURIComponent(q),
       distance,
       longitude,
       latitude
