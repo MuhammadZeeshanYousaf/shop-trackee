@@ -40,6 +40,7 @@ const ProductForm = () => {
   const [currentResponse, setCurrentResponse] = useState(0)
   const [allResponses, setAllResponses] = useState([])
   const [categories, setCategories] = useState([])
+  const [activeResponse, setActiveResponse] = useState(0)
 
   const [base64Images, setBase64Images] = useState([])
   const [facingMode, setFacingMode] = useState(FACING_MODE_USER)
@@ -48,7 +49,8 @@ const ProductForm = () => {
     name: yup.string().required(),
     description: yup.string(),
     price: yup.number().required(),
-    stock_quantity: yup.number().required('quantity is required'),
+
+    // stock_quantity: yup.number().required('quantity is required'),
     category_name: yup.string().required('category is required')
   })
 
@@ -150,11 +152,38 @@ const ProductForm = () => {
       category_name: response.data[0]?.category_name,
       price: response.data[0]?.price
     })
+
     // setValue('name', response.data[1]?.name)
     // setValue('description', response.data[1]?.description)
     // setValue('category_name', response.data[1]?.category_name)
     // setValue('price', response.data[1]?.price)
     // setCurrentResponse(1)
+  }
+
+  const onNext = () => {
+    if (activeResponse < 5) {
+      reset({
+        name: allResponses[activeResponse + 1]?.name,
+        description: allResponses[activeResponse + 1]?.description,
+        category_name: allResponses[activeResponse + 1]?.category_name,
+        price: allResponses[activeResponse + 1]?.price
+      })
+
+      setActiveResponse(activeResponse + 1)
+    }
+  }
+
+  const onPrev = () => {
+    if (activeResponse > 0) {
+      reset({
+        name: allResponses[activeResponse - 1]?.name,
+        description: allResponses[activeResponse - 1]?.description,
+        category_name: allResponses[activeResponse - 1]?.category_name,
+        price: allResponses[activeResponse - 1]?.price
+      })
+
+      setActiveResponse(activeResponse - 1)
+    }
   }
 
   const setResponse = () => {
@@ -179,6 +208,7 @@ const ProductForm = () => {
       },
       { keepDirtyValues: true, keepDirty: true }
     )
+
     // if (currentResponse > 4) return
 
     // console.log(allResponses[currentResponse])
@@ -205,6 +235,7 @@ const ProductForm = () => {
       formData.append('images[]', image)
     })
     setLoader(true)
+
     const response = await Network.put(
       Url.uploadProductMoreImages(query.shopId, product?.id),
       formData,
@@ -353,17 +384,14 @@ const ProductForm = () => {
           <CardHeader title='Add Product' />
 
           <CardContent>
-            {/* <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
-              <Button onClick={() => previousReponse()}>Previous</Button>
-              <Button
-                onClick={() => {
-                  setCurrentResponse(prev => prev + 1)
-                  nextReponse()
-                }}
-              >
+            <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
+              <Button type='button' variant='contained' disabled={activeResponse === 0} onClick={() => onPrev()}>
+                Prev
+              </Button>
+              <Button type='button' variant='contained' disabled={activeResponse === 4} onClick={() => onNext()}>
                 Next
               </Button>
-            </Box> */}
+            </Box>
             <form onSubmit={handleSubmit(onSubmit)}>
               <Grid container spacing={5} sx={{ marginTop: '5px' }}>
                 <Grid item xs={12} md={6}>
