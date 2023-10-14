@@ -150,7 +150,6 @@ const ProductForm = () => {
       category_name: response.data[0]?.category_name,
       price: response.data[0]?.price
     })
-
   }
 
   const onNext = () => {
@@ -178,7 +177,6 @@ const ProductForm = () => {
       setActiveResponse(activeResponse - 1)
     }
   }
-
 
   const uploadMore = async () => {
     const images = base64Images.filter(image => {
@@ -234,10 +232,6 @@ const ProductForm = () => {
   }, [])
 
   // Capture the image using webcam
-
-  useEffect(() => {
-    setResponse()
-  }, [])
 
   useEffect(() => {
     newProductForm()
