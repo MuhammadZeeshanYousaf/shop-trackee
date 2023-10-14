@@ -192,7 +192,7 @@ const CustomerDashboard = () => {
               size='small'
               onClick={() =>
                 router.push(
-                  `/fetch-services?longitude=${longitude}&latitude=${latitude}&distance=${distance}&product_page=1`
+                  `/fetch-services?longitude=${longitude}&latitude=${latitude}&distance=${distance}&service_page=1`
                 )
               }
             >

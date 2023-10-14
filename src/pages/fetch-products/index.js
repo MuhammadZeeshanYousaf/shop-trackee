@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react'
 import { showErrorMessage, CustomerProductCard, showSuccessMessage } from 'src/components'
 import { Network, Url } from 'src/configs'
 import { useLoader } from 'src/hooks'
-import { Grid, Typography } from '@mui/material'
+import { Grid, Typography, Pagination } from '@mui/material'
 import ShopCard from '../shop/ShopCard'
 
 const FetchProducts = () => {
@@ -12,15 +12,18 @@ const FetchProducts = () => {
   const [products, setProducts] = useState([])
   const [shops, setShops] = useState([])
 
+  const [totalPages, setTotalPages] = useState(0)
   const { longitude, latitude, distance, product_page } = router.query
+  const [currentPage, setCurrentPage] = useState(product_page)
 
   const getProductData = async () => {
     setLoader(true)
-    const response = await Network.get(Url.viewAllProducts(latitude, longitude, distance, product_page))
+    const response = await Network.get(Url.viewAllProducts(latitude, longitude, distance, currentPage))
     setLoader(false)
     if (!response.ok) return showErrorMessage(response.data.message)
     setProducts(response.data.product.data)
     setShops(response.data.shop.data)
+    setTotalPages(response.data.product.total_pages)
   }
 
   const addToFavourite = async (id, status, type) => {
@@ -39,7 +42,10 @@ const FetchProducts = () => {
 
   useEffect(() => {
     getProductData()
-  }, [])
+  }, [currentPage])
+  const handleChange = (event, value) => {
+    setCurrentPage(value)
+  }
 
   return (
     <>
@@ -50,6 +56,13 @@ const FetchProducts = () => {
           </Grid>
         ))}
       </Grid>
+
+      {/* Product pagination */}
+
+      <div style={{ display: 'flex', justifyContent: 'center', marginTop: '10px' }}>
+        <Pagination count={totalPages} onChange={handleChange} />
+      </div>
+
       <Typography sx={{ mt: 5 }} variant='h2'>
         Shops
       </Typography>

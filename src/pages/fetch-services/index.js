@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react'
 import { showErrorMessage, showSuccessMessage } from 'src/components'
 import { Network, Url } from 'src/configs'
 import { useLoader } from 'src/hooks'
-import { Grid, Typography } from '@mui/material'
+import { Grid, Typography, Pagination } from '@mui/material'
 import ServiceCard from '../shop/products-and-services/ServiceCard'
 import ShopCard from '../shop/ShopCard'
 
@@ -13,15 +13,19 @@ const FetchServices = () => {
   const [services, setServices] = useState([])
   const [shops, setShops] = useState([])
 
-  const { longitude, latitude, distance, product_page } = router.query
+  const { longitude, latitude, distance, service_page } = router.query
+  const [totalPages, setTotalPages] = useState(0)
+
+  const [currentPage, setCurrentPage] = useState(service_page)
 
   const getServiceData = async () => {
     setLoader(true)
-    const response = await Network.get(Url.viewAllServices(latitude, longitude, distance, product_page))
+    const response = await Network.get(Url.viewAllServices(latitude, longitude, distance, currentPage))
     setLoader(false)
     if (!response.ok) return showErrorMessage(response.data.message)
     setServices(response.data.service.data)
     setShops(response.data.shop.data)
+    setTotalPages(response.data.service.total_pages)
   }
 
   const addToFavourite = async (id, status, type) => {
@@ -40,7 +44,11 @@ const FetchServices = () => {
 
   useEffect(() => {
     getServiceData()
-  }, [])
+  }, [currentPage])
+
+  const handleChange = (event, value) => {
+    setCurrentPage(value)
+  }
 
   return (
     <>
@@ -57,6 +65,12 @@ const FetchServices = () => {
           </Grid>
         ))}
       </Grid>
+
+      {/* Service Pagination */}
+      <div style={{ display: 'flex', justifyContent: 'center', marginTop: '10px' }}>
+        <Pagination count={totalPages} onChange={handleChange} />
+      </div>
+
       <Typography sx={{ mt: 5 }} variant='h2'>
         Shops
       </Typography>
