@@ -63,8 +63,8 @@ export default {
   viewAllProducts: (latitude, longitude, distance, product_page) =>
     `/search_all?type=product&latitude=${latitude}&longitude=${longitude}&distance=${distance}&product_page=${product_page}`,
 
-  viewAllServices: (latitude, longitude, distance, product_page) =>
-    `/search_all?type=service&latitude=${latitude}&longitude=${longitude}&distance=${distance}&service_page=${product_page}`,
+  viewAllServices: (latitude, longitude, distance, service_page) =>
+    `/search_all?type=service&latitude=${latitude}&longitude=${longitude}&distance=${distance}&service_page=${service_page}`,
 
   // create order request
 
@@ -89,5 +89,10 @@ export default {
   //Search by Shop
 
   searchByShop: (shopId, product_page, service_page) =>
-    `search_by_shop/${shopId}?product_page=${product_page}&service_page=${service_page}`
+    `search_by_shop/${shopId}?product_page=${product_page}&service_page=${service_page}`,
+
+  // Search by category
+
+  searchByCategory: (category, latitude, longitude, distance, product_page, service_page) =>
+    `/search_by_category?q=${category}&latitude=${latitude}&longitude=${longitude}&distance=${distance}&product_page=${product_page}&service_page=${service_page}&shop_page=1`
 }

@@ -1,12 +1,11 @@
-import { Grid, Typography, Box, Pagination } from '@mui/material'
-import { useRouter } from 'next/router'
 import { useEffect, useState } from 'react'
+import { Grid, Typography, Box, Pagination } from '@mui/material'
 import { Network, Url, multipartConfig } from 'src/configs'
 import { useLoader } from 'src/hooks'
-
-import ServiceCard from '../shop/products-and-services/ServiceCard'
+import { useRouter } from 'next/router'
 import Icon from 'src/@core/components/icon'
-import { CustomerProductCard, showErrorMessage, showSuccessMessage } from 'src/components'
+import ServiceCard from '../shop/products-and-services/ServiceCard'
+import { CustomerProductCard } from 'src/components'
 import ShopCard from '../shop/ShopCard'
 
 const NoResults = ({ value }) => {
@@ -27,10 +26,9 @@ const NoResults = ({ value }) => {
   )
 }
 
-const SearchResult = () => {
+const SearchbyCategory = () => {
   const router = useRouter()
-  const { q, distance, longitude, latitude, method } = router.query
-
+  const { q, distance, longitude, latitude } = router.query
   const [products, setProducts] = useState([])
   const [services, setServices] = useState([])
   const [shops, setShops] = useState([])
@@ -42,40 +40,18 @@ const SearchResult = () => {
   const [currentServicePage, setCurrentServicePage] = useState(1)
 
   const { setLoader } = useLoader()
+
   const getData = async () => {
     setLoader(true)
-    const response = await Network.get(Url.search(q, distance, longitude, latitude))
+    const response = await Network.get(
+      Url.searchByCategory(q, latitude, longitude, distance, currentProductPage, currentServicePage)
+    )
     setLoader(false)
     setProducts(response.data.product.data)
     setProductTotalPages(response.data.product.total_pages)
     setServiceTotalPages(response.data.service.total_pages)
     setServices(response.data.service.data)
     setShops(response.data.shop.data)
-  }
-
-  const getImageSearchData = async () => {
-    const payload = {
-      q: decodeURIComponent(q),
-      distance,
-      longitude,
-      latitude
-    }
-    setLoader(true)
-    const response = await Network.post(Url.searhWithImage, payload)
-    setLoader(false)
-    setProducts(response.data.product.data)
-    setServices(response.data.service.data)
-    setProductTotalPages(response.data.product.total_pages)
-    setServiceTotalPages(response.data.service.total_pages)
-    setShops(response.data.shop.data)
-  }
-
-  const handleProductPage = (event, value) => {
-    setCurrentProductPage(value)
-  }
-
-  const handleServicePage = (event, value) => {
-    setCurrentServicePage(value)
   }
 
   const addToFavourite = async (id, status, type) => {
@@ -93,9 +69,16 @@ const SearchResult = () => {
     if (method == 'post') getImageSearchData()
   }
 
+  const handleProductPage = (event, value) => {
+    setCurrentProductPage(value)
+  }
+
+  const handleServicePage = (event, value) => {
+    setCurrentServicePage(value)
+  }
+
   useEffect(() => {
-    if (method == 'get') getData()
-    if (method == 'post') getImageSearchData()
+    getData()
   }, [currentProductPage, currentServicePage])
 
   return (
@@ -157,9 +140,9 @@ const SearchResult = () => {
   )
 }
 
-SearchResult.acl = {
-  subject: 'search-result',
+export default SearchbyCategory
+
+SearchbyCategory.acl = {
+  subject: 'search-by-category',
   action: 'read'
 }
-
-export default SearchResult

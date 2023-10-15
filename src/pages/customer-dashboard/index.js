@@ -86,7 +86,7 @@ const CustomerDashboard = () => {
   }, [])
 
   const search = async text => {
-    router.push(`/search-result?q=${text}&longitude=${longitude}&latitude=${latitude}&distance=${distance}&method=get`)
+    router.push(`/search-by-category?q=${text}&longitude=${longitude}&latitude=${latitude}&distance=${distance}`)
   }
 
   return (

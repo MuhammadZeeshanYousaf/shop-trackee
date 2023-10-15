@@ -111,7 +111,7 @@ const NotificationDropdown = props => {
     const response = await Network.get(Url.addToFavourite)
     setLoader(false)
     if (!response.ok) return showErrorMessage(response.data.message)
-    setNotifications(response.data)
+    setNotifications(response.data.favorites)
   }
 
   useEffect(() => {
