@@ -12,6 +12,8 @@ const OrderRequest = () => {
   const { setLoader } = useLoader()
   const { longitude, latitude } = useCoordinates()
   const [open, setOpen] = useState(false)
+  const [totalRecords, setTotalRecords] = useState(0)
+  const [currentPage, setCurrentpage] = useState(0)
 
   const handleClose = () => setOpen(false)
   const [destination, setDestination] = useState({
@@ -28,9 +30,10 @@ const OrderRequest = () => {
 
   const getOrderRequests = async () => {
     setLoader(true)
-    const response = await Network.get(Url.getShopOrderRequests)
+    const response = await Network.get(Url.getShopOrderRequests(currentPage))
     setLoader(false)
-    setOrderRequest(response.data)
+    setOrderRequest(response.data.order_requests)
+    setTotalRecords(response.data.meta.total_count)
   }
 
   const cancelRequest = async orderId => {
@@ -57,7 +60,7 @@ const OrderRequest = () => {
 
   useEffect(() => {
     getOrderRequests()
-  }, [])
+  }, [currentPage])
 
   const bgColors = useBgColor()
 
@@ -207,7 +210,22 @@ const OrderRequest = () => {
         </div>
 
         <Box sx={{ height: 500 }}>
-          <DataGrid pagination={false} columns={columns} rows={orderRequest} disableColumnMenu />
+          <DataGrid
+            pagination
+            paginationMode='server'
+            initialState={{
+              pagination: {
+                paginationModel: {
+                  pageSize: 8
+                }
+              }
+            }}
+            onPaginationModelChange={({ page }) => setCurrentpage(page + 1)}
+            rowCount={totalRecords}
+            columns={columns}
+            rows={orderRequest}
+            disableColumnMenu
+          />
         </Box>
       </Card>
     </>

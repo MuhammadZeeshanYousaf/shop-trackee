@@ -47,7 +47,7 @@ export default {
 
   //get order request for shop
 
-  getShopOrderRequests: '/order_requests',
+  getShopOrderRequests: (page)=>`/order_requests?page=${page}`,
 
   //get all categories
   getAllCategories: type => `/categories?type=${type}`,
