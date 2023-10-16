@@ -20,6 +20,8 @@ const ShopDashboard = () => {
   const [shopStats, setShopStats] = useState([])
   const [orderRequest, setOrderRequests] = useState([])
   const { setCoordinates } = useCoordinates()
+  const [totalRecords, setTotalRecords] = useState(0)
+  const [currentPage, setCurrentpage] = useState(0)
 
   const getStats = async () => {
     setLoader(true)
@@ -32,11 +34,11 @@ const ShopDashboard = () => {
 
   const getOrderRequests = async () => {
     setLoader(true)
-    const response = await Network.get(Url.getShopOrderRequests)
+    const response = await Network.get(Url.getShopOrderRequests(currentPage))
     setLoader(false)
     if (!response.ok) return showErrorMessage(response.data.message)
-
-    setOrderRequests(response.data)
+    setTotalRecords(response.data.meta.total_count)
+    setOrderRequests(response.data.order_requests)
   }
 
   const handleRequest = async (orderID, mode) => {
@@ -65,6 +67,10 @@ const ShopDashboard = () => {
     getStats()
     getOrderRequests()
   }, [])
+
+  useEffect(() => {
+    getOrderRequests()
+  }, [currentPage])
 
   useEffect(() => {
     if (navigator.geolocation) {
@@ -101,10 +107,19 @@ const ShopDashboard = () => {
           </Grid>
           <Grid item xs={12} md={12} lg={12}>
             <OrderRequestTable
+              totalRecords={totalRecords}
+              setCurrentPage={setCurrentpage}
               removeRequest={removeRequest}
               handleRequest={handleRequest}
               orderRequest={orderRequest}
               getOrderRequest={getOrderRequests}
+              initialState={{
+                pagination: {
+                  paginationModel: {
+                    pageSize: 8
+                  }
+                }
+              }}
             />
           </Grid>
         </Grid>

@@ -2,12 +2,19 @@ import { DataGrid } from '@mui/x-data-grid'
 import CustomAvatar from 'src/@core/components/mui/avatar'
 import { Typography, Button, Card, CardHeader, Box, Chip, Tooltip } from '@mui/material'
 import useBgColor from 'src/@core/hooks/useBgColor'
-import { useState } from 'react'
 import { MapModal } from 'src/components'
-import { useCoordinates } from 'src/hooks'
 import Icon from 'src/@core/components/icon'
 
-const OrderRequestTable = ({ orderRequest, handleRequest, removeRequest, getOrderRequest }) => {
+import { useState } from 'react'
+
+const OrderRequestTable = ({
+  orderRequest,
+  handleRequest,
+  removeRequest,
+  getOrderRequest,
+  totalRecords,
+  setCurrentPage
+}) => {
   const bgColors = useBgColor()
 
   const [destination, setDestination] = useState({
@@ -188,7 +195,16 @@ const OrderRequestTable = ({ orderRequest, handleRequest, removeRequest, getOrde
           <Icon onClick={() => getOrderRequest()} style={{ marginRight: '10px' }} icon='tabler:refresh' />
         </div>
         <Box sx={{ height: 500, width: '100%' }}>
-          <DataGrid sx={{ m: 2 }} columns={columns} rows={orderRequest} disableColumnMenu />
+          <DataGrid
+            pagination
+            paginationMode='server'
+            sx={{ m: 2 }}
+            columns={columns}
+            rows={orderRequest}
+            disableColumnMenu
+            rowCount={totalRecords}
+            onPaginationModelChange={({ page }) => setCurrentPage(page + 1)}
+          />
         </Box>
       </Card>
     </>
