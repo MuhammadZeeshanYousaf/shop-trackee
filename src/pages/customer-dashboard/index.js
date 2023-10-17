@@ -189,7 +189,7 @@ const CustomerDashboard = () => {
               </Select>
             </FormControl>
             <Button
-              size='small'
+              size='large'
               onClick={() =>
                 router.push(
                   `/fetch-services?longitude=${longitude}&latitude=${latitude}&distance=${distance}&service_page=1`
