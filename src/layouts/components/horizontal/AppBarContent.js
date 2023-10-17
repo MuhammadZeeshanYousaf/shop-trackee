@@ -25,52 +25,7 @@ import Webcam from 'react-webcam'
 import { useRouter } from 'next/router'
 import { useCoordinates, useLoader } from 'src/hooks'
 import { Network, Url } from 'src/configs'
-import { showErrorMessage } from 'src/components'
-
-const notifications = [
-  {
-    meta: 'Today',
-    avatarAlt: 'Flora',
-    title: 'Congratulation Flora! 🎉',
-    avatarImg: '/images/avatars/4.png',
-    subtitle: 'Won the monthly best seller badge'
-  },
-  {
-    meta: 'Yesterday',
-    avatarColor: 'primary',
-    subtitle: '5 hours ago',
-    avatarText: 'Robert Austin',
-    title: 'New user registered.'
-  },
-  {
-    meta: '11 Aug',
-    avatarAlt: 'message',
-    title: 'New message received 👋🏻',
-    avatarImg: '/images/avatars/5.png',
-    subtitle: 'You have 10 unread messages'
-  },
-  {
-    meta: '25 May',
-    title: 'Paypal',
-    avatarAlt: 'paypal',
-    subtitle: 'Received Payment',
-    avatarImg: '/images/misc/paypal.png'
-  },
-  {
-    meta: '19 Mar',
-    avatarAlt: 'order',
-    title: 'Received Order 📦',
-    avatarImg: '/images/avatars/3.png',
-    subtitle: 'New order received from John'
-  },
-  {
-    meta: '27 Dec',
-    avatarAlt: 'chart',
-    subtitle: '25 hrs ago',
-    avatarImg: '/images/misc/chart.png',
-    title: 'Finance report has been generated'
-  }
-]
+import { showWarningMessage } from 'src/components'
 
 const AppBarContent = props => {
   // ** Props
@@ -85,6 +40,7 @@ const AppBarContent = props => {
   const webcamRef = useRef(null)
   const [searchValue, setSearchValue] = useState('')
   const [distance, setDistance] = useState(0)
+  const fileInputRef = useRef(null)
 
   const FACING_MODE_USER = 'user'
   const FACING_MODE_ENVIRONMENT = 'environment'
@@ -93,6 +49,7 @@ const AppBarContent = props => {
   const videoConstraints = {
     facingMode: FACING_MODE_USER
   }
+
   const switchCamera = useCallback(() => {
     setFacingMode(prevState => (prevState === FACING_MODE_USER ? FACING_MODE_ENVIRONMENT : FACING_MODE_USER))
   }, [])
@@ -108,7 +65,9 @@ const AppBarContent = props => {
       const imageSrc = webcamRef.current.getScreenshot()
       localStorage.setItem('search-image', imageSrc)
       router.push(
-        `/search-result?q=${encodeURIComponent(imageSrc)}&longitude=${longitude}&latitude=${latitude}&distance=${distance}&method=post`
+        `/search-result?q=${encodeURIComponent(
+          imageSrc
+        )}&longitude=${longitude}&latitude=${latitude}&distance=${distance}&method=post`
       )
     } else if (text == 'searchByText') {
       setOpenDialog(false)
@@ -118,19 +77,27 @@ const AppBarContent = props => {
     }
   }
 
-  const handleImage = event => {
-    const file = event.target.files[0]
+  const handleImage = () => {
+    const file = fileInputRef.current?.files?.[0]
 
-    const reader = new FileReader()
+    if (file) {
+      const reader = new FileReader()
 
-    reader.onload = e => {
-      const base64String = e.target.result
-      router.push(
-        `/search-result?q=${encodeURIComponent(base64String)}&longitude=${longitude}&latitude=${latitude}&distance=${distance}&method=post`
-      )
+      reader.onload = e => {
+        const base64String = e.target.result
+
+        setOpenDialog(false)
+        router.push(
+          `/search-result?q=${encodeURIComponent(
+            base64String
+          )}&longitude=${longitude}&latitude=${latitude}&distance=${distance}&method=post`
+        )
+      }
+
+      reader.readAsDataURL(file)
+    } else {
+      showWarningMessage('No file selected')
     }
-
-    reader.readAsDataURL(file)
   }
 
   useEffect(() => {
@@ -183,7 +150,7 @@ const AppBarContent = props => {
               />
             </Grid>
             <Grid sx={{ mt: 5, display: 'flex', alignItems: 'center', justifyContent: 'end' }} item xs={2}>
-              <Button size='small' variant='contained' onClick={() => search('searchByText')}>
+              <Button size='large' variant='contained' onClick={() => search('searchByText')}>
                 Search
               </Button>
             </Grid>
@@ -193,10 +160,9 @@ const AppBarContent = props => {
               item
               xs={6}
             >
-              <Input type='file' sx={{ border: 'none', mb: 5 }} onChange={e => handleImage(e)} />
-              <div style={{ display: 'flex', alignItems: 'center' }}>
+              <div style={{ display: 'flex', alignItems: 'center', marginBottom: '30px' }}>
                 <FormLabel>
-                  <b>Search Around:</b>{' '}
+                  <b>Search Around:</b>&nbsp;
                 </FormLabel>
                 <TextField
                   sx={{ width: '100px', ml: 1 }}
@@ -207,6 +173,7 @@ const AppBarContent = props => {
                     if (event.target.value < 0) {
                       setDistance(0)
                       localStorage.setItem('distance', 0)
+
                       return
                     }
                     setDistance(event.target.value)
@@ -215,13 +182,20 @@ const AppBarContent = props => {
                 />
                 <FormLabel sx={{ ml: 1 }}>KM</FormLabel>
               </div>
+
+              <div>
+                <input type='file' ref={fileInputRef} />
+                <Button variant='contained' size='medium' sx={{ mt: 4 }} onClick={handleImage}>
+                  Search It
+                </Button>
+              </div>
             </Grid>
 
             {/* Camera */}
 
             <Grid sx={{ textAlign: 'center' }} item xs={6}>
               <Webcam
-                height={'100%'}
+                height={'90%'}
                 width={'100%'}
                 audio={false}
                 ref={webcamRef}

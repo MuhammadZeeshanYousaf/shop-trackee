@@ -14,4 +14,16 @@ const showErrorMessage = message => {
   })
 }
 
-export {showErrorMessage,showSuccessMessage}
+const showWarningMessage = message => {
+  toast.remove()
+
+  return toast.error(message, {
+    position: 'top-center',
+    style: {
+      zIndex: 9999 // Set a high z-index value
+    },
+    icon: '⚠️'
+  })
+}
+
+export { showErrorMessage, showSuccessMessage, showWarningMessage }
