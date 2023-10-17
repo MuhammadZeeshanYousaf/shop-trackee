@@ -128,7 +128,7 @@ const ShopCard = ({ shop, deleteShop, role = 'Admin' }) => {
                     variant={true ? 'contained' : 'tonal'}
                     onClick={() => setOpen(true)}
                   >
-                    Get Directions
+                    Get Direction
                   </Button>
                   <Button
                     sx={{ mr: 4, '& svg': { mr: 2 } }}
