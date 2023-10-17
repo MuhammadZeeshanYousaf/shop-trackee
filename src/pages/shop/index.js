@@ -16,7 +16,7 @@ const Shop = () => {
     const response = await Network.get(Url.getShops)
     setLoader(false)
     if (!response.ok) return showErrorMessage(response.data.message)
-    setShops(response.data)
+    setShops(response.data.shops)
   }
 
   useEffect(() => {
