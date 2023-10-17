@@ -195,9 +195,11 @@ const AppBarContent = props => {
             >
               <Input type='file' sx={{ border: 'none', mb: 5 }} onChange={e => handleImage(e)} />
               <div style={{ display: 'flex', alignItems: 'center' }}>
-                <FormLabel>Search Around</FormLabel>
+                <FormLabel>
+                  <b>Search Around:</b>{' '}
+                </FormLabel>
                 <TextField
-                  sx={{ width: '110px', ml: 1 }}
+                  sx={{ width: '100px', ml: 1 }}
                   type='number'
                   value={distance}
                   placeholder='Distance'
@@ -211,7 +213,7 @@ const AppBarContent = props => {
                     localStorage.setItem('distance', event.target.value)
                   }}
                 />
-                <FormLabel sx={{ ml: 1 }}>km</FormLabel>
+                <FormLabel sx={{ ml: 1 }}>KM</FormLabel>
               </div>
             </Grid>
 
@@ -219,8 +221,8 @@ const AppBarContent = props => {
 
             <Grid sx={{ textAlign: 'center' }} item xs={6}>
               <Webcam
-                height={200}
-                width={200}
+                height={'100%'}
+                width={'100%'}
                 audio={false}
                 ref={webcamRef}
                 screenshotFormat='image/jpeg'
@@ -230,16 +232,16 @@ const AppBarContent = props => {
                 }}
               />
               <div style={{ display: 'flex', justifyContent: 'center' }}>
-                <Button variant='contained' size='small' onClick={switchCamera}>
-                  Switch Camera
-                </Button>
-                <Button sx={{ ml: 1 }} variant='contained' size='small' onClick={() => search('searchByImage')}>
+                <Button sx={{ mr: 2 }} variant='contained' size='small' onClick={() => search('searchByImage')}>
                   Capture & Search
+                </Button>
+                <Button variant='outlined' size='small' onClick={switchCamera}>
+                  <Icon icon='tabler:refresh' />
                 </Button>
               </div>
             </Grid>
             {/* <Grid item xs={6} sx={{ textAlign: 'end', mt: 5 }}>
-             
+
             </Grid>  */}
           </Grid>
         </Box>
