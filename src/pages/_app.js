@@ -111,8 +111,8 @@ const App = props => {
         <meta name='viewport' content='initial-scale=1, width=device-width' />
       </Head>
 
-      <AuthProvider>
-        <LoaderContext.Provider value={{ loading, setLoading }}>
+      <LoaderContext.Provider value={{ loading, setLoading }}>
+        <AuthProvider>
           <CoodinateContext.Provider value={{ latitude, setLatitude, setLongitude, longitude }}>
             <Loader visible={loading} />
             <SettingsProvider {...(setConfig ? { pageSettings: setConfig() } : {})}>
@@ -134,8 +134,8 @@ const App = props => {
               </SettingsConsumer>
             </SettingsProvider>
           </CoodinateContext.Provider>
-        </LoaderContext.Provider>
-      </AuthProvider>
+        </AuthProvider>
+      </LoaderContext.Provider>
     </CacheProvider>
   )
 }

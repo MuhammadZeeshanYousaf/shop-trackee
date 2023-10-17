@@ -10,6 +10,8 @@ import axios from 'axios'
 // ** Config
 import authConfig from 'src/configs/auth'
 
+import { useLoader } from 'src/hooks'
+
 // ** Defaults
 const defaultProvider = {
   user: null,
@@ -26,6 +28,7 @@ const AuthProvider = ({ children }) => {
   // ** States
   const [user, setUser] = useState(defaultProvider.user)
   const [loading, setLoading] = useState(defaultProvider.loading)
+  const { setLoader } = useLoader()
 
   // ** Hooks
   const router = useRouter()
@@ -64,6 +67,7 @@ const AuthProvider = ({ children }) => {
   }, [])
 
   const handleLogin = (params, errorCallback) => {
+    setLoader(true)
     axios
       .post(authConfig.baseUrl + authConfig.loginEndpoint, params)
       .then(async response => {
@@ -75,6 +79,7 @@ const AuthProvider = ({ children }) => {
         setUser({ ...response.data.resource_owner })
 
         window.localStorage.setItem('userData', JSON.stringify(response.data.resource_owner))
+
         // params.rememberMe ? window.localStorage.setItem('userData', JSON.stringify(response.data.resource_owner)) : null
         console.log('Signed in Successfully :)')
         const redirectURL = returnUrl && returnUrl !== '/' ? returnUrl : '/'
@@ -83,8 +88,10 @@ const AuthProvider = ({ children }) => {
           localStorage.setItem('distance', 5)
           router.replace('/customer-dashboard')
         }
+        setLoader(false)
       })
       .catch(err => {
+        setLoader(false)
         if (errorCallback) errorCallback(err)
         console.log('Cannot Sign in :(')
       })
@@ -94,6 +101,7 @@ const AuthProvider = ({ children }) => {
     const storedToken = window.localStorage.getItem(authConfig.storageTokenKeyName)
 
     if (storedToken) {
+      setLoader(true)
       axios
         .post(authConfig.baseUrl + authConfig.logoutEndpoint, null, {
           headers: {
@@ -106,8 +114,11 @@ const AuthProvider = ({ children }) => {
           window.localStorage.removeItem(authConfig.storageTokenKeyName)
           window.localStorage.removeItem(authConfig.refreshTokenKeyName)
           router.push('/login')
+          setLoader(false)
         })
         .catch(() => {
+          setLoader(false)
+
           // handle logout error
         })
     } else {
@@ -116,6 +127,7 @@ const AuthProvider = ({ children }) => {
   }
 
   const handleSignup = (params, errorCallback) => {
+    setLoader(true)
     axios
       .post(authConfig.baseUrl + authConfig.signupEndpoint, params)
       .then(async response => {
@@ -131,11 +143,13 @@ const AuthProvider = ({ children }) => {
           localStorage.setItem('distance', 5)
           router.replace('/customer-dashboard')
         }
-        // router.replace(redirectURL)
+
+        setLoader(false)
       })
       .catch(err => {
         if (errorCallback) errorCallback(err)
         console.log('Cannot Sign UP:(')
+        setLoader(false)
       })
   }
 
