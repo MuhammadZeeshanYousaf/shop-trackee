@@ -1,4 +1,15 @@
-import { Grid, Button, Divider, Typography, Card, CardContent, Box, styled, CardActions } from '@mui/material'
+import {
+  Grid,
+  Button,
+  Divider,
+  Typography,
+  Card,
+  CardContent,
+  Box,
+  styled,
+  CardActions,
+  IconButton
+} from '@mui/material'
 import Icon from 'src/@core/components/icon'
 import { useRouter } from 'next/router'
 import { OrderRequestModal } from '../../../components'
@@ -34,19 +45,13 @@ const ServiceCard = ({ service, deleteService, shopId, mode = 'customer', handle
                 </Typography>
                 {mode == 'customer' ? (
                   service?.is_favorite ? (
-                    <Icon
-                      fontSize='1.5rem'
-                      icon='tabler:heart-filled'
-                      color='red'
-                      onClick={() => handleFavourite(service?.id, false, 'service')}
-                    />
+                    <IconButton size='small' onClick={() => handleFavourite(service?.id, false, 'service')}>
+                      <Icon fontSize='1.5rem' icon='tabler:heart-filled' color='red' />
+                    </IconButton>
                   ) : (
-                    <Icon
-                      fontSize='1.5rem'
-                      icon='tabler:heart'
-                      color='red'
-                      onClick={() => handleFavourite(service?.id, true, 'service')}
-                    />
+                    <IconButton size='small' onClick={() => handleFavourite(service?.id, true, 'service')}>
+                      <Icon fontSize='1.5rem' icon='tabler:heart' />
+                    </IconButton>
                   )
                 ) : null}
               </div>
@@ -116,7 +121,7 @@ const ServiceCard = ({ service, deleteService, shopId, mode = 'customer', handle
               </Grid> */}
               </Grid>
             </CardContent>
-            <CardActions sx={{ display: 'flex', justifyContent: 'end', mt: 0 }}>
+            <CardActions>
               {mode == 'customer' ? (
                 <Button size='medium' variant='contained' onClick={() => setOpen(true)}>
                   Request Service
@@ -126,7 +131,7 @@ const ServiceCard = ({ service, deleteService, shopId, mode = 'customer', handle
                   <Button size='small' sx={{ ml: 1 }} variant='contained' onClick={() => handleEdit()}>
                     Edit
                   </Button>
-                  <Button size='small' variant='contained' onClick={() => deleteService(service?.id)}>
+                  <Button size='small' variant='tonal' onClick={() => deleteService(service?.id)}>
                     Delete
                   </Button>
                 </>

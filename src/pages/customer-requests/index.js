@@ -3,7 +3,7 @@ import { Network, Url } from 'src/configs'
 import { useCoordinates, useLoader } from 'src/hooks'
 import { DataGrid } from '@mui/x-data-grid'
 import useBgColor from 'src/@core/hooks/useBgColor'
-import { Typography, Button, Card, CardHeader, Box, Chip, Tooltip } from '@mui/material'
+import { Typography, Button, Card, CardHeader, Box, Chip, Tooltip, IconButton } from '@mui/material'
 import CustomAvatar from 'src/@core/components/mui/avatar'
 import { showErrorMessage, showSuccessMessage, MapModal } from 'src/components'
 import Icon from 'src/@core/components/icon'
@@ -16,6 +16,7 @@ const OrderRequest = () => {
   const [currentPage, setCurrentpage] = useState(0)
 
   const handleClose = () => setOpen(false)
+
   const [destination, setDestination] = useState({
     longitude: '',
     latitude: ''
@@ -107,6 +108,7 @@ const OrderRequest = () => {
       headerName: 'Shop',
       renderCell: params => {
         const { row } = params
+
         return <Box>{row?.shop?.name}</Box>
       }
     },
@@ -117,6 +119,7 @@ const OrderRequest = () => {
       headerName: 'Message',
       renderCell: params => {
         const { row } = params
+
         return (
           <Tooltip placement='top' title={row?.message}>
             <Box sx={{ textOverflow: 'inherit' }}>{row?.message}</Box>
@@ -131,6 +134,7 @@ const OrderRequest = () => {
       headerName: 'Created At',
       renderCell: params => {
         const { row } = params
+
         return <Box>{row?.created_at}</Box>
       }
     },
@@ -141,6 +145,7 @@ const OrderRequest = () => {
       field: 'shop_direction',
       renderCell: params => {
         const { row } = params
+
         return (
           <Button
             onClick={() => {
@@ -148,7 +153,8 @@ const OrderRequest = () => {
               setOpen(true)
             }}
           >
-            Get Direction
+            <Icon icon='tabler:navigation' fontSize={16} />
+            &nbsp;Navigate
           </Button>
         )
       }
@@ -160,6 +166,7 @@ const OrderRequest = () => {
       headerName: 'Status',
       renderCell: params => {
         const { row } = params
+
         return (
           <Chip
             rounded
@@ -186,11 +193,11 @@ const OrderRequest = () => {
         return (
           <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
             {row?.status == 'pending' ? (
-              <Button variant='contained' color='error' onClick={() => cancelRequest(row?.id)}>
+              <Button size='small' variant='contained' color='error' onClick={() => cancelRequest(row?.id)}>
                 Cancel
               </Button>
             ) : (
-              <Button variant='outlined' color='error' onClick={() => removeRequest(row?.id)}>
+              <Button size='small' variant='outlined' color='error' onClick={() => removeRequest(row?.id)}>
                 Remove
               </Button>
             )}
@@ -206,7 +213,9 @@ const OrderRequest = () => {
       <Card>
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
           <CardHeader title='Order Requests' />
-          <Icon onClick={() => getOrderRequests()} style={{ marginRight: '10px' }} icon='tabler:refresh' />
+          <IconButton sx={{ mr: 1 }} size='large' onClick={getOrderRequests}>
+            <Icon icon='tabler:refresh' />
+          </IconButton>
         </div>
 
         <Box sx={{ height: 500 }}>

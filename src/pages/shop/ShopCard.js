@@ -128,7 +128,8 @@ const ShopCard = ({ shop, deleteShop, role = 'Admin' }) => {
                     variant={true ? 'contained' : 'tonal'}
                     onClick={() => setOpen(true)}
                   >
-                    Get Direction
+                    <Icon icon='tabler:navigation' fontSize={18} />
+                    Navigate
                   </Button>
                   <Button
                     sx={{ mr: 4, '& svg': { mr: 2 } }}
