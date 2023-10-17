@@ -106,7 +106,7 @@ const App = props => {
     <CacheProvider value={emotionCache}>
       <Head>
         <title>{appConfig.appName}</title>
-        <meta name='description' content={`${appConfig.appName} - which tracks the shop nearby.`} />
+        <meta name='description' content={`${appConfig.appName} - it track the shops nearby.`} />
         <meta name='keywords' content='Track Shop, Customer, Seller, Product, Service' />
         <meta name='viewport' content='initial-scale=1, width=device-width' />
       </Head>

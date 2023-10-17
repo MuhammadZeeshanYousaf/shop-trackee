@@ -21,7 +21,7 @@ const ProductandServices = () => {
     const response = await Network.get(Url.getProducts(query.shopId))
     setLoader(false)
     if (!response.ok) return showErrorMessage(response.data.message)
-    setProducts(response.data)
+    setProducts(response.data.products)
   }
 
   const getServices = async () => {
@@ -29,7 +29,7 @@ const ProductandServices = () => {
     const response = await Network.get(Url.getServices(query.shopId))
     setLoader(false)
     if (!response.ok) return showErrorMessage(response.data.message)
-    setServices(response.data)
+    setServices(response.data.services)
     console.log({ response })
   }
 
