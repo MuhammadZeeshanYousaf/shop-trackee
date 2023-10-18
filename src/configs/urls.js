@@ -1,7 +1,7 @@
 export default {
   getUser: '/users/tokens/info',
   updateUser: '/user',
-  getShops: '/shops',
+  getShops: page => `/shops?page=${page}`,
 
   uploadImages: shopId => `/shops/${shopId}/products/images`,
 
@@ -47,7 +47,7 @@ export default {
 
   //get order request for shop
 
-  getShopOrderRequests: (page)=>`/order_requests?page=${page}`,
+  getShopOrderRequests: page => `/order_requests?page=${page}`,
 
   //get all categories
   getAllCategories: type => `/categories?type=${type}`,
@@ -60,8 +60,8 @@ export default {
 
   searhWithImage: '/search',
 
-  viewAllProducts: (latitude, longitude, distance, product_page) =>
-    `/search_all?type=product&latitude=${latitude}&longitude=${longitude}&distance=${distance}&product_page=${product_page}`,
+  viewAllProducts: (latitude, longitude, distance, product_page, shop_page) =>
+    `/search_all?type=product&latitude=${latitude}&longitude=${longitude}&distance=${distance}&product_page=${product_page}&shop_page=${shop_page}`,
 
   viewAllServices: (latitude, longitude, distance, service_page) =>
     `/search_all?type=service&latitude=${latitude}&longitude=${longitude}&distance=${distance}&service_page=${service_page}`,

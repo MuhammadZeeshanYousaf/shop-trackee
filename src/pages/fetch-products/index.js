@@ -13,12 +13,14 @@ const FetchProducts = () => {
   const [shops, setShops] = useState([])
 
   const [totalPages, setTotalPages] = useState(0)
+  const [totalShopPages, setTotalShoppages] = useState(0)
   const { longitude, latitude, distance, product_page } = router.query
   const [currentPage, setCurrentPage] = useState(product_page)
+  const [currentShopPage, setCurrentShopPage] = useState(1)
 
   const getProductData = async () => {
     setLoader(true)
-    const response = await Network.get(Url.viewAllProducts(latitude, longitude, distance, currentPage))
+    const response = await Network.get(Url.viewAllProducts(latitude, longitude, distance, currentPage, currentShopPage))
     setLoader(false)
     if (!response.ok) return showErrorMessage(response.data.message)
     setProducts(response.data.product.data)
@@ -42,9 +44,13 @@ const FetchProducts = () => {
 
   useEffect(() => {
     getProductData()
-  }, [currentPage])
+  }, [currentPage, currentShopPage])
   const handleChange = (event, value) => {
     setCurrentPage(value)
+  }
+
+  const handleShopPages = (event, value) => {
+    setCurrentShopPage(value)
   }
 
   return (

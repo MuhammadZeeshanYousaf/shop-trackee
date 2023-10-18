@@ -89,7 +89,7 @@ const EditUserProfile = () => {
     formData.append('gender', data.gender)
     formData.append('vocation', data.vocation)
     formData.append('age', data.age)
-    formData.append(' newsletter_subscribed', data.newsletter_subscribed)
+    formData.append('newsletter_subscribed', data.newsletter_subscribed ? 'true' : 'false')
     if (inputValue) formData.append('avatar', inputValue)
     setLoader(true)
     const response = await Network.put(Url.updateUser, formData, (await multipartConfig()).headers)
