@@ -221,14 +221,16 @@ const AppBarContent = props => {
       <Box sx={{ width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
         <Box className='actions-left' sx={{ mr: 2, display: 'flex', alignItems: 'center' }}>
           {hidden ? (
-            <IconButton color='inherit' sx={{ ml: -2.75 }} onClick={toggleNavVisibility}>
+            <IconButton color='inherit' sx={{ ml: -3.75 }} onClick={toggleNavVisibility}>
               <Icon fontSize='1.5rem' icon='tabler:menu-2' />
             </IconButton>
           ) : null}
           {user?.role == 'customer' ? <NotificationDropdown settings={settings} /> : null}
 
           <ModeToggler settings={settings} saveSettings={saveSettings} />
-          <Icon fontSize='1.5rem' icon='tabler:search' onClick={() => setOpenDialog(true)} />
+          <IconButton color='inherit' sx={{ ml: -1.75 }} onClick={() => setOpenDialog(true)}>
+            <Icon fontSize='1.5rem' icon='tabler:search' />
+          </IconButton>
         </Box>
         <Box className='actions-right' sx={{ display: 'flex', alignItems: 'center' }}>
           <UserDropdown settings={settings} />
