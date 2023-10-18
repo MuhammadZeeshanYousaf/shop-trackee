@@ -14,11 +14,11 @@ const navigation = () => [
     subject: 'shop'
   },
   {
-    title: 'Listing',
-    path: '/listing',
-    icon: 'tabler:building-warehouse',
+    title: 'Home',
+    path: '/customer-dashboard',
+    icon: 'tabler:home-2',
     action: 'read',
-    subject: 'listing'
+    subject: 'customer-dashboard'
   }
 ]
 
