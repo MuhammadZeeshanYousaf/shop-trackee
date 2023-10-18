@@ -96,7 +96,7 @@ const SearchResult = () => {
   useEffect(() => {
     if (method == 'get') getData()
     if (method == 'post') getImageSearchData()
-  }, [currentProductPage, currentServicePage])
+  }, [currentProductPage, currentServicePage, q, distance, longitude, latitude, method])
 
   return (
     <div>
