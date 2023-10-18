@@ -133,7 +133,6 @@ const CustomerDashboard = () => {
               </Select>
             </FormControl>
             <Button
-              sx={{ ml: 1 }}
               size='large'
               onClick={() =>
                 router.push(
@@ -190,7 +189,6 @@ const CustomerDashboard = () => {
               </Select>
             </FormControl>
             <Button
-              sx={{ ml: 1 }}
               size='large'
               onClick={() =>
                 router.push(
