@@ -14,7 +14,7 @@ export default {
 
   createProduct: (shopId, productId) => `/shops/${shopId}/products/${productId}`,
 
-  getProducts: shopId => `/shops/${shopId}/products`,
+  getProducts: (shopId, page) => `/shops/${shopId}/products?page=${page}`,
 
   getProduct: (shopId, productId) => `/shops/${shopId}/products/${productId}`,
 
@@ -29,7 +29,7 @@ export default {
   recognizeServiceImages: (shopId, serviceId, imageId) =>
     `/shops/${shopId}/services/${serviceId}/images/${imageId}/recognize`,
 
-  getServices: shopId => `/shops/${shopId}/services`,
+  getServices: (shopId, page) => `/shops/${shopId}/services?page=${page}`,
 
   deleteService: (shopId, serviceId) => `/shops/${shopId}/services/${serviceId}`,
 
