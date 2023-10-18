@@ -1,7 +1,9 @@
 export default {
   getUser: '/users/tokens/info',
   updateUser: '/user',
-  getShops: page => `/shops?page=${page}`,
+  shop: page => `/shops?page=${page}`,
+
+  getShops: '/shops',
 
   uploadImages: shopId => `/shops/${shopId}/products/images`,
 

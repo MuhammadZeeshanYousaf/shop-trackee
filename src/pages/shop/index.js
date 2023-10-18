@@ -15,7 +15,7 @@ const Shop = () => {
 
   const getShops = async () => {
     setLoader(true)
-    const response = await Network.get(Url.getShops(currentPage))
+    const response = await Network.get(Url.shop(currentPage))
     setLoader(false)
     if (!response.ok) return showErrorMessage(response.data.message)
     setTotalPages(response.data.meta.total_pages)
