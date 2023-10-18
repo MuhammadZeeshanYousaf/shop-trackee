@@ -1,4 +1,4 @@
-import { Box, Grid, MenuItem, Select, FormControl, InputLabel } from '@mui/material'
+import { Box, Grid, MenuItem, Select, FormControl, InputLabel, Pagination } from '@mui/material'
 import SplitButton from './SplitButton'
 import { useRouter } from 'next/router'
 import { useLoader } from 'src/hooks'
@@ -11,26 +11,31 @@ import ServiceCard from './ServiceCard'
 const ProductandServices = () => {
   const { query } = useRouter()
   const { setLoader } = useLoader()
+  const [currentProductPage, setCurrentProductPage] = useState(1)
+  const [totalProductpages, setTotalProductpages] = useState(1)
   const [products, setProducts] = useState([])
 
+  const [currentServicePage, setCurrentServicepage] = useState(1)
+  const [totalServicepages, setTotalServicePages] = useState(1)
   const [services, setServices] = useState([])
   const [mode, setMode] = useState('Both')
 
   const getProducts = async () => {
     setLoader(true)
-    const response = await Network.get(Url.getProducts(query.shopId))
+    const response = await Network.get(Url.getProducts(query.shopId, currentProductPage))
     setLoader(false)
     if (!response.ok) return showErrorMessage(response.data.message)
     setProducts(response.data.products)
+    setTotalProductpages(response.data.meta.total_pages)
   }
 
   const getServices = async () => {
     setLoader(true)
-    const response = await Network.get(Url.getServices(query.shopId))
+    const response = await Network.get(Url.getServices(query.shopId, currentServicePage))
     setLoader(false)
     if (!response.ok) return showErrorMessage(response.data.message)
     setServices(response.data.services)
-    console.log({ response })
+    setTotalServicePages(response.data.meta.total_pages)
   }
 
   const deleteProduct = async id => {
@@ -50,11 +55,21 @@ const ProductandServices = () => {
     showSuccessMessage(response.data.message)
     getServices()
   }
-
   useEffect(() => {
     getProducts()
+  }, [currentProductPage])
+
+  useEffect(() => {
     getServices()
-  }, [])
+  }, [currentServicePage])
+
+  const handleProductPage = (event, value) => {
+    setCurrentProductPage(value)
+  }
+
+  const handleServicePage = (event, value) => {
+    setCurrentServicepage(value)
+  }
 
   return (
     <>
@@ -78,8 +93,6 @@ const ProductandServices = () => {
         {mode == 'Both' || mode == 'Products' ? (
           <Grid item md={6}>
             {products?.map((product, i) => {
-              console.log('product.id', product?.id)
-
               return (
                 <ProductCard
                   key={product?.id}
@@ -90,6 +103,9 @@ const ProductandServices = () => {
                 />
               )
             })}
+            <div style={{ display: 'flex', justifyContent: 'center', marginTop: '20px' }}>
+              <Pagination count={totalProductpages} onChange={handleProductPage} />
+            </div>
           </Grid>
         ) : null}
         {/* Services */}
@@ -98,6 +114,10 @@ const ProductandServices = () => {
             {services?.map((service, i) => (
               <ServiceCard mode='shop' service={service} key={i} deleteService={deleteService} shopId={query?.shopId} />
             ))}
+
+            <div style={{ display: 'flex', justifyContent: 'center', marginTop: '20px' }}>
+              <Pagination count={totalServicepages} onChange={handleServicePage} />
+            </div>
           </Grid>
         ) : null}
       </Grid>

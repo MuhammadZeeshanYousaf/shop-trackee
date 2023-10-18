@@ -1,6 +1,8 @@
 export default {
   getUser: '/users/tokens/info',
   updateUser: '/user',
+  shop: page => `/shops?page=${page}`,
+
   getShops: '/shops',
 
   uploadImages: shopId => `/shops/${shopId}/products/images`,
@@ -14,7 +16,7 @@ export default {
 
   createProduct: (shopId, productId) => `/shops/${shopId}/products/${productId}`,
 
-  getProducts: shopId => `/shops/${shopId}/products`,
+  getProducts: (shopId, page) => `/shops/${shopId}/products?page=${page}`,
 
   getProduct: (shopId, productId) => `/shops/${shopId}/products/${productId}`,
 
@@ -29,7 +31,7 @@ export default {
   recognizeServiceImages: (shopId, serviceId, imageId) =>
     `/shops/${shopId}/services/${serviceId}/images/${imageId}/recognize`,
 
-  getServices: shopId => `/shops/${shopId}/services`,
+  getServices: (shopId, page) => `/shops/${shopId}/services?page=${page}`,
 
   deleteService: (shopId, serviceId) => `/shops/${shopId}/services/${serviceId}`,
 
@@ -47,7 +49,7 @@ export default {
 
   //get order request for shop
 
-  getShopOrderRequests: (page)=>`/order_requests?page=${page}`,
+  getShopOrderRequests: page => `/order_requests?page=${page}`,
 
   //get all categories
   getAllCategories: type => `/categories?type=${type}`,
@@ -60,8 +62,8 @@ export default {
 
   searhWithImage: '/search',
 
-  viewAllProducts: (latitude, longitude, distance, product_page) =>
-    `/search_all?type=product&latitude=${latitude}&longitude=${longitude}&distance=${distance}&product_page=${product_page}`,
+  viewAllProducts: (latitude, longitude, distance, product_page, shop_page) =>
+    `/search_all?type=product&latitude=${latitude}&longitude=${longitude}&distance=${distance}&product_page=${product_page}&shop_page=${shop_page}`,
 
   viewAllServices: (latitude, longitude, distance, service_page) =>
     `/search_all?type=service&latitude=${latitude}&longitude=${longitude}&distance=${distance}&service_page=${service_page}`,
