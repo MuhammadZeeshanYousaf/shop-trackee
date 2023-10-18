@@ -1,7 +1,7 @@
 // ** MUI Imports
 import Box from '@mui/material/Box'
 import IconButton from '@mui/material/IconButton'
-import { TextField, Button, Dialog, Grid, Typography, InputAdornment, FormLabel, Input } from '@mui/material'
+import { TextField, Button, Dialog, Grid, Typography, InputAdornment, FormLabel, Input, Divider } from '@mui/material'
 
 // ** Icon Imports
 import Icon from 'src/@core/components/icon'
@@ -36,9 +36,11 @@ const AppBarContent = props => {
   const [facingMode, setFacingMode] = useState(FACING_MODE_USER)
   const [openDialog, setOpenDialog] = useState(false)
   const fullScreenDialog = useMediaQuery(theme.breakpoints.down('sm'))
+
   const videoConstraints = {
     facingMode: FACING_MODE_USER
   }
+
   const switchCamera = useCallback(() => {
     setFacingMode(prevState => (prevState === FACING_MODE_USER ? FACING_MODE_ENVIRONMENT : FACING_MODE_USER))
   }, [])
@@ -60,6 +62,7 @@ const AppBarContent = props => {
       )
     }
   }
+
   const handleImage = event => {
     const file = event.target.files[0]
 
@@ -103,10 +106,10 @@ const AppBarContent = props => {
                 </Grid>
               </Grid>
             </Grid>
-            <Grid item sx={{ mt: 5 }} md={10} xs={12}>
+            <Grid item sx={{ mt: 5 }} md={10} xs={8}>
               <TextField
                 fullWidth
-                placeholder='Search Here'
+                placeholder='Search here'
                 value={searchValue}
                 onChange={e => setSearchValue(e.target.value)}
                 InputProps={{
@@ -125,41 +128,41 @@ const AppBarContent = props => {
                 }}
               />
             </Grid>
-            <Grid sx={{ mt: 5, display: 'flex', alignItems: 'center', justifyContent: 'end' }} item md={2} xs={12}>
-              <Button size='small' variant='contained' onClick={() => search('searchByText')}>
+            <Grid sx={{ mt: 5, display: 'flex', alignItems: 'center', justifyContent: 'end' }} item md={2} xs={4}>
+              <Button size='large' variant='contained' onClick={() => search('searchByText')}>
                 Search
               </Button>
             </Grid>
 
-            <Grid sx={{ display: 'flex', alignItems: 'center', mt: 10, flexDirection: 'column' }} item md={6} xs={12}>
-              <Input type='file' sx={{ border: 'none', mb: 5 }} onChange={e => handleImage(e)} />
-              <div>
-                <FormLabel>Search Around</FormLabel>
-                <TextField
-                  sx={{ width: '110px', ml: 1 }}
-                  type='number'
-                  value={distance}
-                  placeholder='Distance'
-                  onChange={event => {
-                    if (event.target.value < 0) {
-                      setDistance(0)
-                      localStorage.setItem('distance', 0)
-                      return
-                    }
-                    setDistance(event.target.value)
-                    localStorage.setItem('distance', event.target.value)
-                  }}
-                />
-                <FormLabel sx={{ ml: 1 }}>km</FormLabel>
-              </div>
+            <Grid sx={{ mt: 5, display: 'flex', alignItems: 'center', justifyContent: 'start' }} item md={2} xs={12}>
+              <FormLabel>
+                <b>Search Around: </b>
+              </FormLabel>
+              <TextField
+                sx={{ width: '34%', ml: 1 }}
+                type='number'
+                value={distance}
+                placeholder='Distance'
+                onChange={event => {
+                  if (event.target.value < 0) {
+                    setDistance(0)
+                    localStorage.setItem('distance', 0)
+
+                    return
+                  }
+                  setDistance(event.target.value)
+                  localStorage.setItem('distance', event.target.value)
+                }}
+              />
+              <FormLabel sx={{ ml: 1 }}>KM</FormLabel>
             </Grid>
 
             {/* Camera */}
 
-            <Grid sx={{ textAlign: 'center' }} item md={6} xs={12}>
+            <Grid sx={{ display: 'flex', alignItems: 'center', mt: 5, flexDirection: 'column' }} item md={6} xs={12}>
               <Webcam
-                height={200}
-                width={200}
+                height={'100%'}
+                width={'100%'}
                 audio={false}
                 ref={webcamRef}
                 screenshotFormat='image/jpeg'
@@ -168,18 +171,32 @@ const AppBarContent = props => {
                   facingMode
                 }}
               />
-              <div style={{ display: 'flex', justifyContent: 'center' }}>
-                <Button variant='contained' size='small' onClick={switchCamera}>
-                  Switch Camera
-                </Button>
-                <Button sx={{ ml: 1 }} variant='contained' size='small' onClick={() => search('searchByImage')}>
+              <div style={{ display: 'flex', justifyContent: 'center', marginTop: '20px' }}>
+                <Button variant='contained' size='small' onClick={() => search('searchByImage')}>
                   Capture & Search
+                </Button>
+                <Button sx={{ ml: 3 }} variant='outlined' size='small' onClick={switchCamera}>
+                  <Icon icon='tabler:refresh' />
                 </Button>
               </div>
             </Grid>
-            {/* <Grid item xs={6} sx={{ textAlign: 'end', mt: 5 }}>
-             
-            </Grid>  */}
+
+            <Grid xs={12}>
+              <Divider
+                sx={{
+                  color: 'text.disabled',
+                  '& .MuiDivider-wrapper': { px: 6 },
+                  fontSize: theme.typography.body2.fontSize,
+                  my: theme => `${theme.spacing(3)} !important`
+                }}
+              >
+                or
+              </Divider>
+            </Grid>
+
+            <Grid sx={{ textAlign: 'center', mt: 2 }} item md={6} xs={12}>
+              <Input type='file' sx={{ border: 'none', mb: 5 }} onChange={e => handleImage(e)} />
+            </Grid>
           </Grid>
         </Box>
       </Dialog>
