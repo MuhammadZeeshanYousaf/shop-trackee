@@ -224,10 +224,12 @@ const AppBarContent = props => {
       <Box sx={{ display: 'flex', alignItems: 'center' }}>
         <ModeToggler settings={settings} saveSettings={saveSettings} />
         {user.role == 'customer' ? (
-          <Icon fontSize='1.5rem' icon='tabler:search' onClick={() => setOpenDialog(true)} />
+          <IconButton color={'inherit'} onClick={() => setOpenDialog(true)}>
+            <Icon fontSize='1.5rem' icon='tabler:search' />
+          </IconButton>
         ) : null}
         {user?.role == 'customer' ? <NotificationDropdown settings={settings} /> : null}
-        <UserDropdown settings={settings} />
+        <UserDropdown settings={settings} style={{ cursor: 'pointer' }} />
       </Box>
     </>
   )
