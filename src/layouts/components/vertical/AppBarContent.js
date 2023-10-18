@@ -19,6 +19,7 @@ import Webcam from 'react-webcam'
 import useMediaQuery from '@mui/material/useMediaQuery'
 import { useState, useRef, useCallback, useEffect } from 'react'
 import { styled, useTheme } from '@mui/material/styles'
+import { showWarningMessage } from 'src/components'
 
 const AppBarContent = props => {
   // ** Props
@@ -30,6 +31,7 @@ const AppBarContent = props => {
   const [searchValue, setSearchValue] = useState('')
   const theme = useTheme()
   const [distance, setDistance] = useState(0)
+  const fileInputRef = useRef(null)
 
   const FACING_MODE_USER = 'user'
   const FACING_MODE_ENVIRONMENT = 'environment'
@@ -63,22 +65,29 @@ const AppBarContent = props => {
     }
   }
 
-  const handleImage = event => {
-    const file = event.target.files[0]
+  const handleImage = () => {
+    const file = fileInputRef.current?.files?.[0]
 
-    const reader = new FileReader()
+    if (file) {
+      const reader = new FileReader()
 
-    reader.onload = e => {
-      const base64String = e.target.result
-      router.push(
-        `/search-result?q=${encodeURIComponent(
-          base64String
-        )}&longitude=${longitude}&latitude=${latitude}&distance=${distance}&method=post`
-      )
+      reader.onload = e => {
+        const base64String = e.target.result
+
+        setOpenDialog(false)
+        router.push(
+          `/search-result?q=${encodeURIComponent(
+            base64String
+          )}&longitude=${longitude}&latitude=${latitude}&distance=${distance}&method=post`
+        )
+      }
+
+      reader.readAsDataURL(file)
+    } else {
+      showWarningMessage('No file selected')
     }
-
-    reader.readAsDataURL(file)
   }
+
   useEffect(() => {
     setDistance(localStorage.getItem('distance'))
   }, [])
@@ -187,7 +196,7 @@ const AppBarContent = props => {
                   color: 'text.disabled',
                   '& .MuiDivider-wrapper': { px: 6 },
                   fontSize: theme.typography.body2.fontSize,
-                  my: theme => `${theme.spacing(3)} !important`
+                  my: theme => `${theme.spacing(3.5)} !important`
                 }}
               >
                 or
@@ -195,7 +204,14 @@ const AppBarContent = props => {
             </Grid>
 
             <Grid sx={{ textAlign: 'center', mt: 2 }} item md={6} xs={12}>
-              <Input type='file' sx={{ border: 'none', mb: 5 }} onChange={e => handleImage(e)} />
+              {/* <Input type='file' sx={{ border: 'none', mb: 5 }} onChange={e => handleImage(e)} /> */}
+
+              <div>
+                <input type='file' ref={fileInputRef} />
+                <Button variant='contained' size='medium' sx={{ mt: 6 }} onClick={handleImage}>
+                  Search It
+                </Button>
+              </div>
             </Grid>
           </Grid>
         </Box>
