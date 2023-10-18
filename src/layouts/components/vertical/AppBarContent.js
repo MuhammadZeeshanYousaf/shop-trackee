@@ -20,6 +20,7 @@ import useMediaQuery from '@mui/material/useMediaQuery'
 import { useState, useRef, useCallback, useEffect } from 'react'
 import { styled, useTheme } from '@mui/material/styles'
 import { showWarningMessage } from 'src/components'
+import NotificationDropdown from 'src/@core/layouts/components/shared-components/NotificationDropdown'
 
 const AppBarContent = props => {
   // ** Props
@@ -38,6 +39,7 @@ const AppBarContent = props => {
   const [facingMode, setFacingMode] = useState(FACING_MODE_USER)
   const [openDialog, setOpenDialog] = useState(false)
   const fullScreenDialog = useMediaQuery(theme.breakpoints.down('sm'))
+  const user = JSON.parse(localStorage.getItem('userData'))
 
   const videoConstraints = {
     facingMode: FACING_MODE_USER
@@ -223,6 +225,7 @@ const AppBarContent = props => {
               <Icon fontSize='1.5rem' icon='tabler:menu-2' />
             </IconButton>
           ) : null}
+          {user?.role == 'customer' ? <NotificationDropdown settings={settings} /> : null}
 
           <ModeToggler settings={settings} saveSettings={saveSettings} />
           <Icon fontSize='1.5rem' icon='tabler:search' onClick={() => setOpenDialog(true)} />
