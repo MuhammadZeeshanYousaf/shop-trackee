@@ -1,6 +1,6 @@
 import { DataGrid } from '@mui/x-data-grid'
 import CustomAvatar from 'src/@core/components/mui/avatar'
-import { Typography, Button, Card, CardHeader, Box, Chip, Tooltip } from '@mui/material'
+import { Typography, Button, Card, CardHeader, Box, Chip, Tooltip, IconButton } from '@mui/material'
 import useBgColor from 'src/@core/hooks/useBgColor'
 import { MapModal } from 'src/components'
 import Icon from 'src/@core/components/icon'
@@ -72,12 +72,14 @@ const OrderRequestTable = ({
     {
       // flex: 0.1,
       width: 200,
+
       // minWidth: 100,
       // maxWidth: 100,
       field: 'shop_name',
       headerName: 'Shop',
       renderCell: params => {
         const { row } = params
+
         return <Box>{row?.shop?.name}</Box>
       }
     },
@@ -87,6 +89,7 @@ const OrderRequestTable = ({
       headerName: 'Customer',
       renderCell: params => {
         const { row } = params
+
         return <Box>{row?.customer?.name}</Box>
       }
     },
@@ -96,6 +99,7 @@ const OrderRequestTable = ({
       headerName: 'Message',
       renderCell: params => {
         const { row } = params
+
         return (
           <Tooltip placeholder='top' title={row?.message}>
             <Box sx={{ textOverflow: 'inherit' }}>{row?.message}</Box>
@@ -105,19 +109,11 @@ const OrderRequestTable = ({
     },
     {
       width: 150,
-      field: 'created_at',
-      headerName: 'Created At',
-      renderCell: params => {
-        const { row } = params
-        return <Box>{row?.created_at}</Box>
-      }
-    },
-    {
-      width: 200,
       headerName: 'Location',
       field: 'shop_direction',
       renderCell: params => {
         const { row } = params
+
         return (
           <Button
             onClick={() => {
@@ -126,7 +122,8 @@ const OrderRequestTable = ({
               setOpen(true)
             }}
           >
-            Get Direction
+            <Icon icon='tabler:navigation' fontSize={18} />
+            &nbsp;Direction
           </Button>
         )
       }
@@ -137,6 +134,7 @@ const OrderRequestTable = ({
       headerName: 'Status',
       renderCell: params => {
         const { row } = params
+
         return (
           <Chip
             rounded
@@ -158,30 +156,39 @@ const OrderRequestTable = ({
       headerName: 'Actions',
       renderCell: params => {
         const { row } = params
-        return (
+
+        return row.status == 'pending' ? (
           <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-            {row.status == 'pending' ? (
-              <>
-                <Button
-                  size='small'
-                  variant='contained'
-                  onClick={() => handleRequest(row?.id, 'accept')}
-                  color='success'
-                  sx={{ mr: 5 }}
-                >
-                  Accept
-                </Button>
-                <Button size='small' variant='contained' color='error' onClick={() => handleRequest(row?.id, 'reject')}>
-                  Reject
-                </Button>
-              </>
-            ) : (
-              <Button size='small' variant='contained' color='error' onClick={() => removeRequest(row?.id)}>
-                Remove
-              </Button>
-            )}
+            <Button
+              size='small'
+              variant='contained'
+              onClick={() => handleRequest(row?.id, 'accept')}
+              color='success'
+              sx={{ mr: 3 }}
+            >
+              Accept
+            </Button>
+            <Button size='small' variant='contained' color='error' onClick={() => handleRequest(row?.id, 'reject')}>
+              Reject
+            </Button>
+          </Box>
+        ) : (
+          <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', m: 'auto' }}>
+            <Button size='small' variant='tonal' color='error' onClick={() => removeRequest(row?.id)}>
+              Remove
+            </Button>
           </Box>
         )
+      }
+    },
+    {
+      width: 150,
+      field: 'created_at',
+      headerName: 'Requested At',
+      renderCell: params => {
+        const { row } = params
+
+        return <Box>{row?.created_at}</Box>
       }
     }
   ]
@@ -192,7 +199,9 @@ const OrderRequestTable = ({
       <Card sx={{ width: '100%' }}>
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
           <CardHeader title='Order Requests' />
-          <Icon onClick={() => getOrderRequest()} style={{ marginRight: '10px' }} icon='tabler:refresh' />
+          <IconButton sx={{ mr: 1 }} size='large' onClick={getOrderRequest}>
+            <Icon icon='tabler:refresh' />
+          </IconButton>
         </div>
         <Box sx={{ height: 500, width: '100%' }}>
           <DataGrid

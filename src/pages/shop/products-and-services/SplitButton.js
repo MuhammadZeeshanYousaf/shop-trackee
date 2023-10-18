@@ -45,7 +45,10 @@ const ButtonGroupSplit = ({ shopId }) => {
   return (
     <Fragment>
       <ButtonGroup variant='contained' ref={anchorRef} aria-label='split button'>
-        <Button>Add</Button>
+        <Button>
+          <Icon icon='tabler:plus' />
+          Add
+        </Button>
         <Button
           sx={{ px: '0' }}
           aria-haspopup='menu'
@@ -67,7 +70,12 @@ const ButtonGroupSplit = ({ shopId }) => {
               <ClickAwayListener onClickAway={handleClose}>
                 <MenuList id='split-button-menu'>
                   {options.map((option, index) => (
-                    <MenuItem key={option} disabled={index === 2} onClick={event => handleMenuItemClick(option)}>
+                    <MenuItem
+                      key={option}
+                      disabled={index === 2}
+                      sx={{ pr: 7, pl: 7 }}
+                      onClick={event => handleMenuItemClick(option)}
+                    >
                       {option}
                     </MenuItem>
                   ))}

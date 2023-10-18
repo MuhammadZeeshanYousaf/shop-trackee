@@ -9,7 +9,8 @@ import {
   MenuItem,
   IconButton,
   styled,
-  Button
+  Button,
+  Divider
 } from '@mui/material'
 import Icon from 'src/@core/components/icon'
 import { useState } from 'react'
@@ -68,35 +69,53 @@ const ProductCard = ({ product, deleteProduct, shopId, id }) => {
             <Typography variant='h5' sx={{ mb: 2 }}>
               {product?.name}
             </Typography>
-            <Typography sx={{ mb: 3.5, color: 'text.secondary', height: '100px', overflow: 'hidden' }}>
+            <Typography
+              sx={{
+                color: 'text.secondary',
+                height: '79px',
+                overflow: 'auto',
+                msOverflowStyle: 'none',
+                '&::-webkit-scrollbar': {
+                  width: '0'
+                }
+              }}
+            >
               {product?.description}
             </Typography>
-            <Typography sx={{ fontWeight: 500, mb: 3 }}>
-              Price:{' '}
-              <Box component='span' sx={{ fontWeight: 'bold' }}>
-                Rs{product?.price}
+            <Divider
+              sx={{
+                mt: theme => `${theme.spacing()} !important`,
+                mb: theme => `${theme.spacing()} !important`
+              }}
+            />
+            <Typography sx={{ fontWeight: 500, mb: 1, mt: 1 }}>
+              <b>Category: </b>
+              <Box component={'span'} color={'text.secondary'}>
+                {product?.category_name}
               </Box>
             </Typography>
-            <Typography sx={{ fontWeight: 500, mb: 3 }}>
-              Category:{' '}
-              <Box component='span' sx={{ fontWeight: 'bold' }}>
-                {product?.category_name}
+            <Typography sx={{ fontWeight: 500, mb: 1 }}>
+              <b>Stock: </b>
+              <Box component={'span'} color={'text.secondary'}>
+                {product?.stock_quantity}
+              </Box>
+            </Typography>
+            <Typography sx={{ fontWeight: 500, mb: 0 }}>
+              <b>Rs. </b>
+              <Box component={'span'} color={'text.secondary'}>
+                {product?.price}
               </Box>
             </Typography>
           </CardContent>
           <CardActions className='card-action-dense'>
-            <Box
-              sx={{
-                display: 'flex',
-                justifyContent: 'space-between',
-                width: '100%'
-              }}
-            >
-              <Button sx={{ '& svg': { mr: 2 } }}>
-                <Icon icon='tabler:eye' fontSize={20} />
-                Show Details
-              </Button>
-              <IconButton
+            <Button size='small' sx={{ ml: 1 }} variant='contained' onClick={handleEdit}>
+              Edit
+            </Button>
+            <Button size='small' variant='tonal' onClick={() => deleteProduct(id)}>
+              Delete
+            </Button>
+
+            {/* <IconButton
                 id='long-button'
                 aria-label='share'
                 aria-haspopup='true'
@@ -122,8 +141,7 @@ const ProductCard = ({ product, deleteProduct, shopId, id }) => {
                 <MenuItem value={product} onClick={handleEdit}>
                   <Icon icon='tabler:pencil' />
                 </MenuItem>
-              </Menu>
-            </Box>
+              </Menu> */}
           </CardActions>
         </Grid>
       </Grid>

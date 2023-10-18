@@ -237,7 +237,7 @@ const Register = () => {
                 />
               </Box>
 
-              <Box sx={{ mt: 3 }}>
+              <Box sx={{ mt: 3, mb: 5 }}>
                 <Controller
                   name='role'
                   control={control}
@@ -266,9 +266,9 @@ const Register = () => {
                 />
               </Box>
 
-              <FormControlLabel
+              {/* <FormControlLabel
                 control={<Checkbox />}
-                sx={{ mb: 4, mt: 1.5, '& .MuiFormControlLabel-label': { fontSize: theme.typography.body2.fontSize } }}
+                sx={{ mb: 4, '& .MuiFormControlLabel-label': { fontSize: theme.typography.body2.fontSize } }}
                 label={
                   <Box sx={{ display: 'flex', alignItems: 'center', flexWrap: 'wrap', justifyContent: 'center' }}>
                     <Typography sx={{ color: 'text.secondary' }}>I agree to</Typography>
@@ -277,7 +277,8 @@ const Register = () => {
                     </Typography>
                   </Box>
                 }
-              />
+              /> */}
+
               <Button fullWidth type='submit' variant='contained' sx={{ mb: 4 }}>
                 Sign up
               </Button>

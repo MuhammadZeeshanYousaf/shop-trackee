@@ -1,4 +1,4 @@
-import { Card, CardMedia, Typography, CardContent, Button } from '@mui/material'
+import { Card, CardMedia, Typography, CardContent, Button, Divider, IconButton } from '@mui/material'
 import { useState } from 'react'
 import OrderRequestModal from '../modals/OrderRequestModal'
 import Icon from 'src/@core/components/icon'
@@ -7,8 +7,6 @@ const CustomerProductCard = ({ product, handleFavourite }) => {
   const [open, setOpen] = useState(false)
 
   const handleClose = () => setOpen(false)
-
-
 
   return (
     <>
@@ -23,28 +21,52 @@ const CustomerProductCard = ({ product, handleFavourite }) => {
         <CardContent sx={{ p: theme => `${theme.spacing(3, 5.25, 4)} !important` }}>
           <div style={{ display: 'flex', justifyContent: 'space-between' }}>
             <Typography variant='h6' sx={{ mb: 2 }}>
-              {product?.name}
+              <b>{product?.name}</b>
             </Typography>
             {product?.is_favorite ? (
-              <Icon
-                fontSize='1.5rem'
-                icon='tabler:heart-filled'
-                color='red'
-                onClick={() => handleFavourite(product?.id, false, 'product')}
-              />
+              <IconButton size='small' onClick={() => handleFavourite(product?.id, false, 'product')}>
+                <Icon fontSize='1.5rem' icon='tabler:heart-filled' color='red' />
+              </IconButton>
             ) : (
-              <Icon
-                fontSize='1.5rem'
-                icon='tabler:heart'
-                color='red'
-                onClick={() => handleFavourite(product?.id, true, 'product')}
-              />
+              <IconButton size='small' onClick={() => handleFavourite(product?.id, true, 'product')}>
+                <Icon fontSize='1.5rem' icon='tabler:heart' />
+              </IconButton>
             )}
           </div>
-
-          <Typography sx={{ mb: 2 }}>Rs{product?.price}</Typography>
-          <Typography sx={{ height: '100px' }} variant='body2'>
+          <Typography
+            sx={{
+              color: 'text.secondary',
+              height: '79px',
+              overflow: 'auto',
+              msOverflowStyle: 'none',
+              '&::-webkit-scrollbar': {
+                width: '0'
+              }
+            }}
+            variant='body2'
+          >
             {product?.description}
+          </Typography>
+
+          <Divider
+            sx={{
+              mt: theme => `${theme.spacing(0.5)} !important`,
+              mb: theme => `${theme.spacing(2)} !important`
+            }}
+          />
+
+          <Typography sx={{ mb: 2 }} color={'text.secondary'}>
+            <b>{product?.stock_quantity} </b>stock items
+          </Typography>
+
+          <Typography sx={{ mb: 3 }}>
+            <b>Category: </b>
+            {product?.category_name}
+          </Typography>
+
+          <Typography>
+            <b>Rs. </b>
+            {product?.price}
           </Typography>
         </CardContent>
         <Button

@@ -1,4 +1,15 @@
-import { Grid, Button, Divider, Typography, Card, CardContent, Box, styled, CardActions } from '@mui/material'
+import {
+  Grid,
+  Button,
+  Divider,
+  Typography,
+  Card,
+  CardContent,
+  Box,
+  styled,
+  CardActions,
+  IconButton
+} from '@mui/material'
 import Icon from 'src/@core/components/icon'
 import { useRouter } from 'next/router'
 import { OrderRequestModal } from '../../../components'
@@ -20,6 +31,7 @@ const ServiceCard = ({ service, deleteService, shopId, mode = 'customer', handle
   const handleEdit = () => {
     router.push(`/shop/products-and-services/EditService?shopId=${shopId}&serviceId=${service?.id}`)
   }
+
   return (
     <>
       <OrderRequestModal orderableType='service' orderableId={service?.id} open={open} handleClose={handleClose} />
@@ -33,29 +45,33 @@ const ServiceCard = ({ service, deleteService, shopId, mode = 'customer', handle
                 </Typography>
                 {mode == 'customer' ? (
                   service?.is_favorite ? (
-                    <Icon
-                      fontSize='1.5rem'
-                      icon='tabler:heart-filled'
-                      color='red'
-                      onClick={() => handleFavourite(service?.id, false, 'service')}
-                    />
+                    <IconButton size='small' onClick={() => handleFavourite(service?.id, false, 'service')}>
+                      <Icon fontSize='1.5rem' icon='tabler:heart-filled' color='red' />
+                    </IconButton>
                   ) : (
-                    <Icon
-                      fontSize='1.5rem'
-                      icon='tabler:heart'
-                      color='red'
-                      onClick={() => handleFavourite(service?.id, true, 'service')}
-                    />
+                    <IconButton size='small' onClick={() => handleFavourite(service?.id, true, 'service')}>
+                      <Icon fontSize='1.5rem' icon='tabler:heart' />
+                    </IconButton>
                   )
                 ) : null}
               </div>
 
-              <Typography sx={{ color: 'text.secondary', height: '50px', overflow: 'hidden' }}>
+              <Typography
+                sx={{
+                  color: 'text.secondary',
+                  height: '79px',
+                  overflow: 'auto',
+                  msOverflowStyle: 'none',
+                  '&::-webkit-scrollbar': {
+                    width: '0'
+                  }
+                }}
+              >
                 {service?.description}
               </Typography>
               <Divider
                 sx={{
-                  mt: theme => `${theme.spacing(6.5)} !important`,
+                  mt: theme => `${theme.spacing(0.5)} !important`,
                   mb: theme => `${theme.spacing(6.75)} !important`
                 }}
               />
@@ -70,19 +86,25 @@ const ServiceCard = ({ service, deleteService, shopId, mode = 'customer', handle
                     }}
                   >
                     <Icon icon='tabler:category' fontSize={20} />
-                    <Typography sx={{ color: 'text.secondary' }}>Category: {service?.category_name}</Typography>
+                    <Typography sx={{ color: 'text.secondary' }}>
+                      <b>Category:</b> {service?.category_name}
+                    </Typography>
                   </Box>
-                  <Box
+                  {/* <Box
                     sx={{ display: 'flex', alignItems: 'center', '& svg': { color: 'primary.main', mr: 2.75, mt: 1 } }}
                   >
                     <Icon icon='tabler:businessplan' fontSize={20} />
-                    <Typography sx={{ color: 'text.secondary' }}>Charge by : {service?.charge_by}</Typography>
-                  </Box>
+                    <Typography sx={{ color: 'text.secondary' }}>
+                      <b>Charge by:</b> {service?.charge_by}
+                    </Typography>
+                  </Box> */}
                   <Box
                     sx={{ display: 'flex', alignItems: 'center', '& svg': { color: 'primary.main', mr: 2.75, mt: 1 } }}
                   >
                     <Icon icon='tabler:cash-banknote' fontSize={20} />
-                    <Typography sx={{ color: 'text.secondary' }}>Rate : {service?.rate}</Typography>
+                    <Typography sx={{ color: 'text.secondary' }}>
+                      <b>Rate:</b> {service?.rate} /{service?.charge_by}
+                    </Typography>
                   </Box>
                 </Grid>
                 {/* <Grid item xs={12} sm={7}>
@@ -99,17 +121,17 @@ const ServiceCard = ({ service, deleteService, shopId, mode = 'customer', handle
               </Grid> */}
               </Grid>
             </CardContent>
-            <CardActions sx={{ display: 'flex', justifyContent: 'end' }}>
+            <CardActions>
               {mode == 'customer' ? (
-                <Button size='small' variant='contained' onClick={() => setOpen(true)}>
-                  Request Order
+                <Button size='medium' variant='contained' onClick={() => setOpen(true)}>
+                  Request Service
                 </Button>
               ) : (
                 <>
                   <Button size='small' sx={{ ml: 1 }} variant='contained' onClick={() => handleEdit()}>
                     Edit
                   </Button>
-                  <Button size='small' variant='contained' onClick={() => deleteService(service?.id)}>
+                  <Button size='small' variant='tonal' onClick={() => deleteService(service?.id)}>
                     Delete
                   </Button>
                 </>

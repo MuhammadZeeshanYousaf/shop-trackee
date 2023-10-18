@@ -114,7 +114,7 @@ const CustomerDashboard = () => {
         >
           <Typography variant='h4'>Products</Typography>
           <div style={{ display: 'flex', alignItems: 'center' }}>
-            <InputLabel sx={{ mr: 1 }}>Explore By</InputLabel>
+            <InputLabel sx={{ mr: 1 }}></InputLabel>
             <FormControl>
               <InputLabel sx={{ mr: 1 }} id='demo-simple-select-label'>
                 Category
@@ -170,7 +170,7 @@ const CustomerDashboard = () => {
           <Typography variant='h4'>Services</Typography>
 
           <div style={{ display: 'flex', alignItems: 'center' }}>
-            <InputLabel sx={{ mr: 1 }}>Explore By</InputLabel>
+            <InputLabel sx={{ mr: 1 }}></InputLabel>
 
             <FormControl>
               <InputLabel sx={{ mr: 1 }} id='demo-simple-select-label'>
@@ -189,7 +189,7 @@ const CustomerDashboard = () => {
               </Select>
             </FormControl>
             <Button
-              size='small'
+              size='large'
               onClick={() =>
                 router.push(
                   `/fetch-services?longitude=${longitude}&latitude=${latitude}&distance=${distance}&service_page=1`

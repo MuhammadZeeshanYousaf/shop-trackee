@@ -1,4 +1,4 @@
-import { showErrorMessage, showSuccessMessage } from './toast'
+import { showErrorMessage, showSuccessMessage, showWarningMessage } from './toast'
 import Loader from './loader'
 import CustomInput from './PickerCustomInput'
 import * as source from './PickerSourceCode'
@@ -16,6 +16,7 @@ import MapModal from './modals/MapModal'
 export {
   showErrorMessage,
   showSuccessMessage,
+  showWarningMessage,
   Loader,
   CustomInput,
   source,
