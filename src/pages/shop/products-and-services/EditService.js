@@ -17,7 +17,9 @@ import {
   Grid,
   MenuItem,
   Typography,
-  Divider
+  Divider,
+  IconButton,
+  Input
 } from '@mui/material'
 import { showErrorMessage, showSuccessMessage } from 'src/components'
 import Webcam from 'react-webcam'
@@ -36,6 +38,13 @@ const EditService = () => {
   const { query } = router
   const { setLoader } = useLoader()
   const webcamRef = useRef(null)
+  const FACING_MODE_USER = 'user'
+  const FACING_MODE_ENVIRONMENT = 'environment'
+  const [facingMode, setFacingMode] = useState(FACING_MODE_ENVIRONMENT)
+
+  const videoConstraints = {
+    facingMode: FACING_MODE_USER
+  }
 
   const schema = yup.object().shape({
     name: yup.string().required(),
@@ -116,6 +125,7 @@ const EditService = () => {
     updatedImages.splice(index, 1)
     setBase64Images(updatedImages)
   }
+
   const handleDeleteUploadedImages = async (index, id) => {
     setLoader(true)
     const response = await Network.delete(Url.deleteServiceImage(query.shopId, query.serviceId, id))
@@ -130,6 +140,10 @@ const EditService = () => {
 
     setBase64Images(prev => [...prev, imageSrc])
   }, [webcamRef])
+
+  const switchCamera = useCallback(() => {
+    setFacingMode(prevState => (prevState === FACING_MODE_USER ? FACING_MODE_ENVIRONMENT : FACING_MODE_USER))
+  }, [])
 
   const getService = async () => {
     setLoader(true)
@@ -195,6 +209,7 @@ const EditService = () => {
     })
 
     setLoader(true)
+
     const response = await Network.put(
       Url.uploadServicestMoreImages(query.shopId, query.serviceId),
       formData,
@@ -207,8 +222,10 @@ const EditService = () => {
     setImagesLinks(response.data.services.images)
     showSuccessMessage(response.data.message)
   }
+
   const uploadMore = async () => {
     if (base64Images.length == 0) return showErrorMessage('Please Select Images')
+
     const images = base64Images.filter(image => {
       if (typeof image != 'object') return image
     })
@@ -219,6 +236,7 @@ const EditService = () => {
     })
 
     setLoader(true)
+
     const response = await Network.put(
       Url.uploadServicestMoreImages(query.shopId, query.serviceId),
       formData,
@@ -238,67 +256,100 @@ const EditService = () => {
 
   return (
     <>
-      <Grid container>
-        <Webcam height={200} width={200} audio={false} ref={webcamRef} screenshotFormat='image/jpeg' />
-      </Grid>
-
       <Card sx={{ p: 4 }}>
         <Grid container spacing={5}>
-          <Grid item xs={12} md={12}>
-            <Typography sx={{ mb: 2 }}>Service Images</Typography>
-            <input type='file' onChange={event => handleServicesImages(event)} multiple capture />
-            <Divider
-              sx={{
-                color: 'text.disabled',
-                '& .MuiDivider-wrapper': { px: 6 }
-              }}
-            >
-              or
-            </Divider>
-            <button onClick={capture}>Capture photo</button>
+          <Grid item xs={12} md={5}>
+            <Typography sx={{ mb: 4 }} fontSize={20}>
+              Service Images
+            </Typography>
+            <Grid container>
+              <Webcam
+                width={'330rem'}
+                maxWidth={'400px'}
+                audio={false}
+                ref={webcamRef}
+                screenshotFormat='image/jpeg'
+                videoConstraints={{
+                  ...videoConstraints,
+                  facingMode
+                }}
+              />
+            </Grid>
+            <Grid item md={12} xs={12} sx={{ display: 'flex', justifyContent: 'start', mt: 2 }}>
+              <Button onClick={capture} variant='contained' sx={{ mr: 2 }}>
+                Capture
+              </Button>
+              <Button variant='outlined' size='small' onClick={switchCamera}>
+                <Icon icon='tabler:refresh' />
+              </Button>
+            </Grid>
           </Grid>
           {base64Images?.map((image, index) => {
             if (typeof image == 'object')
               return (
-                <Grid item xs={12} md={2} sx={{ display: 'flex', justifyContent: 'center' }}>
-                  <Card>
-                    <CardHeader
-                      title={
-                        <Icon
-                          icon='tabler:trash'
-                          fontSize={20}
-                          onClick={() => handleDeleteUploadedImages(index, image.id)}
-                        />
-                      }
+                <Grid item xs={12} md={3} sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+                  <Card
+                    sx={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center' }}
+                  >
+                    <IconButton
+                      color='secondary'
+                      sx={{ m: 2 }}
+                      onClick={() => handleDeleteUploadedImages(index, image.id)}
+                    >
+                      <Icon icon='tabler:trash' fontSize={25} />
+                    </IconButton>
+                    <img
+                      src={`${process.env.NEXT_PUBLIC_IMAGE_URL}${image.path}`}
+                      alt='Service image'
+                      style={{ objectFit: 'contain', maxHeight: '100%', maxWidth: '100%' }}
                     />
-                    <CardContent>
-                      <img
-                        src={`${process.env.NEXT_PUBLIC_IMAGE_URL}${image.path}`}
-                        style={{ objectFit: 'contain', maxHeight: '100%', maxWidth: '100%' }}
-                      />
-                    </CardContent>
-                    <CardActions>
-                      <Button onClick={() => recognizeImage(image.id)}>Recognize Image</Button>
-                    </CardActions>
+                    <Button sx={{ m: 2 }} onClick={() => recognizeImage(image.id)}>
+                      Recognize Image
+                    </Button>
                   </Card>
                 </Grid>
               )
-            else {
+            else
               return (
-                <Grid item xs={12} md={2} sx={{ display: 'flex', justifyContent: 'center' }}>
-                  <Card>
-                    <CardHeader
-                      title={<Icon icon='tabler:trash' fontSize={20} onClick={() => handleDeleteImage(index)} />}
+                <Grid
+                  item
+                  key={index}
+                  xs={12}
+                  md={3}
+                  sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}
+                >
+                  <Card
+                    sx={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center' }}
+                  >
+                    <IconButton color='secondary' sx={{ m: 2 }} onClick={() => handleDeleteImage(index)}>
+                      <Icon icon='tabler:trash' fontSize={25} />
+                    </IconButton>
+                    <img
+                      src={image}
+                      alt='Service image'
+                      style={{ objectFit: 'contain', maxHeight: '100%', maxWidth: '100%' }}
                     />
-                    <CardContent>
-                      <img src={image} style={{ objectFit: 'contain', maxHeight: '100%', maxWidth: '100%' }} />
-                    </CardContent>
+                    <p sx={{ m: 2 }} style={{ color: '#C94E50' }}>
+                      Not Uploaded
+                    </p>
                   </Card>
                 </Grid>
               )
-            }
           })}
         </Grid>
+
+        <Divider
+          sx={{
+            color: 'text.disabled',
+            '& .MuiDivider-wrapper': { px: 6 },
+            mt: 2,
+            mb: 3
+          }}
+        >
+          or
+        </Divider>
+        <Input type='file' accept='image/*' onChange={event => handleServicesImages(event)} multiple capture />
+
         <CardActions sx={{ justifyContent: 'end' }}>
           <Button variant='contained' onClick={() => uploadMore()}>
             Upload More
@@ -367,6 +418,7 @@ const EditService = () => {
                   rules={{ required: true }}
                   render={({ field: { value, onChange, onBlur } }) => {
                     console.log({ value })
+
                     return (
                       <CustomTextField
                         select

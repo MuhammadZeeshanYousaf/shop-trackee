@@ -15,7 +15,9 @@ import {
   CardActions,
   MenuItem,
   Typography,
-  Divider
+  Divider,
+  Input,
+  IconButton
 } from '@mui/material'
 import CustomTextField from 'src/@core/components/mui/text-field'
 import { showErrorMessage, showSuccessMessage } from 'src/components'
@@ -35,6 +37,13 @@ const EditProduct = () => {
   const [activeResponse, setActiveResponse] = useState(0)
   const { query } = router
   const webcamRef = useRef(null)
+  const FACING_MODE_USER = 'user'
+  const FACING_MODE_ENVIRONMENT = 'environment'
+
+  const videoConstraints = {
+    facingMode: FACING_MODE_USER
+  }
+  const [facingMode, setFacingMode] = useState(FACING_MODE_ENVIRONMENT)
 
   const schema = yup.object().shape({
     name: yup.string().required(),
@@ -70,6 +79,10 @@ const EditProduct = () => {
     setBase64Images(prev => [...prev, imageSrc])
   }, [webcamRef])
 
+  const switchCamera = useCallback(() => {
+    setFacingMode(prevState => (prevState === FACING_MODE_USER ? FACING_MODE_ENVIRONMENT : FACING_MODE_USER))
+  }, [])
+
   const newProductForm = async () => {
     setLoader(true)
     const response = await Network.get(Url.newProduct(query.shopId))
@@ -93,6 +106,7 @@ const EditProduct = () => {
     setValue('category_name', response.data.category_name)
     setValue('price', response.data.price)
     setValue('stock_quantity', response.data.stock_quantity)
+
     // setImageLinks(response.data.images)
     setBase64Images(response.data.images)
   }
@@ -173,6 +187,7 @@ const EditProduct = () => {
 
   const uploadMore = async () => {
     if (base64Images.length == 0) return showErrorMessage('Please Select Images')
+
     const images = base64Images.filter(image => {
       if (typeof image != 'object') return image
     })
@@ -182,6 +197,7 @@ const EditProduct = () => {
       formData.append('images[]', image)
     })
     setLoader(true)
+
     const response = await Network.put(
       Url.uploadProductMoreImages(query.shopId, query.productId),
       formData,
@@ -229,67 +245,98 @@ const EditProduct = () => {
 
   return (
     <>
-      <Grid container>
-        <Webcam height={200} width={200} audio={false} ref={webcamRef} screenshotFormat='image/jpeg' />
-      </Grid>
-
       <Card sx={{ p: 4 }}>
         <Grid container spacing={5}>
-          <Grid item xs={12} md={12}>
-            <Typography sx={{ mb: 2 }}>Product Images</Typography>
-            <input type='file' onChange={event => handleProductImages(event)} multiple capture />
-            <Divider
-              sx={{
-                color: 'text.disabled',
-                '& .MuiDivider-wrapper': { px: 6 }
-              }}
-            >
-              or
-            </Divider>
-            <button onClick={capture}>Capture photo</button>
+          <Grid item xs={12} md={5}>
+            <Typography sx={{ mb: 4 }} fontSize={20}>
+              Product Images
+            </Typography>
+            <Grid container>
+              <Webcam
+                width={'330rem'}
+                maxWidth={'400px'}
+                audio={false}
+                ref={webcamRef}
+                screenshotFormat='image/jpeg'
+                videoConstraints={{
+                  ...videoConstraints,
+                  facingMode
+                }}
+              />
+            </Grid>
+            <Grid item md={12} xs={12} sx={{ justifyContent: 'start', display: 'flex', mt: 2 }}>
+              <Button onClick={capture} variant='contained' sx={{ mr: 2 }}>
+                Capture
+              </Button>
+              <Button variant='outlined' size='small' onClick={switchCamera}>
+                <Icon icon='tabler:refresh' />
+              </Button>
+            </Grid>
           </Grid>
           {base64Images?.map((image, index) => {
             if (typeof image == 'object')
               return (
-                <Grid item xs={12} md={2} sx={{ display: 'flex', justifyContent: 'center' }}>
-                  <Card>
-                    <CardHeader
-                      title={
-                        <Icon
-                          icon='tabler:trash'
-                          fontSize={20}
-                          onClick={() => handleDeleteUploadedImages(index, image.id)}
-                        />
-                      }
+                <Grid item xs={12} md={3} sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+                  <Card
+                    sx={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center' }}
+                  >
+                    <IconButton
+                      color='secondary'
+                      sx={{ m: 2 }}
+                      onClick={() => handleDeleteUploadedImages(index, image.id)}
+                    >
+                      <Icon icon='tabler:trash' fontSize={25} />
+                    </IconButton>
+                    <img
+                      src={`${process.env.NEXT_PUBLIC_IMAGE_URL}${image.path}`}
+                      alt='Product image'
+                      style={{ objectFit: 'contain', maxHeight: '100%', maxWidth: '100%' }}
                     />
-                    <CardContent>
-                      <img
-                        src={`${process.env.NEXT_PUBLIC_IMAGE_URL}${image.path}`}
-                        style={{ objectFit: 'contain', maxHeight: '100%', maxWidth: '100%' }}
-                      />
-                    </CardContent>
-                    <CardActions>
-                      <Button onClick={() => recognizeImage(image.id)}>Recognize Image</Button>
-                    </CardActions>
+                    <Button sx={{ m: 2 }} onClick={() => recognizeImage(image.id)}>
+                      Recognize Image
+                    </Button>
                   </Card>
                 </Grid>
               )
-            else {
+            else
               return (
-                <Grid item xs={12} md={2} sx={{ display: 'flex', justifyContent: 'center' }}>
-                  <Card>
+                <Grid
+                  item
+                  key={index}
+                  xs={12}
+                  md={2}
+                  sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}
+                >
+                  <Card
+                    sx={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center' }}
+                  >
                     <CardHeader
                       title={<Icon icon='tabler:trash' fontSize={20} onClick={() => handleDeleteImage(index)} />}
                     />
-                    <CardContent>
-                      <img src={image} style={{ objectFit: 'contain', maxHeight: '100%', maxWidth: '100%' }} />
-                    </CardContent>
+                    <img
+                      src={image}
+                      alt='Product image'
+                      style={{ objectFit: 'contain', maxHeight: '100%', maxWidth: '100%' }}
+                    />
+                    <p sx={{ m: 2 }} style={{ color: '#C94E50' }}>
+                      Not Uploaded
+                    </p>
                   </Card>
                 </Grid>
               )
-            }
           })}
         </Grid>
+        <Divider
+          sx={{
+            color: 'text.disabled',
+            '& .MuiDivider-wrapper': { px: 6 },
+            mt: 2,
+            mb: 3
+          }}
+        >
+          or
+        </Divider>
+        <Input type='file' accept='image/*' onChange={event => handleProductImages(event)} multiple capture />
         <CardActions sx={{ justifyContent: 'end' }}>
           <Button variant='contained' onClick={() => uploadMore()}>
             Upload More

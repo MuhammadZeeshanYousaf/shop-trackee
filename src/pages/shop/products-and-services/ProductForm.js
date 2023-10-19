@@ -315,7 +315,7 @@ const ProductForm = () => {
                       alt={'Product image'}
                       style={{ objectFit: 'contain', maxHeight: '100%', maxWidth: '100%' }}
                     />
-                    <p sx={{ m: 2 }} style={{ color: '#C94E50', margin: 2 }}>
+                    <p sx={{ m: 2 }} style={{ color: '#C94E50' }}>
                       Not Uploaded
                     </p>
                   </Card>
