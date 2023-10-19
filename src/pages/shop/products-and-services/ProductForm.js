@@ -8,7 +8,9 @@ import {
   Typography,
   Box,
   MenuItem,
-  Divider
+  Divider,
+  Input,
+  IconButton
 } from '@mui/material'
 import { useForm, Controller } from 'react-hook-form'
 import { yupResolver } from '@hookform/resolvers/yup'
@@ -41,7 +43,7 @@ const ProductForm = () => {
   const [activeResponse, setActiveResponse] = useState(0)
 
   const [base64Images, setBase64Images] = useState([])
-  const [facingMode, setFacingMode] = useState(FACING_MODE_USER)
+  const [facingMode, setFacingMode] = useState(FACING_MODE_ENVIRONMENT)
 
   const schema = yup.object().shape({
     name: yup.string().required(),
@@ -239,82 +241,100 @@ const ProductForm = () => {
 
   return (
     <>
-      <Grid container>
-        <Grid item md={6} xs={12}>
-          <Webcam
-            height={200}
-            width={200}
-            audio={false}
-            ref={webcamRef}
-            screenshotFormat='image/jpeg'
-            videoConstraints={{
-              ...videoConstraints,
-              facingMode
-            }}
-          />
-        </Grid>
-        <Grid item md={6} xs={12} sx={{ justifyContent: 'end', display: 'flex' }}>
-          <Button onClick={switchCamera}>Switch camera</Button>
-        </Grid>
-      </Grid>
-
       <Card sx={{ p: 4 }}>
         <Grid container spacing={5}>
-          <Grid item xs={12} md={12}>
-            <Typography sx={{ mb: 2 }}>Product Images</Typography>
-            <input type='file' onChange={event => handleProductImages(event)} multiple capture />
-            <Divider
-              sx={{
-                color: 'text.disabled',
-                '& .MuiDivider-wrapper': { px: 6 }
-              }}
-            >
-              or
-            </Divider>
-            <button onClick={capture}>Capture photo</button>
+          <Grid item xs={12} md={5}>
+            <Typography sx={{ mb: 4 }} fontSize={20}>
+              Upload Product Images
+            </Typography>
+            <Grid item md={12} xs={12}>
+              <Webcam
+                width={'330rem'}
+                maxWidth={'400px'}
+                audio={false}
+                ref={webcamRef}
+                screenshotFormat='image/jpeg'
+                videoConstraints={{
+                  ...videoConstraints,
+                  facingMode
+                }}
+              />
+            </Grid>
+            <Grid item md={12} xs={12} sx={{ justifyContent: 'start', display: 'flex', mt: 2 }}>
+              <Button onClick={capture} variant='contained' sx={{ mr: 2 }}>
+                Capture
+              </Button>
+              <Button variant='outlined' size='small' onClick={switchCamera}>
+                <Icon icon='tabler:refresh' />
+              </Button>
+            </Grid>
           </Grid>
           {base64Images?.map((image, index) => {
             if (typeof image == 'object')
               return (
-                <Grid item xs={12} md={2} sx={{ display: 'flex', justifyContent: 'center' }}>
-                  <Card>
-                    <CardHeader
-                      title={
-                        <Icon
-                          icon='tabler:trash'
-                          fontSize={20}
-                          onClick={() => handleDeleteUploadedImages(index, image.id)}
-                        />
-                      }
+                <Grid item xs={12} md={3} sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+                  <Card
+                    sx={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center' }}
+                  >
+                    <IconButton
+                      color='secondary'
+                      sx={{ m: 2 }}
+                      onClick={() => handleDeleteUploadedImages(index, image.id)}
+                    >
+                      <Icon icon='tabler:trash' fontSize={25} />
+                    </IconButton>
+                    <img
+                      src={`${process.env.NEXT_PUBLIC_IMAGE_URL}${image.path}`}
+                      alt={'Product image'}
+                      style={{ objectFit: 'contain', maxHeight: '100%', maxWidth: '100%' }}
                     />
-                    <CardContent>
-                      <img
-                        src={`${process.env.NEXT_PUBLIC_IMAGE_URL}${image.path}`}
-                        style={{ objectFit: 'contain', maxHeight: '100%', maxWidth: '100%' }}
-                      />
-                    </CardContent>
-                    <CardActions>
-                      <Button onClick={() => recognizeImage(image.id)}>Recognize Image</Button>
-                    </CardActions>
+                    <Button sx={{ m: 2 }} onClick={() => recognizeImage(image.id)}>
+                      Recognize Image
+                    </Button>
                   </Card>
                 </Grid>
               )
-            else {
+            else
               return (
-                <Grid item xs={12} md={2} sx={{ display: 'flex', justifyContent: 'center' }}>
-                  <Card>
-                    <CardHeader
-                      title={<Icon icon='tabler:trash' fontSize={20} onClick={() => handleDeleteImage(index)} />}
+                <Grid
+                  item
+                  key={index}
+                  xs={12}
+                  md={3}
+                  sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}
+                >
+                  <Card
+                    sx={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center' }}
+                  >
+                    <IconButton color='secondary' sx={{ m: 2 }} onClick={() => handleDeleteImage(index)}>
+                      <Icon icon='tabler:trash' fontSize={25} />
+                    </IconButton>
+
+                    <img
+                      src={image}
+                      alt={'Product image'}
+                      style={{ objectFit: 'contain', maxHeight: '100%', maxWidth: '100%' }}
                     />
-                    <CardContent>
-                      <img src={image} style={{ objectFit: 'contain', maxHeight: '100%', maxWidth: '100%' }} />
-                    </CardContent>
+                    <p sx={{ m: 2 }} style={{ color: '#C94E50', margin: 2 }}>
+                      Not Uploaded
+                    </p>
                   </Card>
                 </Grid>
               )
-            }
           })}
         </Grid>
+        <Divider
+          sx={{
+            color: 'text.disabled',
+            '& .MuiDivider-wrapper': { px: 6 },
+            mt: 2,
+            mb: 3
+          }}
+        >
+          or
+        </Divider>
+        <Input type='file' accept='image/*' onChange={event => handleProductImages(event)} multiple capture />
+
         <CardActions sx={{ justifyContent: 'end' }}>
           {base64Images.some(item => typeof item === 'object') ? (
             <Button variant='contained' onClick={() => uploadMore()}>
