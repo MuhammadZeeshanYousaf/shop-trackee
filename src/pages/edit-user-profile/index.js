@@ -23,6 +23,7 @@ import { Network, Url, multipartConfig } from '../../configs'
 import { useRouter } from 'next/router'
 import { showErrorMessage, showSuccessMessage } from 'src/components'
 import { useLoader } from 'src/hooks'
+import { getValue } from '@mui/system'
 
 const ImgStyled = styled('img')(({ theme }) => ({
   width: 100,
@@ -316,12 +317,13 @@ const EditUserProfile = () => {
             </Grid>
             <Grid item xs={12}>
               <FormLabel>Subscribe to the News Letter</FormLabel>
-
               <Controller
-                name='newsletter_subscribed'
                 control={control}
-                defaultValue={false} // Set your initial value here
-                render={({ field }) => <FormControlLabel control={<Switch {...field} />} />}
+                name='newsletter_subscribed'
+                defaultValue={false}
+                render={({ field: { value, onChange } }) => {
+                  return <Switch checked={value} value={value} onChange={onChange} />
+                }}
               />
             </Grid>
           </Grid>
