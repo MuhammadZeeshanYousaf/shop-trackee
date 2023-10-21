@@ -70,23 +70,23 @@ const LinkStyled = styled(Link)(({ theme }) => ({
 const ResetPasswordV2 = () => {
   const router = useRouter()
   const { setLoader } = useLoader()
-  const { userEmail, setUserEmail } = useState(null)
+  const [userEmail, setUserEmail] = useState(null)
 
   useEffect(() => {
-    ;(async () => {
-      const resetPasswordToken = router.query.token
+    const verifyToken = async resetPasswordToken => {
       setLoader(true)
       const response = await Network.get(Url.resetPassword(resetPasswordToken))
       setLoader(false)
-      if (response.data?.ok) {
-        setUserEmail(response.data?.email)
-      } else if (!response || !response.data?.ok) {
+      if (response.data?.ok) setUserEmail(response.data?.email)
+      else if (!response.data?.ok) {
         showErrorMessage('Reset link expired, send another link')
-        router.push('/forgot-password/')
+        router.replace('/forgot-password')
       }
-    })()
-    console.log(router.query.token)
-  }, [])
+    }
+    if (router.query.token !== undefined) {
+      verifyToken(router.query.token)
+    }
+  }, [router])
 
   // ** States
   const [values, setValues] = useState({
@@ -122,19 +122,21 @@ const ResetPasswordV2 = () => {
     setValues({ ...values, showConfirmNewPassword: !values.showConfirmNewPassword })
   }
 
-  const submitHandler = async e => {
+  const submitHandler = e => {
     e.preventDefault()
-    if (values.newPassword === values.confirmNewPassword) {
-      setLoader(true)
-      const response = await Network.post(Url.resetPassword(router.query.token), { new_password: values.newPassword })
-      setLoader(false)
+    ;(async () => {
+      if (values.newPassword === values.confirmNewPassword) {
+        setLoader(true)
+        const response = await Network.post(Url.resetPassword(router.query.token), { new_password: values.newPassword })
+        setLoader(false)
 
-      if (response.data?.ok) {
-        showSuccessMessage(response.data?.message)
-        router.push('/login/')
-      } else if (!response.data?.ok) showErrorMessage(response.data?.message)
-      else showWarningMessage('Unable to process your request')
-    }
+        if (response.data?.ok) {
+          showSuccessMessage(response.data?.message)
+          router.replace('/login')
+        } else if (!response.data?.ok) showErrorMessage(response.data?.message)
+        else showWarningMessage('Unable to process your request')
+      }
+    })()
   }
 
   return (
