@@ -25,6 +25,8 @@ import FooterIllustrationsV2 from 'src/views/pages/auth/FooterIllustrationsV2'
 import * as yup from 'yup'
 import { useForm, Controller } from 'react-hook-form'
 import { yupResolver } from '@hookform/resolvers/yup'
+import { Network, Url } from 'src/configs'
+import { useLoader } from 'src/hooks'
 
 // Styled Components
 const ForgotPasswordIllustration = styled('img')(({ theme }) => ({
@@ -65,6 +67,7 @@ const LinkStyled = styled(Link)(({ theme }) => ({
 const ForgotPassword = () => {
   // ** Hooks
   const theme = useTheme()
+  const { setLoader } = useLoader()
 
   const schema = yup.object().shape({
     email: yup.string().email().required('Email is required')
@@ -79,11 +82,18 @@ const ForgotPassword = () => {
     resolver: yupResolver(schema)
   })
 
-  const onSubmit = data => {
+  const onSubmit = async data => {
     const { email } = data
-
     showSuccessMessage(`"This is email: ${email}"`)
     console.log(`"This is email: ${email}"`)
+
+    setLoader(true)
+    const response = await Network.post(Url.sendPasswordResetLink, data)
+    setLoader(false)
+
+    if (response.status === 200) return showSuccessMessage(response.data.message)
+    else if (response.status === 404) return showErrorMessage(response.data.message)
+    if (!response.ok) return showErrorMessage('Cannot process request, check you connection')
   }
 
   // ** Vars
