@@ -1,4 +1,4 @@
-import { Modal, Box, Typography, Button } from '@mui/material'
+import { Modal, Box, Typography, Divider } from '@mui/material'
 
 const MessageModal = ({ open, handleClose, message }) => {
   const style = theme => ({
@@ -26,9 +26,10 @@ const MessageModal = ({ open, handleClose, message }) => {
       aria-describedby='modal-modal-description'
     >
       <Box sx={style}>
-        <Typography id='modal-modal-title' variant='h4' component='h2'>
+        <Typography id='modal-modal-title' variant='h5' component='h2'>
           Message
         </Typography>
+        <Divider sx={{ my: '0 !important' }} />
         <Typography sx={{ marginTop: 2 }}>{message}</Typography>
       </Box>
     </Modal>
