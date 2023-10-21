@@ -19,6 +19,7 @@ client.addAsyncRequestTransform(async request => {
 
 export const config = async () => {
   const token = localStorage.getItem(auth.storageTokenKeyName)
+
   return {
     headers: {
       Authorization: `Bearer ${token}`,
@@ -38,6 +39,7 @@ export const authConfig = async token => {
 
 export const multipartConfig = async () => {
   const token = localStorage.getItem(auth.storageTokenKeyName)
+
   return {
     headers: {
       Authorization: `Bearer ${token}`,
@@ -45,8 +47,10 @@ export const multipartConfig = async () => {
     }
   }
 }
+
 export const blobConfig = async () => {
   const token = localStorage.getItem(auth.storageTokenKeyName)
+
   return {
     headers: {
       Authorization: `Bearer ${token}`,

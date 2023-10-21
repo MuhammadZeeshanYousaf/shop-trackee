@@ -85,13 +85,14 @@ const UserDropdown = props => {
 
   return (
     <Fragment>
-      <Box sx={{ display: 'flex', ml: 2.5, flexDirection: 'column' }}>
-        <Typography sx={{ fontWeight: 500 }}>{user?.name}</Typography>
-        <Typography sx={{ textAlign: 'right' }} variant='body2'>
-          {user?.role}
-        </Typography>
-      </Box>
-      {/* <Badge
+      <Box sx={{ display: 'flex', flexDirection: 'row', cursor: 'pointer' }} onClick={handleDropdownOpen}>
+        <Box sx={{ display: 'flex', ml: 2, flexDirection: 'column', cursor: 'pointer', alignItems: 'flex-end' }}>
+          <Typography sx={{ fontWeight: 500, textAlign: 'right' }}>{user?.name}</Typography>
+          <Typography sx={{ textAlign: 'right' }} variant='body2'>
+            {user?.role}
+          </Typography>
+        </Box>
+        {/* <Badge
         overlap='circular'
         onClick={handleDropdownOpen}
         sx={{ ml: 2, cursor: 'pointer' }}
@@ -101,18 +102,16 @@ const UserDropdown = props => {
           horizontal: 'right'
         }}
       > */}
-      {user?.avatar ? (
-        <Avatar
-          alt={user?.name}
-          src={`${process.env.NEXT_PUBLIC_API_HOST_URL}${user?.avatar}`}
-          onClick={handleDropdownOpen}
-          sx={{ width: 38, height: 38, cursor: 'pointer' }}
-        />
-      ) : (
-        <Avatar onClick={handleDropdownOpen} sx={{ width: 38, height: 38, cursor: 'pointer' }}>
-          {user?.name[0]?.toUpperCase()}
-        </Avatar>
-      )}
+        {user?.avatar ? (
+          <Avatar
+            alt={user?.name}
+            src={`${process.env.NEXT_PUBLIC_API_HOST_URL}${user?.avatar}`}
+            sx={{ width: 38, height: 38, cursor: 'pointer', ml: 1 }}
+          />
+        ) : (
+          <Avatar sx={{ width: 38, height: 38, cursor: 'pointer', ml: 1 }}>{user?.name[0]?.toUpperCase()}</Avatar>
+        )}
+      </Box>
       {/* </Badge> */}
       <Menu
         anchorEl={anchorEl}

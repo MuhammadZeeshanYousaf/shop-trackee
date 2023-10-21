@@ -83,10 +83,6 @@ const ForgotPassword = () => {
   })
 
   const onSubmit = async data => {
-    const { email } = data
-    showSuccessMessage(`"This is email: ${email}"`)
-    console.log(`"This is email: ${email}"`)
-
     setLoader(true)
     const response = await Network.post(Url.sendPasswordResetLink, data)
     setLoader(false)

@@ -37,6 +37,15 @@ const ServiceCard = ({ service, deleteService, shopId, mode = 'customer', handle
       <OrderRequestModal orderableType='service' orderableId={service?.id} open={open} handleClose={handleClose} />
       <Card sx={{ mt: 5 }}>
         <Grid container spacing={6}>
+          <Grid item xs={12} md={6} sm={5}>
+            <div style={{ height: '300px' }}>
+              <img
+                style={{ height: '100%', objectFit: 'contain', width: '100%' }}
+                alt='Service image'
+                src={`${process.env.NEXT_PUBLIC_IMAGE_URL}${service?.images[0]?.path}`}
+              />
+            </div>
+          </Grid>
           <Grid item xs={12} md={6} sm={7}>
             <CardContent sx={{ p: theme => `${theme.spacing(3.25, 5.75, 6.25)} !important` }}>
               <div style={{ display: 'flex', justifyContent: 'space-between' }}>
@@ -137,14 +146,6 @@ const ServiceCard = ({ service, deleteService, shopId, mode = 'customer', handle
                 </>
               )}
             </CardActions>
-          </Grid>
-          <Grid item xs={12} md={6} sm={5}>
-            <div style={{ height: '300px' }}>
-              <img
-                style={{ height: '100%', objectFit: 'contain', width: '100%' }}
-                src={`${process.env.NEXT_PUBLIC_IMAGE_URL}${service?.images[0]?.path}`}
-              />
-            </div>
           </Grid>
         </Grid>
       </Card>
