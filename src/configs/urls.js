@@ -2,6 +2,7 @@ export default {
   getUser: '/users/tokens/info',
   updateUser: '/user',
   sendPasswordResetLink: '/user/send_password_reset_link',
+  resetPassword: token => `/user/reset_password/${token}`,
   shop: page => `/shops?page=${page}`,
 
   getShops: '/shops',
