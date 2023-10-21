@@ -88,10 +88,11 @@ const ProductandServices = () => {
         </FormControl>
       </Box>
 
-      <Grid sx={{ mt: 5 }} container spacing={5}>
+      <Grid container spacing={5}>
         {/* Products */}
         {mode == 'Both' || mode == 'Products' ? (
           <Grid item md={6}>
+            <h3>Products</h3>
             {products?.map((product, i) => {
               return (
                 <ProductCard
@@ -111,6 +112,7 @@ const ProductandServices = () => {
         {/* Services */}
         {mode == 'Both' || mode == 'Services' ? (
           <Grid item md={6}>
+            <h3>Services</h3>
             {services?.map((service, i) => (
               <ServiceCard mode='shop' service={service} key={i} deleteService={deleteService} shopId={query?.shopId} />
             ))}

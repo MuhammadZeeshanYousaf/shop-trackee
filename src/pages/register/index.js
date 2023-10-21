@@ -113,7 +113,7 @@ const Register = () => {
     auth.signup({ name, email, password, role }, error => {
       setError('email', {
         type: 'manual',
-        message: error
+        message: error?.response?.data?.error_description[0]
 
         // message: 'Email or Password is invalid'
       })

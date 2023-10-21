@@ -10,6 +10,7 @@ import { styled, useTheme } from '@mui/material/styles'
 
 // ** Custom Component Import
 import CustomTextField from 'src/@core/components/mui/text-field'
+import { showErrorMessage, showSuccessMessage } from 'src/components'
 
 // ** Icon Imports
 import Icon from 'src/@core/components/icon'
@@ -19,6 +20,13 @@ import BlankLayout from 'src/@core/layouts/BlankLayout'
 
 // ** Demo Imports
 import FooterIllustrationsV2 from 'src/views/pages/auth/FooterIllustrationsV2'
+
+// ** Third Party Imports
+import * as yup from 'yup'
+import { useForm, Controller } from 'react-hook-form'
+import { yupResolver } from '@hookform/resolvers/yup'
+import { Network, Url } from 'src/configs'
+import { useLoader } from 'src/hooks'
 
 // Styled Components
 const ForgotPasswordIllustration = styled('img')(({ theme }) => ({
@@ -59,6 +67,30 @@ const LinkStyled = styled(Link)(({ theme }) => ({
 const ForgotPassword = () => {
   // ** Hooks
   const theme = useTheme()
+  const { setLoader } = useLoader()
+
+  const schema = yup.object().shape({
+    email: yup.string().email().required('Email is required')
+  })
+
+  const {
+    control,
+    handleSubmit,
+    formState: { errors }
+  } = useForm({
+    mode: 'onBlur',
+    resolver: yupResolver(schema)
+  })
+
+  const onSubmit = async data => {
+    setLoader(true)
+    const response = await Network.post(Url.sendPasswordResetLink, data)
+    setLoader(false)
+
+    if (response.status === 200) return showSuccessMessage(response.data.message)
+    else if (response.status === 404) return showErrorMessage(response.data.message)
+    if (!response.ok) return showErrorMessage('Cannot process request, check you connection')
+  }
 
   // ** Vars
   const hidden = useMediaQuery(theme.breakpoints.down('md'))
@@ -105,8 +137,29 @@ const ForgotPassword = () => {
                 Enter your email and we&prime;ll send you instructions to reset your password
               </Typography>
             </Box>
-            <form noValidate autoComplete='off' onSubmit={e => e.preventDefault()}>
-              <CustomTextField fullWidth autoFocus type='email' label='Email' sx={{ display: 'flex', mb: 4 }} />
+            <form noValidate autoComplete='off' onSubmit={handleSubmit(onSubmit)}>
+              <Controller
+                name='email'
+                control={control}
+                defaultValue=''
+                rules={{ required: true }}
+                render={({ field: { value, onChange, onBlur } }) => (
+                  <CustomTextField
+                    fullWidth
+                    autoFocus
+                    label='Email'
+                    sx={{ display: 'flex', mb: 4 }}
+                    value={value}
+                    onBlur={onBlur}
+                    onChange={onChange}
+                    placeholder='Enter your email'
+                    error={Boolean(errors.email)}
+                    {...(errors.email && { helperText: errors.email.message })}
+                  />
+                )}
+              />
+
+              {/* <CustomTextField fullWidth autoFocus type='email' label='Email' sx={{ display: 'flex', mb: 4 }} /> */}
               <Button fullWidth type='submit' variant='contained' sx={{ mb: 4 }}>
                 Send reset link
               </Button>
