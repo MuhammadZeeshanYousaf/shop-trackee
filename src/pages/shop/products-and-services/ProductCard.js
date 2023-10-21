@@ -46,7 +46,7 @@ const ProductCard = ({ product, deleteProduct, shopId, id }) => {
   }))
 
   return (
-    <Card sx={{ mt: 5, height: '300px' }} key={product?.id}>
+    <Card sx={{ mt: 5 }} key={product?.id}>
       <Grid container spacing={6} sx={{ p: 0 }}>
         <StyledGrid item md={6} xs={12} sx={{ p: 0 }}>
           <div style={{ height: '300px' }}>
