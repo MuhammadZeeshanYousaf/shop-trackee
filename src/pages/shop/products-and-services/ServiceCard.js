@@ -35,7 +35,7 @@ const ServiceCard = ({ service, deleteService, shopId, mode = 'customer', handle
   return (
     <>
       <OrderRequestModal orderableType='service' orderableId={service?.id} open={open} handleClose={handleClose} />
-      <Card sx={{ mt: 5, height: '300px' }}>
+      <Card sx={{ mt: 5 }}>
         <Grid container spacing={6}>
           <Grid item xs={12} md={6} sm={7}>
             <CardContent sx={{ p: theme => `${theme.spacing(3.25, 5.75, 6.25)} !important` }}>
@@ -138,7 +138,7 @@ const ServiceCard = ({ service, deleteService, shopId, mode = 'customer', handle
               )}
             </CardActions>
           </Grid>
-          <Grid item sm={5} md={6} xs={12}>
+          <Grid item xs={12} md={6} sm={5}>
             <div style={{ height: '300px' }}>
               <img
                 style={{ height: '100%', objectFit: 'contain', width: '100%' }}
