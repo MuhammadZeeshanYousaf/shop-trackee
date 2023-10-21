@@ -5,17 +5,21 @@ import { DataGrid } from '@mui/x-data-grid'
 import useBgColor from 'src/@core/hooks/useBgColor'
 import { Typography, Button, Card, CardHeader, Box, Chip, Tooltip, IconButton } from '@mui/material'
 import CustomAvatar from 'src/@core/components/mui/avatar'
-import { showErrorMessage, showSuccessMessage, MapModal } from 'src/components'
+import { showErrorMessage, showSuccessMessage, MapModal, MessageModal } from 'src/components'
 import Icon from 'src/@core/components/icon'
 
 const OrderRequest = () => {
   const { setLoader } = useLoader()
   const { longitude, latitude } = useCoordinates()
   const [open, setOpen] = useState(false)
+  const [openMessageModal, setOpenMessageModal] = useState(false)
   const [totalRecords, setTotalRecords] = useState(0)
   const [currentPage, setCurrentpage] = useState(0)
+  const [message, setMessage] = useState('')
 
   const handleClose = () => setOpen(false)
+
+  const handleMessageModal = () => setOpenMessageModal(false)
 
   const [destination, setDestination] = useState({
     longitude: '',
@@ -77,7 +81,7 @@ const OrderRequest = () => {
   const columns = [
     {
       flex: 0.15,
-      minWidth: 100,
+      minWidth: 150,
       field: 'name',
       headerName: 'Item',
       renderCell: params => {
@@ -121,9 +125,14 @@ const OrderRequest = () => {
         const { row } = params
 
         return (
-          <Tooltip placement='top' title={row?.message}>
-            <Box sx={{ textOverflow: 'inherit' }}>{row?.message}</Box>
-          </Tooltip>
+          <Button
+            onClick={() => {
+              setMessage(row?.message)
+              setOpenMessageModal(true)
+            }}
+          >
+            Show Message
+          </Button>
         )
       }
     },
@@ -210,6 +219,7 @@ const OrderRequest = () => {
   return (
     <>
       <MapModal key={open} open={open} handleClose={handleClose} destination={destination} origin={origin} />
+      <MessageModal key={openMessageModal} open={openMessageModal} handleClose={handleMessageModal} message={message} />
       <Card>
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
           <CardHeader title='Order Requests' />

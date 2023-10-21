@@ -106,10 +106,10 @@ const UserDropdown = props => {
           alt={user?.name}
           src={`${process.env.NEXT_PUBLIC_API_HOST_URL}${user?.avatar}`}
           onClick={handleDropdownOpen}
-          sx={{ width: 38, height: 38 }}
+          sx={{ width: 38, height: 38, cursor: 'pointer' }}
         />
       ) : (
-        <Avatar onClick={handleDropdownOpen} sx={{ width: 38, height: 38 }}>
+        <Avatar onClick={handleDropdownOpen} sx={{ width: 38, height: 38, cursor: 'pointer' }}>
           {user?.name[0]?.toUpperCase()}
         </Avatar>
       )}

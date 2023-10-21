@@ -2,7 +2,7 @@ import { DataGrid } from '@mui/x-data-grid'
 import CustomAvatar from 'src/@core/components/mui/avatar'
 import { Typography, Button, Card, CardHeader, Box, Chip, Tooltip, IconButton } from '@mui/material'
 import useBgColor from 'src/@core/hooks/useBgColor'
-import { MapModal } from 'src/components'
+import { MapModal, MessageModal } from 'src/components'
 import Icon from 'src/@core/components/icon'
 
 import { useState } from 'react'
@@ -28,8 +28,12 @@ const OrderRequestTable = ({
   })
 
   const [open, setOpen] = useState(false)
+  const [openMessageModal, setOpenMessageModal] = useState(false)
+  const [message, setMessage] = useState('')
 
   const handleClose = () => setOpen(false)
+
+  const handleMessageModal = () => setOpenMessageModal(false)
 
   const colors = {
     primary: { ...bgColors.primaryLight },
@@ -101,9 +105,14 @@ const OrderRequestTable = ({
         const { row } = params
 
         return (
-          <Tooltip placeholder='top' title={row?.message}>
-            <Box sx={{ textOverflow: 'inherit' }}>{row?.message}</Box>
-          </Tooltip>
+          <Button
+            onClick={() => {
+              setMessage(row?.message)
+              setOpenMessageModal(true)
+            }}
+          >
+            Show Message
+          </Button>
         )
       }
     },
@@ -195,6 +204,7 @@ const OrderRequestTable = ({
 
   return (
     <>
+      <MessageModal key={openMessageModal} open={openMessageModal} handleClose={handleMessageModal} message={message} />
       <MapModal key={open} open={open} handleClose={handleClose} destination={destination} origin={origin} />
       <Card sx={{ width: '100%' }}>
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>

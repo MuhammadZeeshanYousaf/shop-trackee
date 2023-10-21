@@ -12,6 +12,7 @@ import Map from './Map'
 import CustomerProductCard from './cards/CustomerProductCard'
 import OrderRequestModal from './modals/OrderRequestModal'
 import MapModal from './modals/MapModal'
+import MessageModal from './modals/MessageModal'
 
 export {
   showErrorMessage,
@@ -29,5 +30,6 @@ export {
   Map,
   CustomerProductCard,
   OrderRequestModal,
-  MapModal
+  MapModal,
+  MessageModal
 }

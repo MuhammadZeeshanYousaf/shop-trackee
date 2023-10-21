@@ -19,12 +19,10 @@ import {
 } from '@mui/material'
 import { useState, useRef, useCallback, useEffect } from 'react'
 import useMediaQuery from '@mui/material/useMediaQuery'
-import { styled, useTheme } from '@mui/material/styles'
-import MuiAutocomplete from '@mui/material/Autocomplete'
+import { useTheme } from '@mui/material/styles'
 import Webcam from 'react-webcam'
 import { useRouter } from 'next/router'
 import { useCoordinates, useLoader } from 'src/hooks'
-import { Network, Url } from 'src/configs'
 import { showWarningMessage } from 'src/components'
 
 const AppBarContent = props => {
@@ -36,7 +34,7 @@ const AppBarContent = props => {
   const { settings, saveSettings } = props
   const user = JSON.parse(localStorage.getItem('userData'))
   const [openDialog, setOpenDialog] = useState(false)
-  const fullScreenDialog = useMediaQuery(theme.breakpoints.down('sm'))
+  const fullScreenDialog = useMediaQuery(theme.breakpoints.down('lg'))
   const webcamRef = useRef(null)
   const [searchValue, setSearchValue] = useState('')
   const [distance, setDistance] = useState(0)
@@ -53,11 +51,6 @@ const AppBarContent = props => {
   const switchCamera = useCallback(() => {
     setFacingMode(prevState => (prevState === FACING_MODE_USER ? FACING_MODE_ENVIRONMENT : FACING_MODE_USER))
   }, [])
-
-  // const capture = useCallback(() => {
-  //   const imageSrc = webcamRef.current.getScreenshot()
-  //   setImageSrc(imageSrc)
-  // }, [webcamRef])
 
   const search = async text => {
     if (text == 'searchByImage') {
@@ -106,13 +99,7 @@ const AppBarContent = props => {
 
   return (
     <>
-      <Dialog
-        fullWidth
-        open={openDialog}
-        fullScreen={fullScreenDialog}
-        sx={{ p: 5 }}
-        onClose={() => setOpenDialog(false)}
-      >
+      <Dialog fullWidth open={openDialog} maxWidth={'md'} sx={{ p: 5 }} onClose={() => setOpenDialog(false)}>
         <Box sx={{ top: 0, width: '100%' }}>
           <Grid container sx={{ p: 5 }}>
             <Grid item xs={12}>
