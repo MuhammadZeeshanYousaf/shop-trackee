@@ -60,16 +60,16 @@ export default {
   customeDashboard: (distance, longitude, latitude) =>
     `/customer/home?distance=${distance}&latitude=${latitude}&longitude=${longitude}`,
 
-  search: (q, distance, longitude, latitude) =>
-    `/search?q=${q}&distance=${distance}&longitude=${longitude}&latitude=${latitude}`,
+  search: (q, distance, longitude, latitude, price_order) =>
+    `/search?q=${q}&distance=${distance}&longitude=${longitude}&latitude=${latitude}&price_order=${price_order}`,
 
   searhWithImage: '/search',
 
-  viewAllProducts: (latitude, longitude, distance, product_page, shop_page) =>
-    `/search_all?type=product&latitude=${latitude}&longitude=${longitude}&distance=${distance}&product_page=${product_page}&shop_page=${shop_page}`,
+  viewAllProducts: (latitude, longitude, distance, product_page, shop_page, price_order) =>
+    `/search_all?type=product&latitude=${latitude}&longitude=${longitude}&distance=${distance}&product_page=${product_page}&shop_page=${shop_page}&price_order=${price_order}`,
 
-  viewAllServices: (latitude, longitude, distance, service_page) =>
-    `/search_all?type=service&latitude=${latitude}&longitude=${longitude}&distance=${distance}&service_page=${service_page}`,
+  viewAllServices: (latitude, longitude, distance, service_page, price_order) =>
+    `/search_all?type=service&latitude=${latitude}&longitude=${longitude}&distance=${distance}&service_page=${service_page}$price_order=${price_order}`,
 
   // create order request
 
@@ -98,6 +98,6 @@ export default {
 
   // Search by category
 
-  searchByCategory: (category, latitude, longitude, distance, product_page, service_page) =>
-    `/search_by_category?q=${category}&latitude=${latitude}&longitude=${longitude}&distance=${distance}&product_page=${product_page}&service_page=${service_page}&shop_page=1`
+  searchByCategory: (category, latitude, longitude, distance, product_page, service_page, price_order) =>
+    `/search_by_category?q=${category}&latitude=${latitude}&longitude=${longitude}&distance=${distance}&product_page=${product_page}&service_page=${service_page}&shop_page=1&price_order=${price_order}`
 }
