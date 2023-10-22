@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { Grid, Typography, Box, Pagination } from '@mui/material'
+import { Grid, Typography, Box, Pagination, FormControl, InputLabel, Select, MenuItem } from '@mui/material'
 import { Network, Url, multipartConfig } from 'src/configs'
 import { useLoader } from 'src/hooks'
 import { useRouter } from 'next/router'
@@ -39,12 +39,14 @@ const SearchbyCategory = () => {
   const [serviceTotalPages, setServiceTotalPages] = useState(0)
   const [currentServicePage, setCurrentServicePage] = useState(1)
 
+  const [priceOrder, setPriceOrder] = useState(null)
+
   const { setLoader } = useLoader()
 
   const getData = async () => {
     setLoader(true)
     const response = await Network.get(
-      Url.searchByCategory(q, latitude, longitude, distance, currentProductPage, currentServicePage)
+      Url.searchByCategory(q, latitude, longitude, distance, currentProductPage, currentServicePage, priceOrder)
     )
     setLoader(false)
     setProducts(response.data.product.data)
@@ -79,10 +81,24 @@ const SearchbyCategory = () => {
 
   useEffect(() => {
     getData()
-  }, [currentProductPage, currentServicePage])
+  }, [currentProductPage, currentServicePage, priceOrder])
 
   return (
     <div>
+      <FormControl size='small'>
+        <InputLabel id='invoice-status-select'>Sort By Price</InputLabel>
+        <Select
+          sx={{ pr: 4 }}
+          value={priceOrder}
+          label='Invoice Status'
+          labelId='invoice-status-select'
+          onChange={e => setPriceOrder(e.target.value)}
+        >
+          <MenuItem value='asc'>Low to High</MenuItem>
+          <MenuItem value='desc'>High to Low</MenuItem>
+        </Select>
+      </FormControl>
+
       <Typography sx={{ mt: 5 }} variant='h2'>
         Products
       </Typography>

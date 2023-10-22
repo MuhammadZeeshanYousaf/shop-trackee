@@ -98,6 +98,6 @@ export default {
 
   // Search by category
 
-  searchByCategory: (category, latitude, longitude, distance, product_page, service_page) =>
-    `/search_by_category?q=${category}&latitude=${latitude}&longitude=${longitude}&distance=${distance}&product_page=${product_page}&service_page=${service_page}&shop_page=1`
+  searchByCategory: (category, latitude, longitude, distance, product_page, service_page, price_order) =>
+    `/search_by_category?q=${category}&latitude=${latitude}&longitude=${longitude}&distance=${distance}&product_page=${product_page}&service_page=${service_page}&shop_page=1&price_order=${price_order}`
 }
