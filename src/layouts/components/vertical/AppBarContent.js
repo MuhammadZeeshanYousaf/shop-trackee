@@ -226,9 +226,18 @@ const AppBarContent = props => {
         </Box>
       </Dialog>
       <Box sx={{ width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-        <Box className='actions-left' sx={{ display: 'flex', alignItems: 'center' }}>
+        <Box
+          className='actions-left'
+          sx={{
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'flex-start',
+            textAlign: 'left',
+            marginRight: 1
+          }}
+        >
           <LinkStyled href='/'>
-            <img style={{ width: '30px', height: '30px' }} src={'/images/app-icon.svg'} />
+            <img style={{ width: '40px', borderRight: 'black 1px' }} alt='logo' src={'/images/app-icon.svg'} />
           </LinkStyled>
           {/* {hidden ? (
             <IconButton color='inherit' sx={{ ml: -3.75 }} onClick={toggleNavVisibility}>
