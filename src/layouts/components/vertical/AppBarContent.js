@@ -235,14 +235,13 @@ const AppBarContent = props => {
               <Icon fontSize='1.5rem' icon='tabler:menu-2' />
             </IconButton>
           ) : null} */}
-          {user?.role == 'customer' ? <NotificationDropdown settings={settings} /> : null}
-
-          <ModeToggler settings={settings} saveSettings={saveSettings} />
-          <IconButton color='inherit' sx={{ ml: -1.75  }} onClick={() => setOpenDialog(true)}>
-            <Icon fontSize='1.5rem' icon='tabler:search' />
-          </IconButton>
         </Box>
         <Box className='actions-right' sx={{ display: 'flex', alignItems: 'center' }}>
+          {user?.role == 'customer' ? <NotificationDropdown settings={settings} /> : null}
+          <ModeToggler settings={settings} saveSettings={saveSettings} />
+          <IconButton color='inherit' sx={{ ml: -1.75 }} onClick={() => setOpenDialog(true)}>
+            <Icon fontSize='1.5rem' icon='tabler:search' />
+          </IconButton>
           <UserDropdown settings={settings} />
         </Box>
       </Box>
