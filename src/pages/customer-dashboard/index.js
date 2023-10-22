@@ -115,7 +115,7 @@ const CustomerDashboard = () => {
           <Typography variant='h4'>Products</Typography>
           <div style={{ display: 'flex', alignItems: 'center' }}>
             <InputLabel sx={{ mr: 1 }}></InputLabel>
-            <FormControl>
+            <FormControl size='small'>
               <InputLabel sx={{ mr: 1 }} id='demo-simple-select-label'>
                 Category
               </InputLabel>
@@ -127,13 +127,16 @@ const CustomerDashboard = () => {
                 onChange={e => search(e.target.value)}
               >
                 <MenuItem value=''>Category</MenuItem>
-                {productCategories.map(category => (
-                  <MenuItem value={category}>{category}</MenuItem>
+                {productCategories.map((category, index) => (
+                  <MenuItem key={index} value={category}>
+                    {category}
+                  </MenuItem>
                 ))}
               </Select>
             </FormControl>
             <Button
-              size='large'
+              size='medium'
+              sx={{ pr: 0, pl: 0.5 }}
               onClick={() =>
                 router.push(
                   `/fetch-products?longitude=${longitude}&latitude=${latitude}&distance=${distance}&product_page=1`
@@ -148,8 +151,8 @@ const CustomerDashboard = () => {
         <CardContent>
           <Grid container spacing={5}>
             {products?.map((product, i) => (
-              <Grid item xs={12} sm={6} md={4}>
-                <CustomerProductCard product={product} key={i} handleFavourite={addToFavourite} />
+              <Grid key={i} item xs={12} sm={6} md={4}>
+                <CustomerProductCard product={product} handleFavourite={addToFavourite} />
               </Grid>
             ))}
           </Grid>
@@ -172,7 +175,7 @@ const CustomerDashboard = () => {
           <div style={{ display: 'flex', alignItems: 'center' }}>
             <InputLabel sx={{ mr: 1 }}></InputLabel>
 
-            <FormControl>
+            <FormControl size='small'>
               <InputLabel sx={{ mr: 1 }} id='demo-simple-select-label'>
                 Category
               </InputLabel>
@@ -183,13 +186,16 @@ const CustomerDashboard = () => {
                 onChange={e => search(e.target.value)}
               >
                 <MenuItem value=''>Category</MenuItem>
-                {serviceCategories.map(category => (
-                  <MenuItem value={category}>{category}</MenuItem>
+                {serviceCategories.map((category, i) => (
+                  <MenuItem key={i} value={category}>
+                    {category}
+                  </MenuItem>
                 ))}
               </Select>
             </FormControl>
             <Button
-              size='large'
+              size='medium'
+              sx={{ pr: 0, pl: 0.5 }}
               onClick={() =>
                 router.push(
                   `/fetch-services?longitude=${longitude}&latitude=${latitude}&distance=${distance}&service_page=1`
@@ -203,14 +209,8 @@ const CustomerDashboard = () => {
         <CardContent>
           <Grid container spacing={5}>
             {services?.map((service, i) => (
-              <Grid xs={12} lg={6} item>
-                <ServiceCard
-                  handleFavourite={addToFavourite}
-                  service={service}
-                  key={i}
-                  deleteService={() => {}}
-                  shopId={1}
-                />
+              <Grid key={i} xs={12} lg={6} item>
+                <ServiceCard handleFavourite={addToFavourite} service={service} deleteService={() => {}} shopId={1} />
               </Grid>
             ))}
           </Grid>
