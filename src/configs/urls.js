@@ -60,8 +60,8 @@ export default {
   customeDashboard: (distance, longitude, latitude) =>
     `/customer/home?distance=${distance}&latitude=${latitude}&longitude=${longitude}`,
 
-  search: (q, distance, longitude, latitude) =>
-    `/search?q=${q}&distance=${distance}&longitude=${longitude}&latitude=${latitude}`,
+  search: (q, distance, longitude, latitude, price_order) =>
+    `/search?q=${q}&distance=${distance}&longitude=${longitude}&latitude=${latitude}&price_order=${price_order}`,
 
   searhWithImage: '/search',
 

@@ -1,4 +1,4 @@
-import { Grid, Typography, Box, Pagination } from '@mui/material'
+import { Grid, Typography, Box, Pagination, FormControl, InputLabel, Select, MenuItem } from '@mui/material'
 import { useRouter } from 'next/router'
 import { useEffect, useState } from 'react'
 import { Network, Url, multipartConfig } from 'src/configs'
@@ -34,6 +34,7 @@ const SearchResult = () => {
   const [products, setProducts] = useState([])
   const [services, setServices] = useState([])
   const [shops, setShops] = useState([])
+  const [priceOrder, setPriceOrder] = useState(null)
 
   const [productTotalPages, setProductTotalPages] = useState(0)
   const [currentProductPage, setCurrentProductPage] = useState(1)
@@ -44,7 +45,7 @@ const SearchResult = () => {
   const { setLoader } = useLoader()
   const getData = async () => {
     setLoader(true)
-    const response = await Network.get(Url.search(q, distance, longitude, latitude))
+    const response = await Network.get(Url.search(q, distance, longitude, latitude, priceOrder))
     setLoader(false)
     setProducts(response.data.product.data)
     setProductTotalPages(response.data.product.total_pages)
@@ -58,7 +59,8 @@ const SearchResult = () => {
       q: decodeURIComponent(q),
       distance,
       longitude,
-      latitude
+      latitude,
+      price_order: priceOrder
     }
     setLoader(true)
     const response = await Network.post(Url.searhWithImage, payload)
@@ -96,10 +98,24 @@ const SearchResult = () => {
   useEffect(() => {
     if (method == 'get') getData()
     if (method == 'post') getImageSearchData()
-  }, [currentProductPage, currentServicePage, q, distance, longitude, latitude, method])
+  }, [currentProductPage, currentServicePage, q, distance, longitude, latitude, method, priceOrder])
 
   return (
     <div>
+      <FormControl size='small'>
+        <InputLabel id='invoice-status-select'>Sort By Price</InputLabel>
+        <Select
+          sx={{ pr: 4 }}
+          value={priceOrder}
+          label='Invoice Status'
+          labelId='invoice-status-select'
+          onChange={e => setPriceOrder(e.target.value)}
+        >
+          <MenuItem value='asc'>Low to High</MenuItem>
+          <MenuItem value='desc'>High to Low</MenuItem>
+        </Select>
+      </FormControl>
+
       <Typography sx={{ mt: 5 }} variant='h2'>
         Products
       </Typography>
