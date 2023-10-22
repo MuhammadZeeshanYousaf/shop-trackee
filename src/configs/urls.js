@@ -3,6 +3,7 @@ export default {
   updateUser: '/user',
   sendPasswordResetLink: '/user/send_password_reset_link',
   resetPassword: token => `/user/reset_password/${token}`,
+  updatePassword: '/user/update_password',
   shop: page => `/shops?page=${page}`,
 
   getShops: '/shops',

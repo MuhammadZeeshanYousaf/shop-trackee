@@ -48,7 +48,7 @@ const UserProfile = ({ user }) => {
 
   return (
     <Grid container spacing={6}>
-      <Grid item lg={4} md={5} xs={12}>
+      <Grid item xs={12}>
         <AboutOverivew about={data.about} contacts={data.contacts} overview={data.overview} />
       </Grid>
     </Grid>
