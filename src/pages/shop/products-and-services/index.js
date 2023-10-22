@@ -1,4 +1,4 @@
-import { Box, Grid, MenuItem, Select, FormControl, InputLabel, Pagination } from '@mui/material'
+import { Box, Grid, MenuItem, Select, FormControl, InputLabel, Pagination, Button } from '@mui/material'
 import SplitButton from './SplitButton'
 import { useRouter } from 'next/router'
 import { useLoader } from 'src/hooks'
@@ -7,11 +7,10 @@ import { showErrorMessage, showSuccessMessage } from 'src/components'
 import { useEffect, useState } from 'react'
 import ProductCard from './ProductCard'
 import ServiceCard from './ServiceCard'
-import Link from 'next/link'
-import { styled } from '@mui/material/styles'
+import Icon from 'src/@core/components/icon'
 
 const ProductandServices = () => {
-  const { query } = useRouter()
+  const { query, push } = useRouter()
   const { setLoader } = useLoader()
   const [currentProductPage, setCurrentProductPage] = useState(1)
   const [totalProductpages, setTotalProductpages] = useState(1)
@@ -73,17 +72,12 @@ const ProductandServices = () => {
     setCurrentServicepage(value)
   }
 
-  const LinkStyled = styled(Link)(({ theme }) => ({
-    display: 'flex',
-    alignItems: 'center',
-    textDecoration: 'none',
-    marginRight: theme.spacing(8)
-  }))
-
   return (
     <>
       <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-        <LinkStyled href='/shop'>Back</LinkStyled>
+        <Button onClick={() => push('/shop')} variant='outlined' startIcon={<Icon icon='tabler:arrow-narrow-left' />}>
+          Back
+        </Button>
         <SplitButton shopId={query.shopId} />
       </Box>
 
