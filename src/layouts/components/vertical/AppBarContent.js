@@ -9,6 +9,7 @@ import Icon from 'src/@core/components/icon'
 // ** Components
 import ModeToggler from 'src/@core/layouts/components/shared-components/ModeToggler'
 import UserDropdown from 'src/@core/layouts/components/shared-components/UserDropdown'
+import Link from 'next/link'
 
 //Custom imports
 
@@ -44,6 +45,12 @@ const AppBarContent = props => {
   const videoConstraints = {
     facingMode: FACING_MODE_USER
   }
+
+  const LinkStyled = styled(Link)({
+    display: 'flex',
+    alignItems: 'center',
+    textDecoration: 'none'
+  })
 
   const switchCamera = useCallback(() => {
     setFacingMode(prevState => (prevState === FACING_MODE_USER ? FACING_MODE_ENVIRONMENT : FACING_MODE_USER))
@@ -219,7 +226,10 @@ const AppBarContent = props => {
         </Box>
       </Dialog>
       <Box sx={{ width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-        <Box className='actions-left' sx={{ mr: 2, display: 'flex', alignItems: 'center' }}>
+        <Box className='actions-left' sx={{ display: 'flex', alignItems: 'center' }}>
+          <LinkStyled href='/'>
+            <img style={{ width: '30px', height: '30px' }} src={'/images/app-icon.svg'} />
+          </LinkStyled>
           {/* {hidden ? (
             <IconButton color='inherit' sx={{ ml: -3.75 }} onClick={toggleNavVisibility}>
               <Icon fontSize='1.5rem' icon='tabler:menu-2' />
@@ -228,7 +238,7 @@ const AppBarContent = props => {
           {user?.role == 'customer' ? <NotificationDropdown settings={settings} /> : null}
 
           <ModeToggler settings={settings} saveSettings={saveSettings} />
-          <IconButton color='inherit' sx={{ ml: -1.75 }} onClick={() => setOpenDialog(true)}>
+          <IconButton color='inherit' sx={{ ml: -1.75  }} onClick={() => setOpenDialog(true)}>
             <Icon fontSize='1.5rem' icon='tabler:search' />
           </IconButton>
         </Box>
