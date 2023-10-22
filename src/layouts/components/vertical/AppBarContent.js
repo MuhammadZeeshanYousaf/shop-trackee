@@ -220,11 +220,11 @@ const AppBarContent = props => {
       </Dialog>
       <Box sx={{ width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
         <Box className='actions-left' sx={{ mr: 2, display: 'flex', alignItems: 'center' }}>
-          {hidden ? (
+          {/* {hidden ? (
             <IconButton color='inherit' sx={{ ml: -3.75 }} onClick={toggleNavVisibility}>
               <Icon fontSize='1.5rem' icon='tabler:menu-2' />
             </IconButton>
-          ) : null}
+          ) : null} */}
           {user?.role == 'customer' ? <NotificationDropdown settings={settings} /> : null}
 
           <ModeToggler settings={settings} saveSettings={saveSettings} />
