@@ -70,7 +70,7 @@ const renderTeams = arr => {
 }
 
 const AboutOverivew = props => {
-  const {  about, contacts, overview } = props
+  const { about, contacts, overview } = props
 
   return (
     <Grid container spacing={6}>
