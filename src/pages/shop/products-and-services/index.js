@@ -7,6 +7,8 @@ import { showErrorMessage, showSuccessMessage } from 'src/components'
 import { useEffect, useState } from 'react'
 import ProductCard from './ProductCard'
 import ServiceCard from './ServiceCard'
+import Link from 'next/link'
+import { styled } from '@mui/material/styles'
 
 const ProductandServices = () => {
   const { query } = useRouter()
@@ -71,9 +73,17 @@ const ProductandServices = () => {
     setCurrentServicepage(value)
   }
 
+  const LinkStyled = styled(Link)(({ theme }) => ({
+    display: 'flex',
+    alignItems: 'center',
+    textDecoration: 'none',
+    marginRight: theme.spacing(8)
+  }))
+
   return (
     <>
-      <Box sx={{ display: 'flex', justifyContent: 'end' }}>
+      <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+        <LinkStyled href='/shop'>Back</LinkStyled>
         <SplitButton shopId={query.shopId} />
       </Box>
 
