@@ -65,11 +65,11 @@ export default {
 
   searhWithImage: '/search',
 
-  viewAllProducts: (latitude, longitude, distance, product_page, shop_page) =>
-    `/search_all?type=product&latitude=${latitude}&longitude=${longitude}&distance=${distance}&product_page=${product_page}&shop_page=${shop_page}`,
+  viewAllProducts: (latitude, longitude, distance, product_page, shop_page, price_order) =>
+    `/search_all?type=product&latitude=${latitude}&longitude=${longitude}&distance=${distance}&product_page=${product_page}&shop_page=${shop_page}&price_order=${price_order}`,
 
-  viewAllServices: (latitude, longitude, distance, service_page) =>
-    `/search_all?type=service&latitude=${latitude}&longitude=${longitude}&distance=${distance}&service_page=${service_page}`,
+  viewAllServices: (latitude, longitude, distance, service_page, price_order) =>
+    `/search_all?type=service&latitude=${latitude}&longitude=${longitude}&distance=${distance}&service_page=${service_page}$price_order=${price_order}`,
 
   // create order request
 
