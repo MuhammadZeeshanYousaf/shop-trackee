@@ -5,6 +5,7 @@ import { styled } from '@mui/material/styles'
 import Typography from '@mui/material/Typography'
 import CardContent from '@mui/material/CardContent'
 import { useRouter } from 'next/router'
+import appConfig from 'src/configs/appConfig'
 
 const Illustration = styled('img')(({ theme }) => ({
   right: 20,
@@ -23,10 +24,10 @@ const WelcomeCard = () => {
   return (
     <Card sx={{ position: 'relative' }}>
       <CardContent>
-        <Typography variant='h5' sx={{ mb: 0.5 }}>
+        <Typography variant='h5' sx={{ mb: 0.5 }} color={'primary.dark'}>
           Welcome {user?.name}
         </Typography>
-        <Typography sx={{ color: 'text.secondary' }}>to Shop Trackee</Typography>
+        <Typography sx={{ color: 'text.secondary' }}>to {appConfig.appName}</Typography>
 
         <Typography variant='h4' sx={{ color: 'primary.main' }}>
           &nbsp;
