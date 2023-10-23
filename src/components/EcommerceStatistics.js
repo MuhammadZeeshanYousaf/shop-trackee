@@ -66,11 +66,7 @@ const EcommerceStatistics = ({ shopStats }) => {
       <CardHeader
         title='Statistics'
         sx={{ '& .MuiCardHeader-action': { m: 0, alignSelf: 'center' } }}
-        action={
-          <Typography variant='body2' sx={{ color: 'text.disabled' }}>
-            Updated 1 month ago
-          </Typography>
-        }
+        action={<Typography variant='body2' sx={{ color: 'text.disabled' }}></Typography>}
       />
       <CardContent
         sx={{ pt: theme => `${theme.spacing(7)} !important`, pb: theme => `${theme.spacing(7.5)} !important` }}

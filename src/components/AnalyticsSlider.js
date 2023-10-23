@@ -11,20 +11,21 @@ import { useTheme } from '@mui/material/styles'
 
 // ** Custom Components Imports
 import CustomAvatar from 'src/@core/components/mui/avatar'
+import appConfig from 'src/configs/appConfig'
 
 const AnalyticsSlider = ({ stats }) => {
   const user = JSON.parse(localStorage.getItem('userData'))
   const theme = useTheme()
 
   return (
-    <Card sx={{ position: 'relative', backgroundColor: 'primary.main' }}>
+    <Card sx={{ position: 'relative', backgroundColor: '' }}>
       <Box className='keen-slider'>
-        <Box className='keen-slider__slide' sx={{ p: 6, '& .MuiTypography-root': { color: 'common.white' } }}>
-          <Typography variant='h5' sx={{ mb: 0.5 }}>
+        <Box className='keen-slider__slide' sx={{ p: 6, '& .MuiTypography-root': { color: '' } }}>
+          <Typography variant='h5' sx={{ mb: 0.5 }} color={'primary.dark'}>
             Lets explore {user?.name}
           </Typography>
           <Typography variant='body2' sx={{ mb: 4.5 }}>
-            to Shop Trackee
+            in {appConfig.appName}
           </Typography>
           <Grid container>
             <Grid item xs={12} sm={8} sx={{ order: [2, 1] }}>
@@ -43,7 +44,7 @@ const AnalyticsSlider = ({ stats }) => {
                         height: 30,
                         fontWeight: 500,
                         color: 'common.white',
-                        backgroundColor: 'primary.dark'
+                        backgroundColor: 'primary.main'
                       }}
                     >
                       {stats?.delivered}
@@ -62,7 +63,7 @@ const AnalyticsSlider = ({ stats }) => {
                         height: 30,
                         fontWeight: 500,
                         color: 'common.white',
-                        backgroundColor: 'primary.dark'
+                        backgroundColor: 'primary.main'
                       }}
                     >
                       {stats?.pending}
@@ -81,7 +82,7 @@ const AnalyticsSlider = ({ stats }) => {
                         height: 30,
                         fontWeight: 500,
                         color: 'common.white',
-                        backgroundColor: 'primary.dark'
+                        backgroundColor: 'primary.main'
                       }}
                     >
                       {stats?.searches}
@@ -100,7 +101,7 @@ const AnalyticsSlider = ({ stats }) => {
                         height: 30,
                         fontWeight: 500,
                         color: 'common.white',
-                        backgroundColor: 'primary.dark'
+                        backgroundColor: 'primary.main'
                       }}
                     >
                       {stats?.rejected}

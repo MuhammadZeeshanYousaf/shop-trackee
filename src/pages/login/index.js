@@ -179,7 +179,7 @@ const LoginPage = () => {
                 d='M7.77295 16.3566L23.6563 0H32V6.88383C32 6.88383 31.8262 9.17836 30.6591 10.4057L19.7824 22H13.6938L7.77295 16.3566Z'
               />
             </svg> */}
-            <img src='/images/outside-app-icon.svg' />
+            <img src='/images/outside-app-icon.svg' alt='logo' />
             <Box sx={{ my: 6 }}>
               <Typography variant='h3' sx={{ mb: 1.5 }}>
                 {`Welcome to ${appConfig.appName}!`}
@@ -268,7 +268,7 @@ const LoginPage = () => {
                   Create an account
                 </Typography>
               </Box>
-              <Divider
+              {/* <Divider
                 sx={{
                   color: 'text.disabled',
                   '& .MuiDivider-wrapper': { px: 6 },
@@ -296,7 +296,7 @@ const LoginPage = () => {
                 <IconButton href='/' component={Link} sx={{ color: '#db4437' }} onClick={e => e.preventDefault()}>
                   <Icon icon='mdi:google' />
                 </IconButton>
-              </Box>
+              </Box> */}
             </form>
           </Box>
         </Box>

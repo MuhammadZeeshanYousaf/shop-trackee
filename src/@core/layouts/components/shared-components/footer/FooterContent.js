@@ -6,6 +6,7 @@ import Box from '@mui/material/Box'
 import { styled } from '@mui/material/styles'
 import Typography from '@mui/material/Typography'
 import useMediaQuery from '@mui/material/useMediaQuery'
+import appConfig from 'src/configs/appConfig'
 
 const StyledCompanyName = styled(Link)(({ theme }) => ({
   fontWeight: 500,
@@ -30,7 +31,7 @@ const FooterContent = () => {
       <Typography sx={{ mr: 2, display: 'flex', color: 'text.secondary' }}>
         {`© ${new Date().getFullYear()}, All Rights Reserved By`}
         <Typography sx={{ ml: 1 }} target='_blank' href='/' component={StyledCompanyName}>
-          Shop Trackee
+          {appConfig.appName}
         </Typography>
       </Typography>
       {hidden ? null : (
