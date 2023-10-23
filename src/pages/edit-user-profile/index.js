@@ -117,7 +117,7 @@ const EditUserProfile = () => {
     setValue('newsletter_subscribed', response.data.resource_owner.newsletter_subscribed)
 
     if (response.data.resource_owner?.avatar) {
-      setImgSrc(`${process.env.NEXT_PUBLIC_API_HOST_URL}/${response.data.resource_owner?.avatar}`)
+      setImgSrc(`${process.env.NEXT_PUBLIC_IMAGE_URL}/${response.data.resource_owner?.avatar}`)
     }
   }
 

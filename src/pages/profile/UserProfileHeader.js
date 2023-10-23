@@ -59,7 +59,7 @@ const UserProfileHeader = ({ user }) => {
         }}
       >
         {user?.avatar ? (
-          <ProfilePicture src={`${process.env.NEXT_PUBLIC_API_HOST_URL}${user?.avatar}`} alt='profile-picture' />
+          <ProfilePicture src={`${process.env.NEXT_PUBLIC_IMAGE_URL}${user?.avatar}`} alt='profile-picture' />
         ) : (
           <MuiAvatar variant='rounded' sx={{ width: 108, height: 108, bgcolor: theme.palette.secondary }}>
             {user?.name[0]?.toUpperCase()}
