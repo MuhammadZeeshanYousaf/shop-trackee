@@ -99,7 +99,7 @@ const EditProfile = () => {
     setValue('intro', response.data.resource_owner.intro)
 
     if (response.data.resource_owner?.avatar) {
-      setImgSrc(`${process.env.NEXT_PUBLIC_API_HOST_URL}/${response.data.resource_owner?.avatar}`)
+      setImgSrc(`${process.env.NEXT_PUBLIC_IMAGE_URL}/${response.data.resource_owner?.avatar}`)
     }
   }
 

@@ -105,7 +105,7 @@ const UserDropdown = props => {
         {user?.avatar ? (
           <Avatar
             alt={user?.name}
-            src={`${process.env.NEXT_PUBLIC_API_HOST_URL}${user?.avatar}`}
+            src={`${process.env.NEXT_PUBLIC_IMAGE_URL}${user?.avatar}`}
             sx={{ width: 38, height: 38, cursor: 'pointer', ml: 1 }}
           />
         ) : (
@@ -134,7 +134,7 @@ const UserDropdown = props => {
             {user?.avatar ? (
               <Avatar
                 alt={user?.name}
-                src={`${process.env.NEXT_PUBLIC_API_HOST_URL}${user?.avatar}`}
+                src={`${process.env.NEXT_PUBLIC_IMAGE_URL}${user?.avatar}`}
                 sx={{ width: '2.5rem', height: '2.5rem' }}
               />
             ) : (
