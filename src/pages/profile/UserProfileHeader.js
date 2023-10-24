@@ -70,7 +70,7 @@ const UserProfileHeader = ({ user }) => {
             width: '100%',
             display: 'flex',
             ml: { xs: 0, md: 6 },
-            alignItems: 'flex-end',
+            alignItems: 'center',
             flexWrap: ['wrap', 'nowrap'],
             justifyContent: ['center', 'space-between']
           }}
@@ -96,9 +96,11 @@ const UserProfileHeader = ({ user }) => {
               </Box>
             </Box>
           </Box>
-          <Button variant='contained' sx={{ '& svg': { mr: 2 } }} onClick={() => handleEditProfile()}>
-            Edit Profile
-          </Button>
+          <Box minWidth={200} textAlign={'center'}>
+            <Button variant='contained' sx={{ '& svg': { mr: 2 } }} onClick={() => handleEditProfile()}>
+              Edit Profile
+            </Button>
+          </Box>
         </Box>
       </CardContent>
     </Card>
