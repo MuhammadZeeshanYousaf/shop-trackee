@@ -43,7 +43,7 @@ const ServiceForm = () => {
   const [facingMode, setFacingMode] = useState(FACING_MODE_ENVIRONMENT)
 
   const videoConstraints = {
-    facingMode: FACING_MODE_USER
+    facingMode: FACING_MODE_ENVIRONMENT
   }
 
   const schema = yup.object().shape({
