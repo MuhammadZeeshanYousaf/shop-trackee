@@ -34,7 +34,7 @@ const ProductForm = () => {
   const FACING_MODE_ENVIRONMENT = 'environment'
 
   const videoConstraints = {
-    facingMode: FACING_MODE_USER
+    facingMode: FACING_MODE_ENVIRONMENT
   }
 
   const [product, setProduct] = useState(null)

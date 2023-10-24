@@ -42,10 +42,10 @@ const AppBarContent = props => {
 
   const FACING_MODE_USER = 'user'
   const FACING_MODE_ENVIRONMENT = 'environment'
-  const [facingMode, setFacingMode] = useState(FACING_MODE_USER)
+  const [facingMode, setFacingMode] = useState(FACING_MODE_ENVIRONMENT)
 
   const videoConstraints = {
-    facingMode: FACING_MODE_USER
+    facingMode: FACING_MODE_ENVIRONMENT
   }
 
   const switchCamera = useCallback(() => {

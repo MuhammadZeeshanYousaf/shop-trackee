@@ -41,7 +41,7 @@ const EditProduct = () => {
   const FACING_MODE_ENVIRONMENT = 'environment'
 
   const videoConstraints = {
-    facingMode: FACING_MODE_USER
+    facingMode: FACING_MODE_ENVIRONMENT
   }
   const [facingMode, setFacingMode] = useState(FACING_MODE_ENVIRONMENT)
 
