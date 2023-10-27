@@ -24,7 +24,13 @@ import Icon from 'src/@core/components/icon'
 import { geocodeByPlaceId } from 'react-google-places-autocomplete'
 import GooglePlacesAutocomplete from 'react-google-places-autocomplete'
 import { Network, Url } from '../../configs'
-import { showErrorMessage, showSuccessMessage, CustomInput, DatePickerWrapper } from '../../components'
+import {
+  showErrorMessage,
+  showSuccessMessage,
+  CustomInput,
+  DatePickerWrapper,
+  showWarningMessage
+} from '../../components'
 import { useLoader } from '../../hooks'
 import { Map } from '../../components'
 
@@ -105,6 +111,7 @@ const Form = () => {
       if (changeId == item.id) {
         return { ...item, link: value }
       }
+
       return item
     })
 
@@ -116,11 +123,24 @@ const Form = () => {
     socialLinks.forEach(item => {
       social_links.push(item.link)
     })
+
     const payload = {
       ...data,
       social_links,
       longitude: longitude,
       latitude: latitude
+    }
+
+    if (payload.opening_time > payload.closing_time || payload.opening_time === payload.closing_time) {
+      showErrorMessage('Opening and Closing Time are invalid')
+
+      return
+    }
+
+    if (payload.latitude === null || payload.longitude === null) {
+      showWarningMessage('Please select Shop address or allow your location')
+
+      return
     }
 
     const request = mode == 'Add' ? 'post' : 'put'
