@@ -45,7 +45,7 @@ const BlankLayoutAppBar = () => {
         }}
       >
         <LinkStyled href='/'>
-          <img src={'/images/app-icon.svg'} />
+          <img src={'/images/app-icon.svg'} alt='logo' />
           <Typography variant='h4' sx={{ ml: 2.5, fontWeight: 700, lineHeight: '24px' }}>
             {appConfig.appName}
           </Typography>
