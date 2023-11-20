@@ -165,6 +165,20 @@ const Profile = () => {
               </CardContent>
             </Card>
           </Grid>
+          <Grid item xs={12} md={5}>
+            <Card>
+              <CardHeader
+                title={
+                  <Typography style={{ fontSize: '13px' }} color={'secondary'}>
+                    SCAN TO DOWNLOAD ANDROID APP
+                  </Typography>
+                }
+              />
+              <CardContent style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+                <img src={'/images/shop-trackee-qr.svg'} width='240px' alt='android-qr' />
+              </CardContent>
+            </Card>
+          </Grid>
         </Grid>
       </Grid>
     </Grid>
