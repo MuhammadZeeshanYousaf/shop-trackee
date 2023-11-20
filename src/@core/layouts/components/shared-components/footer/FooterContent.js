@@ -36,12 +36,12 @@ const FooterContent = () => {
       </Typography>
       {hidden ? null : (
         <Box sx={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', '& :not(:last-child)': { mr: 4 } }}>
-          <Typography target='_blank' component={LinkStyled} href='#'>
+          {/* <Typography target='_blank' component={LinkStyled} href='#'>
             Documentation
           </Typography>
           <Typography target='_blank' component={LinkStyled} href='#'>
             Support
-          </Typography>
+          </Typography> */}
         </Box>
       )}
     </Box>
