@@ -96,7 +96,7 @@ const ExploreShop = () => {
         {products?.length > 0 ? (
           products?.map((product, i) => {
             return (
-              <Grid item xs={12} sm={6} md={4}>
+              <Grid key={i} item xs={12} sm={6} md={4}>
                 <CustomerProductCard product={product} key={i} handleFavourite={addToFavourite} />
               </Grid>
             )
@@ -117,7 +117,7 @@ const ExploreShop = () => {
       <Grid sx={{ mt: 5 }} container spacing={5}>
         {services?.length > 0 ? (
           services?.map((service, i) => (
-            <Grid xs={12} lg={6} item>
+            <Grid key={i} xs={12} lg={6} item>
               <ServiceCard
                 service={service}
                 key={i}

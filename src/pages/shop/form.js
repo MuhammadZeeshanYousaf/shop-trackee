@@ -143,14 +143,23 @@ const Form = () => {
       return
     }
 
-    const request = mode == 'Add' ? 'post' : 'put'
-    const route = mode == 'Add' ? Url.getShops : `${Url.getShops}/${id}`
+    let request, route, message
+
+    if (mode == 'Add') {
+      request = 'post'
+      route = Url.getShops
+      message = 'Shop created successfully'
+    } else {
+      request = 'put'
+      route = `${Url.getShops}/${id}`
+      message = 'Shop updated successfully'
+    }
 
     setLoader(true)
     const response = await Network[request](route, payload)
     setLoader(false)
     if (!response.ok) return showErrorMessage(response.data.message)
-    showSuccessMessage('Shop Created Successfully')
+    showSuccessMessage(message)
     router.push('/shop')
   }
 
