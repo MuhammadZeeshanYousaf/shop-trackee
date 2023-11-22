@@ -126,6 +126,22 @@ const ProductForm = () => {
     showSuccessMessage(response.data.message)
   }
 
+  const cancelOperation = async () => {
+    // Delete all images if uploaded
+    if (product?.id !== undefined && product?.id !== null && query.shopId !== undefined && query.shopId !== null) {
+      try {
+        await Network.delete(Url.deleteProduct(query.shopId, product.id))
+      } catch (e) {
+        console.log('Unable to delete uploaded images')
+      } finally {
+        setBase64Images([])
+      }
+    }
+
+    // and then redirect
+    router.push(`/shop/products-and-services?shopId=${query.shopId}`)
+  }
+
   const uploadImages = async () => {
     if (base64Images.length == 0) return showErrorMessage('Please Select Images')
     const formData = new FormData()
@@ -145,11 +161,20 @@ const ProductForm = () => {
     setLoader(true)
     const response = await Network.get(Url.recognizeProductImages(query.shopId, product?.id, id))
     setLoader(false)
+
+    let allCategories = []
+    response.data.forEach(element => {
+      if (!(categories.includes(element.category_name) && allCategories.includes(element.category_name))) {
+        allCategories.push(element.category_name)
+      }
+    })
+    setCategories(prevCategories => prevCategories.concat(allCategories))
     setAllResponses(response.data)
     reset({
       name: response.data[0]?.name,
       description: response.data[0]?.description,
       category_name: response.data[0]?.category_name,
+      stock_quantity: response.data[0]?.stock_quantity,
       price: response.data[0]?.price
     })
   }
@@ -250,7 +275,6 @@ const ProductForm = () => {
             <Grid item md={12} xs={12}>
               <Webcam
                 width={'330rem'}
-                maxWidth={'400px'}
                 audio={false}
                 ref={webcamRef}
                 screenshotFormat='image/jpeg'
@@ -333,7 +357,14 @@ const ProductForm = () => {
         >
           or
         </Divider>
-        <Input type='file' accept='image/*' onChange={event => handleProductImages(event)} multiple capture />
+
+        <Input
+          type='file'
+          inputProps={{ accept: 'image/*' }}
+          onChange={event => handleProductImages(event)}
+          multiple
+          capture
+        />
 
         <CardActions sx={{ justifyContent: 'end' }}>
           {base64Images.some(item => typeof item === 'object') ? (
@@ -341,10 +372,15 @@ const ProductForm = () => {
               Upload More
             </Button>
           ) : (
-            <Button variant='contained' onClick={() => uploadImages()}>
-              Upload
-            </Button>
+            <>
+              <Button variant='contained' onClick={() => uploadImages()}>
+                Upload
+              </Button>
+            </>
           )}
+          <Button type='reset' color='secondary' variant='tonal' onClick={cancelOperation}>
+            Cancel
+          </Button>
         </CardActions>
       </Card>
 
@@ -425,8 +461,12 @@ const ProductForm = () => {
                           onChange
                         }}
                       >
-                        {categories?.map(category => {
-                          return <MenuItem value={category}>{category}</MenuItem>
+                        {[...new Set(categories)]?.map((category, index) => {
+                          return (
+                            <MenuItem key={`cat-${index}`} value={category}>
+                              {category}
+                            </MenuItem>
+                          )
                         })}
                       </CustomTextField>
                     )}
@@ -477,7 +517,7 @@ const ProductForm = () => {
               </Grid>
               <CardActions sx={{ justifyContent: 'end' }}>
                 <Button type='submit' variant='contained'>
-                  Submit
+                  Create
                 </Button>
                 <Button
                   type='reset'
