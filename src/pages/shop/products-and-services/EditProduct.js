@@ -67,6 +67,7 @@ const EditProduct = () => {
     defaultValues: {
       name: '',
       description: '',
+      stock_quantity: 1,
       price: '',
       category_name: ''
     },
@@ -124,6 +125,15 @@ const EditProduct = () => {
     setLoader(true)
     const response = await Network.get(Url.recognizeProductImages(query.shopId, query.productId, id))
     setLoader(false)
+
+    let allCategories = []
+    response.data.forEach(element => {
+      if (!(categories.includes(element.category_name) && allCategories.includes(element.category_name))) {
+        allCategories.push(element.category_name)
+      }
+    })
+    setCategories(prevCategories => prevCategories.concat(allCategories))
+
     setAllResponses(response.data)
 
     reset({
@@ -131,7 +141,7 @@ const EditProduct = () => {
       description: response.data[0]?.description,
       category_name: response.data[0]?.category_name,
       price: response.data[0]?.price,
-      quantity: product?.quantity
+      stock_quantity: product?.stock_quantity
     })
   }
 
@@ -154,7 +164,7 @@ const EditProduct = () => {
   const setResponse = () => {
     setValue('name', product[currentResponse]?.name)
     setValue('description', product[currentResponse]?.description)
-    setValue('price', 10)
+    setValue('price', 0)
     setValue('stock_quantity', product[currentResponse]?.stock_quantity)
     setValue('category_name', product[currentResponse]?.category_name)
   }
@@ -183,6 +193,11 @@ const EditProduct = () => {
 
       setActiveResponse(activeResponse - 1)
     }
+  }
+
+  const cancelOperation = async () => {
+    // redirect
+    router.push(`/shop/products-and-services?shopId=${query.shopId}`)
   }
 
   const uploadMore = async () => {
@@ -254,7 +269,6 @@ const EditProduct = () => {
             <Grid container>
               <Webcam
                 width={'330rem'}
-                maxWidth={'400px'}
                 audio={false}
                 ref={webcamRef}
                 screenshotFormat='image/jpeg'
@@ -336,10 +350,19 @@ const EditProduct = () => {
         >
           or
         </Divider>
-        <Input type='file' accept='image/*' onChange={event => handleProductImages(event)} multiple capture />
+        <Input
+          type='file'
+          inputProps={{ accept: 'image/*' }}
+          onChange={event => handleProductImages(event)}
+          multiple
+          capture
+        />
         <CardActions sx={{ justifyContent: 'end' }}>
           <Button variant='contained' onClick={() => uploadMore()}>
             Upload More
+          </Button>
+          <Button type='reset' color='secondary' variant='tonal' onClick={cancelOperation}>
+            Cancel
           </Button>
         </CardActions>
       </Card>
@@ -419,8 +442,12 @@ const EditProduct = () => {
                         onChange
                       }}
                     >
-                      {categories?.map(category => {
-                        return <MenuItem value={category}>{category}</MenuItem>
+                      {[...new Set(categories)].map((category, i) => {
+                        return (
+                          <MenuItem key={`cat-${i}`} value={category}>
+                            {category}
+                          </MenuItem>
+                        )
                       })}
                     </CustomTextField>
                   )}
@@ -471,7 +498,7 @@ const EditProduct = () => {
             </Grid>
             <CardActions sx={{ justifyContent: 'end' }}>
               <Button type='submit' variant='contained'>
-                Submit
+                Save
               </Button>
               <Button
                 type='reset'

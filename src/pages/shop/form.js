@@ -24,7 +24,13 @@ import Icon from 'src/@core/components/icon'
 import { geocodeByPlaceId } from 'react-google-places-autocomplete'
 import GooglePlacesAutocomplete from 'react-google-places-autocomplete'
 import { Network, Url } from '../../configs'
-import { showErrorMessage, showSuccessMessage, CustomInput, DatePickerWrapper } from '../../components'
+import {
+  showErrorMessage,
+  showSuccessMessage,
+  CustomInput,
+  DatePickerWrapper,
+  showWarningMessage
+} from '../../components'
 import { useLoader } from '../../hooks'
 import { Map } from '../../components'
 
@@ -105,6 +111,7 @@ const Form = () => {
       if (changeId == item.id) {
         return { ...item, link: value }
       }
+
       return item
     })
 
@@ -116,6 +123,7 @@ const Form = () => {
     socialLinks.forEach(item => {
       social_links.push(item.link)
     })
+
     const payload = {
       ...data,
       social_links,
@@ -123,14 +131,35 @@ const Form = () => {
       latitude: latitude
     }
 
-    const request = mode == 'Add' ? 'post' : 'put'
-    const route = mode == 'Add' ? Url.getShops : `${Url.getShops}/${id}`
+    if (payload.opening_time > payload.closing_time || payload.opening_time === payload.closing_time) {
+      showErrorMessage('Opening and Closing Time are invalid')
+
+      return
+    }
+
+    if (payload.latitude === null || payload.longitude === null) {
+      showWarningMessage('Please select Shop address or allow your location')
+
+      return
+    }
+
+    let request, route, message
+
+    if (mode == 'Add') {
+      request = 'post'
+      route = Url.getShops
+      message = 'Shop created successfully'
+    } else {
+      request = 'put'
+      route = `${Url.getShops}/${id}`
+      message = 'Shop updated successfully'
+    }
 
     setLoader(true)
     const response = await Network[request](route, payload)
     setLoader(false)
     if (!response.ok) return showErrorMessage(response.data.message)
-    showSuccessMessage('Shop Created Successfully')
+    showSuccessMessage(message)
     router.push('/shop')
   }
 

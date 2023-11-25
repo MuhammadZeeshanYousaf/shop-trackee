@@ -2,8 +2,10 @@ import { useEffect, useState } from 'react'
 import { useRouter } from 'next/router'
 import { useLoader } from 'src/hooks'
 import { Network, Url } from 'src/configs'
+import moment from 'moment'
+import CustomChip from 'src/@core/components/mui/chip'
 import { showErrorMessage, showSuccessMessage, CustomerProductCard } from 'src/components'
-import { Typography, Grid, Box, Pagination } from '@mui/material'
+import { Typography, Grid, Box, Pagination, Card, CardContent } from '@mui/material'
 import ServiceCard from '../shop/products-and-services/ServiceCard'
 
 import Icon from 'src/@core/components/icon'
@@ -21,6 +23,8 @@ const ExploreShop = () => {
   const [currentProductPage, setCurrentProductPage] = useState(1)
 
   const [currentServicePage, setCurrentServicePage] = useState(1)
+
+  const [shop, setShop] = useState({})
 
   const NoResults = ({ value }) => {
     return (
@@ -56,6 +60,7 @@ const ExploreShop = () => {
     setTotalProductPages(response.data.product.total_pages)
     setServices(response.data.service.data)
     setTotalServicesPage(response.data.service.total_pages)
+    setShop(response.data.shop.data)
   }
 
   const addToFavourite = async (id, status, type) => {
@@ -72,6 +77,10 @@ const ExploreShop = () => {
     searchByShop()
   }
 
+  const isEmpty = value => {
+    return value === undefined || value === 0 || value === null || value == '' || value?.length <= 0
+  }
+
   const handleProductPage = (event, value) => {
     setCurrentProductPage(value)
   }
@@ -86,17 +95,73 @@ const ExploreShop = () => {
 
   return (
     <div>
-      <Typography sx={{ mt: 5 }} variant='h1'>
-        {query?.name}
-      </Typography>
-      <Typography sx={{ mt: 5 }} variant='h2'>
+      <Card>
+        <CardContent>
+          <Typography variant='h2' component='div'>
+            {shop.name}
+          </Typography>
+          {!isEmpty(shop.description) ? <Typography>{shop.description}</Typography> : null}
+          <br />
+          <Typography color='textSecondary'>
+            <b>Contact:</b> {isEmpty(shop.contact) ? 'N/A' : shop.contact}
+          </Typography>
+
+          <Typography color='textSecondary'>
+            <b>Address:</b> {isEmpty(shop.address?.label) ? 'N/A' : shop.address?.label}
+          </Typography>
+
+          <Typography color='textSecondary'>
+            <b>Opening Time:</b>
+            {'  '}
+            {isEmpty(shop.opening_time) ? (
+              'N/A'
+            ) : (
+              <CustomChip
+                sx={{ mr: 2 }}
+                rounded
+                size='small'
+                skin='light'
+                color='info'
+                label={moment(shop?.opening_time).format('h:mm A')}
+              />
+            )}{' '}
+            <b>Closing Time:</b>{' '}
+            {isEmpty(shop.closing_time) ? (
+              'N/A'
+            ) : (
+              <CustomChip
+                sx={{ mr: 2 }}
+                rounded
+                size='small'
+                skin='light'
+                color='warning'
+                label={moment(shop?.closing_time).format('h:mm A')}
+              />
+            )}
+          </Typography>
+
+          <Typography color='textSecondary'>
+            <b>Closing Days:</b> {isEmpty(shop.closing_days) ? 'N/A' : shop.closing_days.map(day => `${day}, `)}
+          </Typography>
+
+          <Typography color='textSecondary'>
+            <b>Website:</b> {isEmpty(shop.shop_website_url) ? 'N/A' : shop.shop_website_url}
+          </Typography>
+
+          <Typography color='textSecondary'>
+            <b>Social Links:</b> {isEmpty(shop.social_links) ? 'N/A' : shop.social_links.map(day => `${day}, `)}
+          </Typography>
+        </CardContent>
+      </Card>
+
+      <Typography sx={{ mt: 5 }} variant='h4'>
         Products
       </Typography>
       <Grid sx={{ mt: 5 }} container spacing={5}>
         {products?.length > 0 ? (
           products?.map((product, i) => {
             return (
-              <Grid item xs={12} sm={6} md={4}>
+              <Grid key={i} item xs={12} sm={6} md={4}>
                 <CustomerProductCard product={product} key={i} handleFavourite={addToFavourite} />
               </Grid>
             )
@@ -110,14 +175,14 @@ const ExploreShop = () => {
         <Pagination count={totalProductPages} onChange={handleProductPage} />
       </div>
 
-      <Typography sx={{ mt: 5 }} variant='h2'>
+      <Typography sx={{ mt: 5 }} variant='h4'>
         Services
       </Typography>
 
       <Grid sx={{ mt: 5 }} container spacing={5}>
         {services?.length > 0 ? (
           services?.map((service, i) => (
-            <Grid xs={12} lg={6} item>
+            <Grid key={i} xs={12} lg={6} item>
               <ServiceCard
                 service={service}
                 key={i}

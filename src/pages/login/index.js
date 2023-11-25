@@ -184,7 +184,14 @@ const LoginPage = () => {
               <Typography variant='h3' sx={{ mb: 1.5 }}>
                 {`Welcome to ${appConfig.appName}!`}
               </Typography>
-              <Typography sx={{ color: 'text.secondary' }}>Please sign-in to your account</Typography>
+              <Typography sx={{ color: 'text.secondary', mb: 8 }}>
+                <b>{appConfig.appName}</b> revolutionizes the way small businesses connect with customers. Our
+                affordable web app provides a user-friendly platform for businesses to showcase products effortlessly.
+                With features like image recognition and location services, it's a seamless experience for sellers and
+                buyers, creating a vibrant digital marketplace. Join us in empowering local businesses and enhancing
+                community connections!
+              </Typography>
+              <Typography sx={{ color: 'text.black' }}>⚷ Please sign-in to your account</Typography>
             </Box>
             <form noValidate autoComplete='off' onSubmit={handleSubmit(onSubmit)}>
               <Box sx={{ mb: 4 }}>
