@@ -16,6 +16,7 @@ const CustomerProductCard = ({ product, handleFavourite }) => {
           <img
             style={{ height: '100%', width: '100%', objectFit: 'contain' }}
             src={`${process.env.NEXT_PUBLIC_IMAGE_URL}${product?.images[0]?.path}`}
+            alt='product'
           />
         </div>
         <CardContent sx={{ p: theme => `${theme.spacing(3, 5.25, 4)} !important` }}>
@@ -64,10 +65,14 @@ const CustomerProductCard = ({ product, handleFavourite }) => {
             {product?.category_name}
           </Typography>
 
-          <Typography>
-            <b>Rs. </b>
-            {product?.price}
-          </Typography>
+          {product?.price < 2 ? (
+            ''
+          ) : (
+            <Typography>
+              <b>Rs. </b>
+              {product?.price?.toLocaleString()}
+            </Typography>
+          )}
         </CardContent>
         <Button
           onClick={() => setOpen(true)}

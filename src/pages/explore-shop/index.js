@@ -111,7 +111,7 @@ const ExploreShop = () => {
           </Typography>
 
           <Typography color='textSecondary'>
-            <b>Opening Time:</b>
+            <b>Availability:</b>
             {'  '}
             {isEmpty(shop.opening_time) ? (
               'N/A'
@@ -124,8 +124,9 @@ const ExploreShop = () => {
                 color='info'
                 label={moment(shop?.opening_time).format('h:mm A')}
               />
-            )}{' '}
-            <b>Closing Time:</b>{' '}
+            )}
+            <b>-</b>
+            {'  '}
             {isEmpty(shop.closing_time) ? (
               'N/A'
             ) : (
@@ -145,11 +146,23 @@ const ExploreShop = () => {
           </Typography>
 
           <Typography color='textSecondary'>
-            <b>Website:</b> {isEmpty(shop.shop_website_url) ? 'N/A' : shop.shop_website_url}
+            {isEmpty(shop.shop_website_url) ? (
+              ''
+            ) : (
+              <>
+                <b>Website:</b> {shop.shop_website_url}
+              </>
+            )}
           </Typography>
 
           <Typography color='textSecondary'>
-            <b>Social Links:</b> {isEmpty(shop.social_links) ? 'N/A' : shop.social_links.map(day => `${day}, `)}
+            {isEmpty(shop.social_links) ? (
+              ''
+            ) : (
+              <>
+                <b>Social Links:</b> <span>{shop.social_links.map(day => `${day}, `)}</span>{' '}
+              </>
+            )}
           </Typography>
         </CardContent>
       </Card>

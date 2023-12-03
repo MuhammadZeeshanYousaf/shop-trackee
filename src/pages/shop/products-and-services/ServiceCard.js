@@ -110,10 +110,16 @@ const ServiceCard = ({ service, deleteService, shopId, mode = 'customer', handle
                   <Box
                     sx={{ display: 'flex', alignItems: 'center', '& svg': { color: 'primary.main', mr: 2.75, mt: 1 } }}
                   >
-                    <Icon icon='tabler:cash-banknote' fontSize={20} />
-                    <Typography sx={{ color: 'text.secondary' }}>
-                      <b>Rate:</b> {service?.rate} /{service?.charge_by}
-                    </Typography>
+                    {+service?.rate < 2 ? (
+                      ''
+                    ) : (
+                      <>
+                        <Icon icon='tabler:cash-banknote' fontSize={20} />
+                        <Typography sx={{ color: 'text.secondary' }}>
+                          <b>Rate:</b> {service?.rate?.toLocaleString()} /{service?.charge_by}
+                        </Typography>
+                      </>
+                    )}
                   </Box>
                 </Grid>
                 {/* <Grid item xs={12} sm={7}>

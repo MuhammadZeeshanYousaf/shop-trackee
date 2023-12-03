@@ -53,6 +53,7 @@ const ProductCard = ({ product, deleteProduct, shopId, id }) => {
             <img
               style={{ height: '100%', objectFit: 'contain', width: '100%' }}
               src={`${process.env.NEXT_PUBLIC_IMAGE_URL}${product?.images[0]?.path}`}
+              alt='product'
             />
           </div>
         </StyledGrid>
@@ -103,7 +104,7 @@ const ProductCard = ({ product, deleteProduct, shopId, id }) => {
             <Typography sx={{ fontWeight: 500, mb: 0 }}>
               <b>Rs. </b>
               <Box component={'span'} color={'text.secondary'}>
-                {product?.price}
+                {product?.price?.toLocaleString()}
               </Box>
             </Typography>
           </CardContent>
