@@ -1,5 +1,5 @@
 const appConfig = {
-  appName: 'Track A Shop'
+  appName: 'Shop Trackee'
 }
 
 export default appConfig
