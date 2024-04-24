@@ -25,7 +25,7 @@ class CustomDocument extends Document {
           <link rel='shortcut icon' href='/images/favicon.png' />
           <script
             type='text/javascript'
-            src='https://maps.googleapis.com/maps/api/js?key=AIzaSyAPBI4e19Or0KAphAP7v-3QRQwghlG_TkA&libraries=places,geometry,geocoding'
+            src={`https://maps.googleapis.com/maps/api/js?key=${process.env.NEXT_PUBLIC_MAPS_API_KEY}&libraries=places,geometry,geocoding`}
           />
         </Head>
         <body>
